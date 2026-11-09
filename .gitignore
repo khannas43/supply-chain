@@ -1,0 +1,14 @@
+.DS_Store
+node_modules
+node_modules.nosync
+dist
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.venv/
+
+# Client and planning documents stay local (public repo)
+docs/
