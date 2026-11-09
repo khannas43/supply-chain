@@ -4,7 +4,7 @@ from sqlalchemy import text
 
 from .config import get_settings
 from .db import get_engine
-from .routers import alerts, network, overview
+from .routers import actions, alerts, assumptions, network, options, overview
 
 router = APIRouter(prefix="/api")
 
@@ -52,3 +52,6 @@ app.include_router(router)
 app.include_router(alerts.router)
 app.include_router(network.router)
 app.include_router(overview.router)
+app.include_router(assumptions.router)
+app.include_router(options.router)
+app.include_router(actions.router)

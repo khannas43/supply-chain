@@ -2,7 +2,7 @@
 
 Local application that maps a supply chain, detects commodity risk events, assesses business impact and records a response, for wheat and tungsten. Everything runs locally in Docker.
 
-Status: frontend prototype of nine screens on mock data; Docker stack with database, schema, demo data and an API skeleton. The API serves alerts, network traversal and assessments ; screens S01 to S03 use it, the other six still use mock data. Writes need an identity (development headers for now).
+Status: frontend prototype of nine screens on mock data; Docker stack with database, schema, demo data and an API skeleton. The API serves alerts, network traversal and assessments ; screens S01 to S06 use it, S07 to S09 still use mock data. Writes need an identity (development headers for now).
 
 ## Layout
 
@@ -77,6 +77,14 @@ Interactive docs at http://127.0.0.1:8100/api/docs. Field names are camelCase, m
 | `GET /api/alerts/{id}` | One alert with evidence, rule version, matched nodes, exposure and days of cover |
 | `GET /api/alerts/{id}/assessment` | Latest assessment snapshot with calculated measures, active assumption, reference option and version history. Measures that need an approved assumption are null, with the reason |
 | `POST /api/alerts/{id}/disposition` | Confirm, monitor or dismiss an alert. Analyst role; rationale required; writes an audit event |
+| `POST /api/alerts/{id}/assumptions` | Propose a disruption assumption (Analyst). Replaces the current one; figures stay unavailable until approved |
+| `POST /api/assumptions/{id}/decision` | Approve or reject (a different Analyst than the proposer). Approval creates a new assessment snapshot |
+| `GET /api/alerts/{id}/options` | Response options: eligible ones ranked by gap, then cost; inventory listed apart; ineligible ones with the reasons |
+| `POST /api/options/{id}/shortlist` | Shortlist or remove an option (Analyst, Manager); shared |
+| `POST /api/options/{id}/decision` | Record the chosen option as an action with owner and target date (Manager). Only eligible options |
+| `GET /api/actions`, `GET /api/actions/{id}` | Actions with overdue and review-needed flags; detail adds history and audit trail |
+| `POST /api/actions/{id}/status` | Change status. Manager: any; owner or Admin: in progress or in review |
+| `POST /api/actions/{id}/reassign` | Change the owner (Manager) |
 | `GET /api/overview?commodity=` | Counts, action totals, last assessment, 7-day trend and source freshness for the overview screen |
 | `GET /api/sources` | Sources with freshness state (fresh, stale, failing, paused) |
 | `GET /api/network/nodes` | Network nodes; filter `commodity` |

@@ -143,10 +143,10 @@ export interface ResponseOption {
   qualification: Qualification
   specFit: SpecFit
   capacity: string
-  unitPrice?: number
-  quantityAvailable?: number
+  unitPrice?: number | null
+  quantityAvailable?: number | null
   leadTimeDays: number
-  quoteValidUntil?: string
+  quoteValidUntil?: string | null
   note: string
 }
 

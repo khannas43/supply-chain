@@ -1,55 +1,127 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { api } from '../api/client'
+import { useApi } from '../api/hooks'
+import type { ActionData } from '../api/types'
 import { useAuth } from '../auth/AuthContext'
 import { IDENTITIES } from '../auth/users'
 import { useApp } from '../components/AppContext'
 import { PageHead, formatTime } from '../components/ui'
-import { TODAY, useStore } from '../data/store'
-import type { ActionItem, ActionStatus } from '../data/types'
+import type { ActionStatus, Alert } from '../data/types'
 
 const LABEL: Record<ActionStatus, string> = { open: 'Open', in_progress: 'In progress', review: 'In review', done: 'Done' }
 const BADGE: Record<ActionStatus, string> = { open: 'b-neutral', in_progress: 'b-warn', review: 'b-warn', done: 'b-ok' }
 
-export function Actions() {
-  const { commodity, openEvidence } = useApp()
+function Detail({ id, onChanged, onClose }: { id: string; onChanged: () => void; onClose: () => void }) {
+  const { openEvidence } = useApp()
   const { user, can } = useAuth()
-  const { actions, alerts, currentVersion, updateStatus, reassign, audit } = useStore()
+  const detail = useApi<ActionData>(`/actions/${id}`)
+  const alertRemote = useApi<Alert>(detail.data ? `/alerts/${detail.data.alertId}` : null)
+  const [note, setNote] = useState('')
+  const [next, setNext] = useState<ActionStatus>('in_progress')
+  const [newOwner, setNewOwner] = useState('u-manager')
+  const [error, setError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+
+  const a = detail.data
+  if (!a) return <div className="card empty">{detail.error ?? 'Loading…'}</div>
+  const alert = alertRemote.data
+  const manager = can('action.manage')
+  const canUpdate = a.ownerId === user.id || can('action.update')
+
+  const act = async (work: () => Promise<unknown>) => {
+    setBusy(true)
+    setError(null)
+    try {
+      await work()
+      setNote('')
+      detail.reload()
+      onChanged()
+    } catch (e) {
+      setError((e as Error).message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <>
+      <section className="card">
+        <header><h2>{a.optionName}</h2><button className="btn" onClick={onClose}>Close</button></header>
+        {a.reviewNeeded && <div className="notice" style={{ marginBottom: 10 }}>The assessment is now v{a.currentAssessmentVersion}; this decision was made on v{a.assessmentVersion}. Review it. It has not been changed.</div>}
+        <dl className="kv">
+          <dt>Action</dt><dd>{a.id}</dd>
+          <dt>Alert</dt><dd><Link to={`/risk?alert=${a.alertId}`}>{a.alertTitle}</Link></dd>
+          <dt>Owner</dt><dd>{a.ownerName}</dd>
+          <dt>Target date</dt><dd>{a.targetDate}{a.overdue && ' (overdue)'}</dd>
+          <dt>Rationale</dt><dd>{a.rationale}</dd>
+          <dt>Made on</dt><dd>Assessment v{a.assessmentVersion}, assumption {a.assumptionStatus}</dd>
+          <dt>Created</dt><dd>{formatTime(a.createdAt)} by {a.createdBy}</dd>
+        </dl>
+        <div className="row" style={{ marginTop: 12 }}>
+          {alert && <button className="btn" onClick={() => openEvidence({ title: alert.title, evidence: alert.evidence, mode: alert.mode, scenarioRun: alert.scenarioRun ?? undefined, ruleVersion: alert.ruleVersion })}>Reopen evidence</button>}
+          <Link className="btn" to={`/impact?alert=${a.alertId}`}>Reopen calculation</Link>
+        </div>
+      </section>
+
+      <section className="card">
+        <header><h2>Update</h2></header>
+        {error && <div className="notice" role="alert" style={{ marginBottom: 8 }}>{error}</div>}
+        {canUpdate || manager ? (
+          <div className="field">
+            {canUpdate && (
+              <>
+                <label htmlFor="st">New status{!manager && ' (owners can set in progress or in review)'}</label>
+                <select id="st" value={next} onChange={(e) => setNext(e.target.value as ActionStatus)}>
+                  {(manager ? (Object.keys(LABEL) as ActionStatus[]) : (['in_progress', 'review'] as ActionStatus[])).map((s) => <option key={s} value={s}>{LABEL[s]}</option>)}
+                </select>
+                <label htmlFor="nt">Note</label>
+                <input id="nt" value={note} onChange={(e) => setNote(e.target.value)} />
+                <div><button className="btn primary" disabled={next === a.status || busy} onClick={() => act(() => api.post(`/actions/${a.id}/status`, { status: next, note: note.trim() }))}>Update status</button></div>
+              </>
+            )}
+            {manager && (
+              <div style={{ marginTop: 10 }}>
+                <label htmlFor="ro">Reassign owner</label>
+                <div className="row">
+                  <select id="ro" value={newOwner} onChange={(e) => setNewOwner(e.target.value)}>
+                    {IDENTITIES.filter((i) => i.role !== 'demo_operator').map((i) => <option key={i.id} value={i.id}>{i.name}</option>)}
+                  </select>
+                  <button className="btn" disabled={newOwner === a.ownerId || busy} onClick={() => act(() => api.post(`/actions/${a.id}/reassign`, { ownerId: newOwner, ownerName: IDENTITIES.find((i) => i.id === newOwner)!.name, note: note.trim() }))}>Reassign</button>
+                </div>
+                {a.status === 'done' && <div style={{ marginTop: 8 }}><button className="btn" disabled={busy} onClick={() => act(() => api.post(`/actions/${a.id}/status`, { status: 'in_progress', note: note.trim() || 'Reopened' }))}>Reopen action</button></div>}
+              </div>
+            )}
+          </div>
+        ) : <div className="muted">Only the owner or a Procurement Manager can update this action.</div>}
+      </section>
+
+      <section className="card">
+        <header><h2>History</h2></header>
+        {[...a.history].reverse().map((h, i) => (
+          <div key={i} style={{ marginBottom: 8 }}>
+            <div><span className={`badge ${BADGE[h.to]}`}>{LABEL[h.to]}</span> <span className="muted small">{formatTime(h.at)} · {h.actor}</span></div>
+            {h.note && <div className="small">{h.note}</div>}
+          </div>
+        ))}
+        {a.audit.length > 0 && <><h3 style={{ marginTop: 10 }}>Audit trail</h3>{a.audit.map((e, i) => <div key={i} className="small muted">{formatTime(e.at)} · {e.actor} · {e.event} · {e.detail}</div>)}</>}
+      </section>
+    </>
+  )
+}
+
+export function Actions() {
+  const { commodity } = useApp()
   const [params, setParams] = useSearchParams()
   const [status, setStatus] = useState<'all' | ActionStatus>('all')
   const [owner, setOwner] = useState('all')
   const [overdueOnly, setOverdueOnly] = useState(false)
-  const [note, setNote] = useState('')
-  const [next, setNext] = useState<ActionStatus>('in_progress')
-  const [newOwner, setNewOwner] = useState('u-manager')
 
-  const overdue = (a: ActionItem) => a.status !== 'done' && a.targetDate < TODAY
-  const needsReview = (a: ActionItem) => a.status !== 'done' && a.assessmentVersion < currentVersion(a.alertId)
-
-  const rows = useMemo(
-    () =>
-      actions
-        .filter((a) => a.commodity === commodity)
-        .filter((a) => status === 'all' || a.status === status)
-        .filter((a) => owner === 'all' || a.ownerId === owner)
-        .filter((a) => !overdueOnly || (a.status !== 'done' && a.targetDate < TODAY))
-        .sort((a, b) => a.targetDate.localeCompare(b.targetDate)),
-    [actions, commodity, status, owner, overdueOnly],
-  )
-
+  const query = [`commodity=${commodity}`, status !== 'all' && `status=${status}`, owner !== 'all' && `ownerId=${owner}`, overdueOnly && 'overdueOnly=true'].filter(Boolean).join('&')
+  const list = useApi<ActionData[]>(`/actions?${query}`)
+  const rows = list.data ?? []
   const selId = params.get('action')
-  const sel = actions.find((a) => a.id === selId && a.commodity === commodity) ?? null
-  const alert = sel ? alerts.find((a) => a.id === sel.alertId) : undefined
-  const isOwner = !!sel && sel.ownerId === user.id
-  const canUpdate = !!sel && (isOwner || can('action.update'))
-  const canManage = can('action.manage')
-  const choose = (id: string | null) => { setNote(''); setParams(id ? { action: id } : {}) }
-  const auditFor = sel ? audit.filter((e) => e.ref === sel.id) : []
-
-  const apply = () => {
-    if (!sel) return
-    updateStatus(sel.id, next, note.trim())
-    setNote('')
-  }
+  const choose = (id: string | null) => setParams(id ? { action: id } : {})
 
   return (
     <div className="page">
@@ -69,9 +141,13 @@ export function Actions() {
         <label className="row" style={{ alignSelf: 'flex-end' }}><input type="checkbox" checked={overdueOnly} onChange={(e) => setOverdueOnly(e.target.checked)} /> Overdue only</label>
       </div>
 
+      {list.error && <div className="notice" role="alert">{list.error} <button className="btn" onClick={list.reload}>Retry</button></div>}
+
       <div className="split">
         <section className="card" style={{ padding: 0 }}>
-          {rows.length === 0 ? (
+          {list.data === null ? (
+            !list.error && <div className="empty" role="status">Loading…</div>
+          ) : rows.length === 0 ? (
             <div className="empty">No actions match. Decisions are recorded from the <Link to="/response">response comparison</Link>.</div>
           ) : (
             <div className="table-wrap">
@@ -85,7 +161,7 @@ export function Actions() {
                       <td>{a.ownerName}</td>
                       <td>{a.targetDate}</td>
                       <td><span className={`badge ${BADGE[a.status]}`}>{LABEL[a.status]}</span></td>
-                      <td><div className="row">{overdue(a) && <span className="badge b-bad">Overdue</span>}{needsReview(a) && <span className="badge b-warn">Review needed</span>}</div></td>
+                      <td><div className="row">{a.overdue && <span className="badge b-bad">Overdue</span>}{a.reviewNeeded && <span className="badge b-warn">Review needed</span>}</div></td>
                     </tr>
                   ))}
                 </tbody>
@@ -95,68 +171,8 @@ export function Actions() {
         </section>
 
         <aside className="detail" aria-live="polite">
-          {!sel ? <div className="card empty">Select an action to see its history, evidence and audit trail.</div> : (
-            <>
-              <section className="card">
-                <header><h2>{sel.optionName}</h2><button className="btn" onClick={() => choose(null)}>Close</button></header>
-                {needsReview(sel) && <div className="notice" style={{ marginBottom: 10 }}>The assessment is now v{currentVersion(sel.alertId)}; this decision was made on v{sel.assessmentVersion}. Review it. It has not been changed.</div>}
-                <dl className="kv">
-                  <dt>Action</dt><dd>{sel.id}</dd>
-                  <dt>Alert</dt><dd><Link to={`/risk?alert=${sel.alertId}`}>{alert?.title ?? sel.alertId}</Link></dd>
-                  <dt>Owner</dt><dd>{sel.ownerName}</dd>
-                  <dt>Target date</dt><dd>{sel.targetDate}{overdue(sel) && ' (overdue)'}</dd>
-                  <dt>Rationale</dt><dd>{sel.rationale}</dd>
-                  <dt>Made on</dt><dd>Assessment v{sel.assessmentVersion}, assumption {sel.assumptionStatus}</dd>
-                  <dt>Created</dt><dd>{formatTime(sel.createdAt)} by {sel.createdBy}</dd>
-                </dl>
-                <div className="row" style={{ marginTop: 12 }}>
-                  {alert && <button className="btn" onClick={() => openEvidence({ title: alert.title, evidence: alert.evidence, mode: alert.mode, scenarioRun: alert.scenarioRun, ruleVersion: alert.ruleVersion })}>Reopen evidence</button>}
-                  <Link className="btn" to={`/impact?alert=${sel.alertId}`}>Reopen calculation</Link>
-                </div>
-              </section>
-
-              <section className="card">
-                <header><h2>Update</h2></header>
-                {canUpdate || canManage ? (
-                  <div className="field">
-                    {canUpdate && (
-                      <>
-                        <label htmlFor="st">New status{!canManage && ' (owners can set in progress or in review)'}</label>
-                        <select id="st" value={next} onChange={(e) => setNext(e.target.value as ActionStatus)}>
-                          {(canManage ? (Object.keys(LABEL) as ActionStatus[]) : (['in_progress', 'review'] as ActionStatus[])).map((s) => <option key={s} value={s}>{LABEL[s]}</option>)}
-                        </select>
-                        <label htmlFor="nt">Note</label>
-                        <input id="nt" value={note} onChange={(e) => setNote(e.target.value)} />
-                        <div><button className="btn primary" onClick={apply} disabled={next === sel.status}>Update status</button></div>
-                      </>
-                    )}
-                    {canManage && (
-                      <div style={{ marginTop: 10 }}>
-                        <label htmlFor="ro">Reassign owner</label>
-                        <div className="row">
-                          <select id="ro" value={newOwner} onChange={(e) => setNewOwner(e.target.value)}>
-                            {IDENTITIES.filter((i) => i.role !== 'demo_operator').map((i) => <option key={i.id} value={i.id}>{i.name}</option>)}
-                          </select>
-                          <button className="btn" onClick={() => reassign(sel.id, newOwner, note.trim())} disabled={newOwner === sel.ownerId}>Reassign</button>
-                        </div>
-                        {sel.status === 'done' && <div style={{ marginTop: 8 }}><button className="btn" onClick={() => updateStatus(sel.id, 'in_progress', note.trim() || 'Reopened')}>Reopen action</button></div>}
-                      </div>
-                    )}
-                  </div>
-                ) : <div className="muted">Only the owner or a Procurement Manager can update this action.</div>}
-              </section>
-
-              <section className="card">
-                <header><h2>History</h2></header>
-                {[...sel.history].reverse().map((h, i) => (
-                  <div key={i} style={{ marginBottom: 8 }}>
-                    <div><span className={`badge ${BADGE[h.to]}`}>{LABEL[h.to]}</span> <span className="muted small">{formatTime(h.at)} · {h.actor}</span></div>
-                    {h.note && <div className="small">{h.note}</div>}
-                  </div>
-                ))}
-                {auditFor.length > 0 && <><h3 style={{ marginTop: 10 }}>Audit trail</h3>{auditFor.map((e, i) => <div key={i} className="small muted">{formatTime(e.at)} · {e.actor} · {e.event} · {e.detail}</div>)}</>}
-              </section>
-            </>
+          {!selId ? <div className="card empty">Select an action to see its history, evidence and audit trail.</div> : (
+            <Detail key={selId} id={selId} onChanged={list.reload} onClose={() => choose(null)} />
           )}
         </aside>
       </div>

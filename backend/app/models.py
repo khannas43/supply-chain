@@ -323,6 +323,16 @@ class ResponseOption(Base):
     note: Mapped[str] = mapped_column(Text, server_default=text("''"))
 
 
+class OptionShortlist(Base):
+    """Options an analyst or manager has shortlisted. Shared, not per user."""
+
+    __tablename__ = "option_shortlist"
+    option_id: Mapped[str] = mapped_column(ForeignKey("response_option.id", ondelete="CASCADE"), primary_key=True)
+    shortlisted_by_id: Mapped[str] = mapped_column(String(100))
+    shortlisted_by_name: Mapped[str] = mapped_column(String(200))
+    shortlisted_at: Mapped[datetime] = mapped_column(TS)
+
+
 class Assumption(Base):
     __tablename__ = "assumption"
     __table_args__ = (

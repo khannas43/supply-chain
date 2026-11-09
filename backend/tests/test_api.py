@@ -1,22 +1,3 @@
-import pytest
-from fastapi.testclient import TestClient
-from sqlalchemy.orm import Session
-
-from app.deps import get_session
-from app.main import app
-
-
-@pytest.fixture
-def client(seeded):
-    def override():
-        with Session(seeded) as s:
-            yield s
-
-    app.dependency_overrides[get_session] = override
-    yield TestClient(app)
-    app.dependency_overrides.clear()
-
-
 def test_alert_list_and_filters(client):
     all_ = client.get("/api/alerts").json()
     assert {a["id"] for a in all_} == {"AL-W-001", "AL-W-002", "AL-T-001", "AL-T-002"}

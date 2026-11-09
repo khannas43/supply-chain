@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from .. import sources as source_health
+from .. import clock, sources as source_health
 from ..deps import get_session
 from ..models import Action, Alert, Assessment, Source, SourceCommodity
 from ..schemas import ActionCountsOut, Commodity, OverviewOut, SourceOut, TrendPoint
@@ -36,7 +36,7 @@ def list_sources(
     as_of: datetime | None = Query(None, alias="asOf"),
     session: Session = Depends(get_session),
 ) -> list[SourceOut]:
-    return _sources(session, as_of or datetime.now(UTC), commodity)
+    return _sources(session, as_of or clock.now(), commodity)
 
 
 @router.get("/overview", response_model=OverviewOut)
@@ -46,7 +46,7 @@ def overview(
     session: Session = Depends(get_session),
 ) -> OverviewOut:
     """Everything the overview screen needs except the alert list itself."""
-    now = as_of or datetime.now(UTC)
+    now = as_of or clock.now()
     active = list(session.scalars(select(Alert).where(Alert.commodity == commodity, Alert.disposition != "dismissed")))
     by_severity: dict[str, int] = {}
     for a in active:

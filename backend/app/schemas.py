@@ -219,3 +219,109 @@ class OverviewOut(Out):
     last_assessment_at: datetime | None
     trend: list[TrendPoint]  # alerts observed per day, last 7 days
     sources: list[SourceOut]
+
+
+# ---- Assumptions, options, actions ----
+
+
+class In(BaseModel):
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+
+
+Text = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=2000)]
+ShortText = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=200)]
+
+
+class AssumptionIn(In):
+    affected_share_pct: Annotated[Decimal, Field(ge=0, le=100, decimal_places=2)]
+    basis: Text
+
+
+class AssumptionDecisionIn(In):
+    decision: Literal["approved", "rejected"]
+    note: Annotated[str, StringConstraints(strip_whitespace=True, max_length=2000)] = ""
+
+
+class ShortlistIn(In):
+    shortlisted: bool
+
+
+class OptionRowOut(Out):
+    option: ResponseOptionOut
+    rank: int | None = None
+    gap_days: Num | None = None
+    incremental_cost: Num | None = None
+    extra_cover_days: Num | None = None
+    quote_status: Literal["none", "valid", "expiring", "expired"]
+    days_to_quote_expiry: int | None = None
+    shortlisted: bool = False
+    reasons: list[str] = []  # why an option is not eligible
+
+
+class ResponseOptionsOut(Out):
+    alert_id: str
+    assessment_version: int
+    currency: str
+    cover_days: Num | None
+    assumption_status: Literal["none", "proposed", "approved", "rejected", "superseded"]
+    unavailable_reason: str | None
+    ranked: list[OptionRowOut]
+    complementary: list[OptionRowOut]
+    ineligible: list[OptionRowOut]
+
+
+class DecisionIn(In):
+    owner_id: ShortText
+    owner_name: ShortText
+    target_date: date
+    rationale: Text
+
+
+class StatusIn(In):
+    status: Literal["open", "in_progress", "review", "done"]
+    note: Annotated[str, StringConstraints(strip_whitespace=True, max_length=2000)] = ""
+
+
+class ReassignIn(In):
+    owner_id: ShortText
+    owner_name: ShortText
+    note: Annotated[str, StringConstraints(strip_whitespace=True, max_length=2000)] = ""
+
+
+class StatusEntryOut(Out):
+    at: datetime
+    actor: str
+    from_status: str | None = Field(alias="from")
+    to_status: str = Field(alias="to")
+    note: str
+
+
+class AuditOut(Out):
+    at: datetime
+    actor: str
+    event: str
+    ref: str
+    detail: str
+
+
+class ActionOut(Out):
+    id: str
+    alert_id: str
+    alert_title: str
+    commodity: Commodity
+    option_id: str
+    option_name: str
+    owner_id: str
+    owner_name: str
+    target_date: date
+    rationale: str
+    status: Literal["open", "in_progress", "review", "done"]
+    created_at: datetime
+    created_by: str
+    assessment_version: int
+    current_assessment_version: int
+    assumption_status: str
+    overdue: bool
+    review_needed: bool  # assessment moved on since this decision; the decision itself is unchanged
+    history: list[StatusEntryOut]
+    audit: list[AuditOut] = []

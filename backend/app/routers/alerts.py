@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from .. import calc
+from .. import assess, audit, calc
 from ..auth import Actor, require_role
 from ..deps import get_session
 from ..models import (
@@ -27,14 +27,6 @@ def _latest_assessments(session: Session, alert_ids: list[str]) -> dict[str, Ass
         .order_by(Assessment.alert_id, Assessment.version.desc())
     )
     return {a.alert_id: a for a in rows}
-
-
-def _active_assumption(session: Session, alert_id: str) -> Assumption | None:
-    return session.scalars(
-        select(Assumption)
-        .where(Assumption.alert_id == alert_id, Assumption.status != "superseded")
-        .order_by(Assumption.proposed_at.desc())
-    ).first()
 
 
 def _cover(inputs: dict) -> Decimal | None:
@@ -106,17 +98,12 @@ def set_disposition(
         raise HTTPException(404, f"Alert {alert_id} not found")
     previous = alert.disposition
     alert.disposition = body.disposition
-    session.add(
-        AuditEvent(
-            at=datetime.now(UTC), actor=actor.name, event="alert.disposition", ref=alert_id,
-            detail=f"{previous} -> {body.disposition}: {body.rationale}",
-        )
-    )
+    audit.record(session, actor.name, "alert.disposition", alert_id, f"{previous} -> {body.disposition}: {body.rationale}")
     session.commit()
     return _build_alerts(session, [alert])[0]
 
 
-def _assumption_out(a: Assumption) -> AssumptionOut:
+def assumption_out(a: Assumption) -> AssumptionOut:
     return AssumptionOut(
         id=a.id, alert_id=a.alert_id, affected_share_pct=a.affected_share_pct, basis=a.basis,
         proposed_by=PersonOut(id=a.proposed_by_id, name=a.proposed_by_name), proposed_at=a.proposed_at,
@@ -134,45 +121,21 @@ def get_assessment(alert_id: str, session: Session = Depends(get_session)) -> As
     """
     if session.get(Alert, alert_id) is None:
         raise HTTPException(404, f"Alert {alert_id} not found")
-    snapshots = list(session.scalars(select(Assessment).where(Assessment.alert_id == alert_id).order_by(Assessment.version)))
-    if not snapshots:
+    ctx = assess.load(session, alert_id)
+    if ctx is None:
         raise HTTPException(404, f"Alert {alert_id} has no assessment yet")
-    snap = snapshots[-1]
-    reference = session.get(ResponseOption, snap.reference_option_id)
-    active = _active_assumption(session, alert_id)
-    bound = session.get(Assumption, snap.assumption_id) if snap.assumption_id else None
-
-    approved = bound if bound is not None and bound.status == "approved" else None
-    if approved is None:
-        reason = {
-            None: "No disruption assumption has been proposed.",
-            "proposed": "The disruption assumption is awaiting approval.",
-            "rejected": "The disruption assumption was rejected.",
-        }.get(active.status if active else None, "Needs an approved disruption assumption.")
-    else:
-        reason = None
-
-    i = snap.inputs
-    result = calc.calculate(
-        usable_stock=calc.d(i["usableStock"]),
-        demand_per_day=calc.d(i["demandPerDay"]),
-        baseline_price=calc.d(i["baselinePrice"]),
-        exposed_value=snap.exposed_value,
-        approved_share_pct=approved.affected_share_pct if approved else None,
-        unavailable_reason=reason,
-        reference_lead_days=reference.lead_time_days if reference else None,
-        reference_price=reference.unit_price if reference else None,
-    )
+    snap, reference = ctx.snapshot, ctx.reference
+    result = assess.calculate(ctx, reference.lead_time_days if reference else None, reference.unit_price if reference else None)
     return AssessmentOut(
         alert_id=alert_id, version=snap.version, created_at=snap.created_at, note=snap.note,
         calc_version=snap.calc_version,
         exposed=ExposedOut(value=snap.exposed_value, unit=snap.exposed_unit, horizon=snap.exposed_horizon),
         inputs=snap.inputs, paths=snap.paths, missing=snap.missing,
         reference_option=ResponseOptionOut.model_validate(reference),
-        assumption=_assumption_out(active) if active else None,
+        assumption=assumption_out(ctx.active) if ctx.active else None,
         calc=CalcOut(
             cover_days=result.cover_days, at_risk=result.at_risk, gap_days=result.gap_days,
             incremental_cost=result.incremental_cost, reason=result.reason,
         ),
-        versions=[VersionOut(v=s.version, at=s.created_at, note=s.note) for s in snapshots],
+        versions=[VersionOut(v=x.version, at=x.created_at, note=x.note) for x in ctx.snapshots],
     )

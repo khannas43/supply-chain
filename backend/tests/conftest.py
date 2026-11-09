@@ -1,4 +1,5 @@
 import uuid
+from datetime import UTC, datetime
 
 import pytest
 from alembic import command
@@ -6,6 +7,7 @@ from alembic.config import Config
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import make_url
 
+from app import clock
 from app.config import get_settings
 
 
@@ -52,3 +54,28 @@ def seeded(engine):
 
     seed.load(engine)
     return engine
+
+
+@pytest.fixture(autouse=True)
+def frozen_clock():
+    """Demo data is dated around 7 to 9 November 2026; keep the clock there so quotes and dates behave."""
+    clock.freeze(datetime(2026, 11, 9, 9, 0, tzinfo=UTC))
+    yield
+    clock.freeze(None)
+
+
+@pytest.fixture
+def client(seeded):
+    from fastapi.testclient import TestClient
+    from sqlalchemy.orm import Session
+
+    from app.deps import get_session
+    from app.main import app
+
+    def override():
+        with Session(seeded) as s:
+            yield s
+
+    app.dependency_overrides[get_session] = override
+    yield TestClient(app)
+    app.dependency_overrides.clear()

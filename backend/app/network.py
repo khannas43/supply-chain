@@ -11,6 +11,7 @@ from datetime import date
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
+from . import clock
 from .models import Node, SupplyEdge
 
 MAX_DEPTH = 5
@@ -59,7 +60,7 @@ def traverse(
     if session.get(Node, focus) is None:
         raise KeyError(focus)
     depth = max(1, min(depth, MAX_DEPTH))
-    params = {"focus": focus, "depth": depth, "as_of": as_of or date.today(), "material": material or None}
+    params = {"focus": focus, "depth": depth, "as_of": as_of or clock.today(), "material": material or None}
 
     level: dict[str, int] = {focus: 0}
     edge_ids: set[str] = set()
