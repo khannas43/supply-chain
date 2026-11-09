@@ -1,9 +1,7 @@
-import type { ActionSummary, Alert, Commodity, NetEdge, NetNode, SourceStatus } from './types'
+import type { Alert, NetEdge, NetNode } from './types'
 
 // All data below is synthetic and labelled simulated. Country and supplier names are fictional.
 // The wheat figures follow the worked example in docs/data-to-dashboard-workflow.md section 6.
-
-export const NOW = '2026-11-09T09:00:00Z'
 
 export const alerts: Alert[] = [
   {
@@ -162,108 +160,3 @@ export const edges: NetEdge[] = [
   e('e12', 't-carbide', 't-plantk', 'tungsten carbide powder', 'Curated BOM v1', 'high', '2024-01-01'),
   e('e13', 't-plantk', 't-prodr', 'carbide insert', 'Curated BOM v1', 'high', '2024-01-01'),
 ]
-
-export const sources: SourceStatus[] = [
-  { id: 'src-policy', name: 'Policy feed (simulator)', mode: 'simulated', lastUsable: '2026-11-08T14:20:00Z', policyHours: 24, state: 'ok' },
-  { id: 'src-logistics', name: 'Logistics feed (simulator)', mode: 'simulated', lastUsable: '2026-11-08T08:05:00Z', policyHours: 12, state: 'stale' },
-  { id: 'src-price', name: 'Price series (replay)', mode: 'replay', lastUsable: '2026-11-08T16:30:00Z', policyHours: 24, state: 'ok' },
-]
-
-export const actionSummaries: ActionSummary[] = [
-  { commodity: 'wheat', open: 1, inProgress: 0, review: 0, done: 0 },
-  { commodity: 'tungsten', open: 0, inProgress: 1, review: 1, done: 0 },
-]
-
-// Alerts raised per day, last 7 days.
-export const trend: Record<Commodity, { day: string; count: number }[]> = {
-  wheat: [
-    { day: '03 Nov', count: 0 }, { day: '04 Nov', count: 1 }, { day: '05 Nov', count: 0 },
-    { day: '06 Nov', count: 0 }, { day: '07 Nov', count: 1 }, { day: '08 Nov', count: 1 }, { day: '09 Nov', count: 0 },
-  ],
-  tungsten: [
-    { day: '03 Nov', count: 0 }, { day: '04 Nov', count: 0 }, { day: '05 Nov', count: 1 },
-    { day: '06 Nov', count: 1 }, { day: '07 Nov', count: 0 }, { day: '08 Nov', count: 1 }, { day: '09 Nov', count: 0 },
-  ],
-}
-
-// Traversal of the mock network. Mirrors the server contract: direction, depth bound,
-// material filter, cycle guard and a visible result limit.
-export type Direction = 'upstream' | 'downstream' | 'both'
-
-export interface TraverseResult {
-  nodes: { node: NetNode; level: number }[]
-  edges: NetEdge[]
-  totalReachable: number
-  truncated: boolean
-  cycleEdgeIds: string[]
-}
-
-export function traverse(
-  focusId: string,
-  direction: Direction,
-  depth: number,
-  material: string,
-  limit: number,
-): TraverseResult {
-  const byId = new Map(nodes.map((n) => [n.id, n]))
-  const usable = edges.filter((x) => !material || x.material.toLowerCase().includes(material.toLowerCase()))
-  const level = new Map<string, number>([[focusId, 0]])
-  const seenEdges = new Set<string>()
-  const queue: string[] = [focusId]
-
-  while (queue.length) {
-    const id = queue.shift()!
-    const l = level.get(id)!
-    if (Math.abs(l) >= depth) continue
-    const steps: { edge: NetEdge; next: string; dir: 1 | -1 }[] = []
-    if (direction !== 'downstream')
-      usable.filter((x) => x.to === id).forEach((x) => steps.push({ edge: x, next: x.from, dir: -1 }))
-    if (direction !== 'upstream')
-      usable.filter((x) => x.from === id).forEach((x) => steps.push({ edge: x, next: x.to, dir: 1 }))
-    for (const s of steps) {
-      // keep the sign of the branch so upstream sits left and downstream right
-      const branch = l === 0 ? s.dir : Math.sign(l)
-      const nextLevel = branch * (Math.abs(l) + 1)
-      if (level.has(s.next)) {
-        seenEdges.add(s.edge.id)
-        continue
-      }
-      level.set(s.next, nextLevel)
-      seenEdges.add(s.edge.id)
-      queue.push(s.next)
-    }
-  }
-
-  // Cycle guard: a depth-first walk from the focus; an edge back to a node on the current path is a cycle.
-  const cycleEdgeIds = new Set<string>()
-  const walk = (dir: 'up' | 'down') => {
-    const onPath = new Set<string>()
-    const done = new Set<string>()
-    const dfs = (id: string, d: number) => {
-      onPath.add(id)
-      for (const x of usable) {
-        const hit = dir === 'down' ? x.from === id : x.to === id
-        if (!hit) continue
-        const next = dir === 'down' ? x.to : x.from
-        if (onPath.has(next)) cycleEdgeIds.add(x.id)
-        else if (!done.has(next) && d < depth) dfs(next, d + 1)
-      }
-      onPath.delete(id)
-      done.add(id)
-    }
-    dfs(focusId, 0)
-  }
-  if (direction !== 'upstream') walk('down')
-  if (direction !== 'downstream') walk('up')
-
-  const ordered = [...level.entries()].sort((a, b) => Math.abs(a[1]) - Math.abs(b[1]))
-  const kept = ordered.slice(0, limit)
-  const keptIds = new Set(kept.map(([id]) => id))
-  return {
-    nodes: kept.map(([id, l]) => ({ node: byId.get(id)!, level: l })),
-    edges: edges.filter((x) => seenEdges.has(x.id) && keptIds.has(x.from) && keptIds.has(x.to)),
-    totalReachable: ordered.length,
-    truncated: ordered.length > limit,
-    cycleEdgeIds: [...cycleEdgeIds],
-  }
-}

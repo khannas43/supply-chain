@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -17,6 +17,21 @@ router = APIRouter(prefix="/api", tags=["assumptions"])
 
 def _pct(a: Assumption) -> str:
     return format(a.affected_share_pct.normalize(), "f")
+
+
+@router.get("/assumptions", response_model=list[AssumptionOut])
+def list_assumptions(
+    alert_id: str | None = Query(None, alias="alertId"),
+    status: str | None = Query(None, pattern="^(proposed|approved|rejected|superseded)$"),
+    session: Session = Depends(get_session),
+) -> list[AssumptionOut]:
+    """The assumptions library, newest first."""
+    query = select(Assumption).order_by(Assumption.proposed_at.desc(), Assumption.id.desc())
+    if alert_id:
+        query = query.where(Assumption.alert_id == alert_id)
+    if status:
+        query = query.where(Assumption.status == status)
+    return [assumption_out(a) for a in session.scalars(query)]
 
 
 @router.post("/alerts/{alert_id}/assumptions", response_model=AssumptionOut, status_code=201)

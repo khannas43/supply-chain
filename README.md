@@ -2,7 +2,7 @@
 
 Local application that maps a supply chain, detects commodity risk events, assesses business impact and records a response, for wheat and tungsten. Everything runs locally in Docker.
 
-Status: frontend prototype of nine screens on mock data; Docker stack with database, schema, demo data and an API skeleton. The API serves alerts, network traversal and assessments ; screens S01 to S06 use it, S07 to S09 still use mock data. Writes need an identity (development headers for now).
+Status: nine screens on the API; Docker stack with database, schema, demo data and an API skeleton. The API serves alerts, network traversal and assessments ; all nine screens use it. Writes need an identity (development headers for now).
 
 ## Layout
 
@@ -47,19 +47,19 @@ npm install
 npm run dev        # http://127.0.0.1:5180
 ```
 
-The prototype uses a development identity switch in the top bar. Data is in memory and resets on reload.
+The top bar has a development identity switch (replaced by Keycloak). `?as=u-demo` in the URL opens the app as that identity, for example `/simulator?as=u-demo`; ids are in `frontend/src/auth/users.ts`.
 
 ## Database
 
 ```
 docker compose exec api alembic upgrade head     # create or update the schema
 docker compose exec api python -m app.seed       # load the demo data (safe to repeat)
-docker compose exec api python -m app.seed --reset   # empty the seeded tables and reload
+docker compose exec api python -m app.seed --reset   # empty the seeded tables and everything the app created, then reload
 ```
 
 The schema is in `backend/app/models.py` and `backend/alembic/versions/`. Rules enforced by the database itself: an assumption cannot be decided by its proposer, one active assumption per alert, one published and one draft version per rule, actions point at an existing assessment snapshot, and audit events cannot be changed or deleted.
 
-The demo data is `backend/seed/demo.json`, generated from the frontend demo data:
+The demo data is `backend/seed/demo.json`, generated from the demo data files in `frontend/src/data` (the application itself reads only from the API):
 
 ```
 cd frontend && npm run seed:export
@@ -85,6 +85,14 @@ Interactive docs at http://127.0.0.1:8100/api/docs. Field names are camelCase, m
 | `GET /api/actions`, `GET /api/actions/{id}` | Actions with overdue and review-needed flags; detail adds history and audit trail |
 | `POST /api/actions/{id}/status` | Change status. Manager: any; owner or Admin: in progress or in review |
 | `POST /api/actions/{id}/reassign` | Change the owner (Manager) |
+| `POST /api/sources/{id}/enabled` | Pause or enable a source (Admin) |
+| `GET /api/runs`, `GET /api/quarantine`, `GET /api/dead-letter`, `GET /api/pipeline/queue` | Ingestion runs, quarantined records, dead-letter records, queue status (Kafka and NiFi report "not connected") |
+| `POST /api/quarantine/{id}/replay` | Save a corrected value and request a replay (Steward, Admin) |
+| `GET /api/rules`, `POST /api/rules/{id}/draft`, `POST /api/rules/{id}/versions/{v}/publish` | Risk rule versions; draft thresholds, then publish (Analyst, Admin). Published versions are never edited |
+| `GET /api/assumptions` | The assumptions library |
+| `GET /api/reference`, `POST /api/reference/conversions` | Countries, aliases, forms and dated conversions; add a conversion (Steward, Admin) |
+| `GET /api/imports/datasets`, `GET /api/imports`, `POST /api/imports/validate`, `POST /api/imports` | CSV imports: dry run (Analyst, Steward, Admin) and commit (Steward, Admin). Supplier network rows are applied to the network; the other datasets are validated and recorded. Rejected rows go to quarantine; the same file cannot be imported twice |
+| `GET /api/simulator/scenarios`, `GET /api/simulator/run`, `POST /api/simulator/runs`, `POST /api/simulator/run/{pause,resume,advance,inject,reset}` | Simulator (Admin, Demo Operator): one run at a time, virtual clock, failure injection that shows up in source health |
 | `GET /api/overview?commodity=` | Counts, action totals, last assessment, 7-day trend and source freshness for the overview screen |
 | `GET /api/sources` | Sources with freshness state (fresh, stale, failing, paused) |
 | `GET /api/network/nodes` | Network nodes; filter `commodity` |

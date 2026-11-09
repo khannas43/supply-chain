@@ -325,3 +325,209 @@ class ActionOut(Out):
     review_needed: bool  # assessment moved on since this decision; the decision itself is unchanged
     history: list[StatusEntryOut]
     audit: list[AuditOut] = []
+
+
+# ---- Pipeline, rules, reference data, imports, simulator ----
+
+
+class RunOut(Out):
+    id: str
+    source_id: str
+    started_at: datetime
+    status: Literal["ok", "partial", "failed"]
+    accepted: int
+    duplicate: int
+    quarantined: int
+    note: str
+
+
+class QuarantineOut(Out):
+    id: str
+    source_id: str
+    source_name: str
+    run_id: str
+    received_at: datetime
+    reason: str
+    source_row: str
+    object_key: str
+    field: str
+    bad_value: str
+    status: Literal["quarantined", "replay_requested"]
+    correction: str | None = None
+
+
+class ReplayIn(In):
+    correction: Text
+
+
+class DeadOut(Out):
+    id: str
+    source_id: str
+    source_name: str
+    received_at: datetime
+    reason: str
+    object_key: str
+    attempts: int
+
+
+class QueueOut(Out):
+    worker_backlog: int
+    kafka: Literal["connected", "not_connected"]
+    nifi: Literal["connected", "not_connected"]
+
+
+class EnabledIn(In):
+    enabled: bool
+
+
+class ThresholdOut(Out):
+    key: str
+    label: str
+    value: Num
+    unit: str
+
+
+class RuleVersionOut(Out):
+    v: str
+    status: Literal["draft", "published", "superseded"]
+    thresholds: list[ThresholdOut]
+    created_by: str
+    created_at: datetime
+    published_by: str | None = None
+    published_at: datetime | None = None
+
+
+class RuleOut(Out):
+    id: str
+    name: str
+    commodity: Commodity
+    versions: list[RuleVersionOut]  # oldest first
+
+
+class ThresholdIn(In):
+    key: ShortText
+    value: Decimal
+
+
+class DraftIn(In):
+    thresholds: Annotated[list[ThresholdIn], Field(min_length=1, max_length=20)]
+
+
+class ConversionOut(Out):
+    id: str
+    from_unit: str = Field(alias="from")
+    to_unit: str = Field(alias="to")
+    factor: Num
+    effective_from: date
+    source: str
+
+
+class ConversionIn(In):
+    from_unit: ShortText = Field(alias="from")
+    to_unit: ShortText = Field(alias="to")
+    factor: Annotated[Decimal, Field(gt=0, max_digits=18, decimal_places=8)]
+    effective_from: date
+    source: ShortText
+
+
+class CountryOut(Out):
+    code: str
+    name: str
+    aliases: list[str]
+
+
+class FormOut(Out):
+    commodity: Commodity
+    form: str
+    note: str
+
+
+class ReferenceOut(Out):
+    countries: list[CountryOut]
+    forms: list[FormOut]
+    conversions: list[ConversionOut]
+
+
+class DatasetOut(Out):
+    id: str
+    label: str
+    required: list[str]
+    sample: str
+    applied: bool  # valid rows are written to business tables
+
+
+class ImportIn(In):
+    dataset: str
+    csv: Annotated[str, StringConstraints(min_length=1, max_length=1_000_000)]
+
+
+class RejectedOut(Out):
+    row: int
+    reason: str
+    field: str
+    bad_value: str
+
+
+class ImportReportOut(Out):
+    dataset: str
+    checksum: str
+    header_errors: list[str]
+    valid: int
+    duplicates: int
+    rejected: list[RejectedOut]
+    already_imported_as: str | None = None
+
+
+class ImportOut(Out):
+    id: str
+    dataset: str
+    version: int
+    rows: int
+    rejected: int
+    checksum: str
+    committed_by: str
+    committed_at: datetime
+    applied: bool
+
+
+class SimEventOut(Out):
+    at: int
+    text: str
+
+
+class ScenarioOut(Out):
+    id: str
+    name: str
+    commodity: Commodity
+    seed: int
+    events: list[SimEventOut]
+
+
+class SimLogOut(Out):
+    at: datetime
+    run_id: str
+    text: str
+
+
+class SimStateOut(Out):
+    status: Literal["idle", "running", "paused"]
+    scenario_id: str | None = None
+    run_id: str | None = None
+    seed: int | None = None
+    offset_hours: int = 0
+    virtual_now: datetime
+    emitted: int = 0
+    total_events: int = 0
+    log: list[SimLogOut] = []
+
+
+class StartIn(In):
+    scenario_id: ShortText
+
+
+class AdvanceIn(In):
+    hours: Annotated[int, Field(ge=1, le=168)]
+
+
+class InjectIn(In):
+    kind: Literal["rate_limit", "timeout", "recover", "duplicate", "late", "malformed", "missing_field"]

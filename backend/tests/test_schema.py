@@ -56,6 +56,16 @@ def test_seed_reset_reloads(seeded):
         assert count(c, "alert") == 4
 
 
+def test_reset_also_clears_what_the_application_created(seeded):
+    with seeded.begin() as c:
+        c.execute(text("INSERT INTO sim_run (id, scenario_id, seed, status, active_slot, started_at, started_by) VALUES ('r', 'SC-W-1', 1, 'running', 1, now(), 'me')"))
+        c.execute(text("INSERT INTO import_record (id, dataset, version, rows, rejected, checksum, committed_by, committed_at) VALUES ('IMP-1', 'price', 1, 1, 0, 'abc', 'x', now())"))
+        c.execute(text("INSERT INTO option_shortlist (option_id, shortlisted_by_id, shortlisted_by_name, shortlisted_at) VALUES ('O-W-1', 'u', 'U', now())"))
+    seed.load(seeded, reset=True)
+    with seeded.connect() as c:
+        assert [count(c, t) for t in ("sim_run", "import_record", "option_shortlist")] == [0, 0, 0]
+
+
 def test_assumption_cannot_be_decided_by_its_proposer(seeded):
     with pytest.raises(IntegrityError, match="maker_checker"):
         with seeded.begin() as c:

@@ -184,6 +184,8 @@ class ImportRecord(Base):
     checksum: Mapped[str] = mapped_column(String(64))
     committed_by: Mapped[str] = mapped_column(String(200))
     committed_at: Mapped[datetime] = mapped_column(TS)
+    applied: Mapped[bool] = mapped_column(Boolean, server_default=text("false"))  # rows written to business tables
+    content: Mapped[str | None] = mapped_column(Text)  # original file, kept until object storage is in place
 
 
 # ---- Risk rules ----
@@ -427,3 +429,37 @@ class AuditEvent(Base):
     event: Mapped[str] = mapped_column(String(100))
     ref: Mapped[str] = mapped_column(String(100))
     detail: Mapped[str] = mapped_column(Text, server_default=text("''"))
+
+
+# ---- Simulator ----
+
+
+class SimRun(Base):
+    """A simulator run. At most one run can be running or paused at a time."""
+
+    __tablename__ = "sim_run"
+    __table_args__ = (
+        _check("status", ("running", "paused", "ended"), "ck_sim_run_status"),
+        CheckConstraint("offset_hours >= 0 AND emitted >= 0", name="ck_sim_run_counts"),
+        CheckConstraint("(status = 'ended') = (active_slot IS NULL)", name="ck_sim_run_slot"),
+        UniqueConstraint("active_slot", name="uq_sim_one_active_run"),
+    )
+    id: Mapped[str] = mapped_column(String(40), primary_key=True)
+    scenario_id: Mapped[str] = mapped_column(String(40))
+    seed: Mapped[int] = mapped_column(Integer)
+    status: Mapped[str] = mapped_column(String(20))
+    active_slot: Mapped[int | None] = mapped_column(Integer)  # 1 while running or paused, NULL once ended
+    offset_hours: Mapped[int] = mapped_column(Integer, server_default=text("0"))
+    emitted: Mapped[int] = mapped_column(Integer, server_default=text("0"))
+    started_at: Mapped[datetime] = mapped_column(TS)
+    started_by: Mapped[str] = mapped_column(String(200))
+    ended_at: Mapped[datetime | None] = mapped_column(TS)
+
+
+class SimLog(Base):
+    __tablename__ = "sim_log"
+    __table_args__ = (Index("ix_sim_log_run", "run_id", "id"),)
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("sim_run.id", ondelete="CASCADE"))
+    at: Mapped[datetime] = mapped_column(TS)  # virtual time
+    text: Mapped[str] = mapped_column(Text)

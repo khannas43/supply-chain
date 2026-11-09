@@ -3,7 +3,7 @@
 The file is generated from the frontend demo data: `npm run seed:export` in frontend/.
 Re-running is safe: rows that already exist are left alone. audit_event and
 action_status_history have no natural key, so they are loaded only while empty.
-Use --reset to empty the seeded tables first.
+Use --reset to empty the seeded tables, and the simulator, import and shortlist tables, first.
 
     python -m app.seed [--reset]
 """
@@ -22,6 +22,8 @@ from .models import Base
 
 SEED_FILE = Path(__file__).resolve().parent.parent / "seed" / "demo.json"
 LOAD_ONLY_IF_EMPTY = {"audit_event", "action_status_history"}
+# Tables the application fills while it runs. They are emptied by --reset along with the seeded ones.
+RUNTIME_TABLES = ("sim_log", "sim_run", "import_record", "option_shortlist")
 
 
 def _convert(table: Table, row: dict) -> dict:
@@ -54,7 +56,7 @@ def load(engine: Engine | None = None, path: Path = SEED_FILE, reset: bool = Fal
     inserted: dict[str, int] = {}
     with engine.begin() as conn:
         if reset:
-            names = ", ".join(f'"{name}"' for name in data)
+            names = ", ".join(f'"{name}"' for name in (*data, *RUNTIME_TABLES))
             conn.execute(text(f"TRUNCATE {names} RESTART IDENTITY CASCADE"))
         for name, rows in data.items():
             table = Base.metadata.tables[name]

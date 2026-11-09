@@ -1,5 +1,6 @@
 import type { Commodity, Mode } from './types'
-import { NOW } from './mock'
+
+// Demo data for the backend seed (npm run seed:export). The application reads everything from the API.
 
 export interface SourceRow {
   id: string
@@ -11,19 +12,6 @@ export interface SourceRow {
   lastUsable: string
   policyHours: number
   lastError?: string
-}
-
-export type SourceState = 'fresh' | 'stale' | 'failing' | 'paused'
-
-export function hoursSince(iso: string, now = NOW) {
-  return (Date.parse(now) - Date.parse(iso)) / 3600000
-}
-
-// Failed ingestion and staleness are source-health states. They are never shown as healthy or as a risk disposition.
-export function sourceState(s: SourceRow, now = NOW): SourceState {
-  if (!s.enabled) return 'paused'
-  if (s.lastError) return 'failing'
-  return hoursSince(s.lastUsable, now) > s.policyHours ? 'stale' : 'fresh'
 }
 
 export interface RunRow {
@@ -113,11 +101,6 @@ export const seedRules: Rule[] = [
   { id: 'R-T-PRC', name: 'tungsten-price', commodity: 'tungsten', versions: [{ v: '1.0', status: 'published', thresholds: [t('chg', '30-day price change', 15, '%'), t('sev', 'Severity score (1 low to 4 critical)', 1, 'score'), t('stale', 'Stale after', 24, 'hours')], createdBy: 'Risk Analyst B', createdAt: '2026-10-21T10:00:00Z', publishedBy: 'Risk Analyst A', publishedAt: '2026-10-21T10:30:00Z' }] },
 ]
 
-export function nextMinor(v: string) {
-  const [maj, min] = v.split('.').map(Number)
-  return `${maj}.${min + 1}`
-}
-
 // ---- Reference data ----
 
 export interface Conversion { id: string; from: string; to: string; factor: number; effectiveFrom: string; source: string }
@@ -140,29 +123,4 @@ export const forms = [
   { commodity: 'tungsten', form: 'Concentrate (65% WO3)', note: 'Basis for WO3-equivalent conversion' },
   { commodity: 'tungsten', form: 'APT', note: 'Ammonium paratungstate' },
   { commodity: 'tungsten', form: 'Carbide powder', note: 'Carbide-grade, qualified suppliers only' },
-]
-
-// ---- Imports ----
-
-export interface DatasetSpec {
-  id: string
-  label: string
-  required: string[]
-  numeric?: string[]
-  dates?: string[]
-  enums?: Record<string, string[]>
-  sample: string
-}
-
-export const DATASETS: DatasetSpec[] = [
-  { id: 'supplier_network', label: 'Supplier network', required: ['from_id', 'to_id', 'material', 'source', 'effective_from', 'confidence'], dates: ['effective_from'], enums: { confidence: ['low', 'medium', 'high'] },
-    sample: 'from_id,to_id,material,source,effective_from,confidence\nw-supx,w-milly,"wheat, milling grade",Curated file v2,2026-01-01,medium\nw-milly,w-plantz,flour input,Curated file v2,2026-01-01,high\nw-supw,w-traderq,"wheat, milling grade",Curated file v2,2026-13-40,low' },
-  { id: 'inventory', label: 'Inventory snapshot', required: ['plant_id', 'material', 'usable_qty', 'unit', 'as_of'], numeric: ['usable_qty'], dates: ['as_of'],
-    sample: 'plant_id,material,usable_qty,unit,as_of\nw-plantz,wheat flour input,120,t,2026-11-07\nt-plantk,tungsten carbide powder,9,t,2026-11-06\nw-plantz,wheat flour input,n/a,t,2026-11-07' },
-  { id: 'demand', label: 'Demand rate', required: ['plant_id', 'material', 'rate_per_day', 'unit', 'as_of'], numeric: ['rate_per_day'], dates: ['as_of'],
-    sample: 'plant_id,material,rate_per_day,unit,as_of\nw-plantz,wheat flour input,20,t,2026-11-07\nt-plantk,tungsten carbide powder,0.2,t,2026-11-06' },
-  { id: 'price', label: 'Price and contract', required: ['material', 'price', 'currency', 'unit', 'effective_date'], numeric: ['price'], dates: ['effective_date'],
-    sample: 'material,price,currency,unit,effective_date\nwheat milling,200,USD,t,2026-11-01\ntungsten concentrate,38000,USD,t,2026-11-01\ntungsten concentrate,38500,,t,2026-11-02' },
-  { id: 'alternatives', label: 'Qualified alternatives', required: ['supplier_id', 'material', 'qualification', 'lead_time_days', 'unit_price', 'quote_valid_until'], numeric: ['lead_time_days', 'unit_price'], dates: ['quote_valid_until'], enums: { qualification: ['qualified', 'unknown', 'expired'] },
-    sample: 'supplier_id,material,qualification,lead_time_days,unit_price,quote_valid_until\nalt-v,wheat milling,qualified,10,230,2026-12-15\nalt-u,wheat milling,maybe,7,224,2026-12-01' },
 ]

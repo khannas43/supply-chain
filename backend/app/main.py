@@ -4,7 +4,7 @@ from sqlalchemy import text
 
 from .config import get_settings
 from .db import get_engine
-from .routers import actions, alerts, assumptions, network, options, overview
+from .routers import actions, alerts, assumptions, dataimports, network, options, overview, pipeline, reference, rules, simulation
 
 router = APIRouter(prefix="/api")
 
@@ -55,3 +55,8 @@ app.include_router(overview.router)
 app.include_router(assumptions.router)
 app.include_router(options.router)
 app.include_router(actions.router)
+app.include_router(pipeline.router)
+app.include_router(rules.router)
+app.include_router(dataimports.router)
+app.include_router(reference.router)
+app.include_router(simulation.router)

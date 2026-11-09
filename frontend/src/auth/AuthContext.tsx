@@ -16,7 +16,11 @@ const Ctx = createContext<Auth | null>(null)
 // Development stand-in for Keycloak. Replace with the OIDC session (identity and roles from
 // the token) when the realm is available; the rest of the app only uses canView/can.
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [userId, setUserId] = useState('u-analyst-a')
+  // Dev only: ?as=u-demo opens the app as that identity, which makes role-specific screens easy to check.
+  const [userId, setUserId] = useState(() => {
+    const asked = new URLSearchParams(window.location.search).get('as')
+    return IDENTITIES.some((i) => i.id === asked) ? asked! : 'u-analyst-a'
+  })
   const value = useMemo<Auth>(() => {
     const user = IDENTITIES.find((i) => i.id === userId)!
     setApiActor(user) // set during render so requests made by child effects already carry the identity

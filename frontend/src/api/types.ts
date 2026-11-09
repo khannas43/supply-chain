@@ -120,3 +120,102 @@ export interface ActionData {
   history: StatusEntry[]
   audit: { at: string; actor: string; event: string; ref: string; detail: string }[]
 }
+
+// ---- Pipeline, rules, reference data, imports, simulator ----
+
+export interface RunData {
+  id: string
+  sourceId: string
+  startedAt: string
+  status: 'ok' | 'partial' | 'failed'
+  accepted: number
+  duplicate: number
+  quarantined: number
+  note: string
+}
+
+export interface QuarantineData {
+  id: string
+  sourceId: string
+  sourceName: string
+  runId: string
+  receivedAt: string
+  reason: string
+  sourceRow: string
+  objectKey: string
+  field: string
+  badValue: string
+  status: 'quarantined' | 'replay_requested'
+  correction?: string | null
+}
+
+export interface DeadData {
+  id: string
+  sourceId: string
+  sourceName: string
+  receivedAt: string
+  reason: string
+  objectKey: string
+  attempts: number
+}
+
+export interface QueueData {
+  workerBacklog: number
+  kafka: 'connected' | 'not_connected'
+  nifi: 'connected' | 'not_connected'
+}
+
+export interface ThresholdData { key: string; label: string; value: number; unit: string }
+export interface RuleVersionData {
+  v: string
+  status: 'draft' | 'published' | 'superseded'
+  thresholds: ThresholdData[]
+  createdBy: string
+  createdAt: string
+  publishedBy?: string | null
+  publishedAt?: string | null
+}
+export interface RuleData { id: string; name: string; commodity: Commodity; versions: RuleVersionData[] }
+
+export interface ConversionData { id: string; from: string; to: string; factor: number; effectiveFrom: string; source: string }
+export interface ReferenceData {
+  countries: { code: string; name: string; aliases: string[] }[]
+  forms: { commodity: Commodity; form: string; note: string }[]
+  conversions: ConversionData[]
+}
+
+export interface DatasetData { id: string; label: string; required: string[]; sample: string; applied: boolean }
+export interface ImportReport {
+  dataset: string
+  checksum: string
+  headerErrors: string[]
+  valid: number
+  duplicates: number
+  rejected: { row: number; reason: string; field: string; badValue: string }[]
+  alreadyImportedAs?: string | null
+}
+export interface ImportData {
+  id: string
+  dataset: string
+  version: number
+  rows: number
+  rejected: number
+  checksum: string
+  committedBy: string
+  committedAt: string
+  applied: boolean
+}
+
+export interface ScenarioData { id: string; name: string; commodity: Commodity; seed: number; events: { at: number; text: string }[] }
+export interface SimState {
+  status: 'idle' | 'running' | 'paused'
+  scenarioId?: string | null
+  runId?: string | null
+  seed?: number | null
+  offsetHours: number
+  virtualNow: string
+  emitted: number
+  totalEvents: number
+  log: { at: string; runId: string; text: string }[]
+}
+export type FailureKind = 'rate_limit' | 'timeout' | 'recover' | 'duplicate' | 'late' | 'malformed' | 'missing_field'

@@ -1,4 +1,4 @@
-import type { AssessmentBase, Assumption, ResponseOption, VersionNote } from './types'
+import type { AssessmentBase, Assumption, VersionNote } from './types'
 
 // Synthetic assessments. Wheat follows docs/data-to-dashboard-workflow.md section 6:
 // 100 t exposed, 120 t usable stock, 20 t/day demand, 10-day alternative lead time,
@@ -80,42 +80,3 @@ export const initialAssumptions: Assumption[] = [
     decisionNote: 'Accepted for scenario purposes.',
   },
 ]
-
-export interface Calc {
-  coverDays: number | null
-  atRisk: number | null
-  gapDays: number | null
-  incrementalCost: number | null
-  reason: string | null // why the dependent metrics are unavailable
-}
-
-export function activeAssumption(list: Assumption[], alertId: string): Assumption | undefined {
-  return list
-    .filter((a) => a.alertId === alertId && a.status !== 'superseded')
-    .sort((a, b) => b.proposedAt.localeCompare(a.proposedAt))[0]
-}
-
-export function referencePrice(opt: ResponseOption | undefined) {
-  return opt?.unitPrice
-}
-
-// Cover needs usable stock and a non-zero demand rate. At-risk volume, availability gap and
-// incremental cost all need an approved disruption assumption; without one they stay unavailable.
-export function calculate(
-  base: AssessmentBase,
-  assumption: Assumption | undefined,
-  reference: ResponseOption | undefined,
-): Calc {
-  const { usableStock, demandPerDay, baselinePrice } = base.inputs
-  const coverDays = demandPerDay > 0 ? usableStock / demandPerDay : null
-  if (!assumption) return { coverDays, atRisk: null, gapDays: null, incrementalCost: null, reason: 'No disruption assumption has been proposed.' }
-  if (assumption.status !== 'approved') {
-    const why = assumption.status === 'proposed' ? 'The disruption assumption is awaiting approval.' : 'The disruption assumption was rejected.'
-    return { coverDays, atRisk: null, gapDays: null, incrementalCost: null, reason: why }
-  }
-  const atRisk = (base.exposed.value * assumption.affectedSharePct) / 100
-  const gapDays = coverDays != null && reference ? Math.max(0, reference.leadTimeDays - coverDays) : null
-  const incrementalCost =
-    reference?.unitPrice != null ? Math.round(atRisk * (reference.unitPrice - baselinePrice)) : null
-  return { coverDays, atRisk, gapDays, incrementalCost, reason: null }
-}
