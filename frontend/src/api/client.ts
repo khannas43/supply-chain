@@ -47,7 +47,34 @@ async function request<T>(method: 'GET' | 'POST', path: string, body?: unknown):
   return res.json() as Promise<T>
 }
 
+// The original payload exactly as stored, with the checksum the server verified.
+async function raw(path: string): Promise<{ body: string; sha256: string | null }> {
+  const headers: Record<string, string> = {}
+  if (actor) {
+    headers['X-Actor-Id'] = actor.id
+    headers['X-Actor-Name'] = actor.name
+    headers['X-Actor-Role'] = actor.role
+  }
+  let res: Response
+  try {
+    res = await fetch(`/api${path}`, { headers })
+  } catch {
+    throw new ApiError('The API is not reachable. Is the stack running (docker compose up -d)?', 0)
+  }
+  if (!res.ok) {
+    let detail: unknown
+    try {
+      detail = (await res.json()).detail
+    } catch {
+      /* not JSON */
+    }
+    throw new ApiError(describe(detail, `Request failed (${res.status})`), res.status)
+  }
+  return { body: await res.text(), sha256: res.headers.get('X-Content-SHA256') }
+}
+
 export const api = {
+  raw,
   get: <T,>(path: string) => request<T>('GET', path),
   post: <T,>(path: string, body: unknown) => request<T>('POST', path, body),
 }

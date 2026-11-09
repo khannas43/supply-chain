@@ -1,11 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import select
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .. import audit
 from ..auth import Actor, require_role
 from ..deps import get_session
-from ..models import DeadLetter, IngestionRun, QuarantineItem, Source, SourceCommodity
+from ..envelope import TOPIC_REPLAY, ReplayEnvelope
+from ..models import DeadLetter, Evidence, IngestionRun, Outbox, QuarantineItem, Source, SourceCommodity
+from ..storage import EvidenceMissing, get_store, sha256
 from ..routers.overview import source_out
 from .. import clock
 from ..schemas import DeadOut, EnabledIn, QuarantineOut, QueueOut, ReplayIn, RunOut, SourceOut
@@ -51,7 +53,7 @@ def list_runs(
 
 @router.get("/quarantine", response_model=list[QuarantineOut])
 def list_quarantine(
-    status: str | None = Query(None, pattern="^(quarantined|replay_requested)$"),
+    status: str | None = Query(None, pattern="^(quarantined|replay_requested|resolved)$"),
     session: Session = Depends(get_session),
 ) -> list[QuarantineOut]:
     names = _names(session)
@@ -75,10 +77,11 @@ def request_replay(
     actor: Actor = Depends(require_role("steward", "admin")),
     session: Session = Depends(get_session),
 ) -> QuarantineOut:
-    """Save a corrected value and request a controlled replay of the record.
+    """Save a corrected value and queue a controlled replay of the record.
 
-    The replay itself runs through the ingestion pipeline once that is connected; nothing repairs
-    business meaning automatically.
+    The worker applies the correction to the original record and runs it through the same pipeline;
+    it resolves the item on success, or puts it back in quarantine with the new reason. Nothing
+    repairs business meaning automatically.
     """
     q = session.get(QuarantineItem, item_id, with_for_update=True)
     if q is None:
@@ -86,6 +89,10 @@ def request_replay(
     if q.status != "quarantined":
         raise HTTPException(409, "A replay has already been requested for this record")
     q.status, q.correction = "replay_requested", body.correction
+    attempt = session.scalar(select(func.count()).select_from(Outbox).where(Outbox.topic == TOPIC_REPLAY, Outbox.key.like(f"{item_id}:%"))) + 1
+    now = clock.now()
+    envelope = ReplayEnvelope(event_id=f"evt-{item_id}-{attempt}", quarantine_id=item_id, requested_by=actor.name, requested_at=now)
+    session.add(Outbox(topic=TOPIC_REPLAY, key=f"{item_id}:{attempt}", payload=envelope.model_dump(mode="json"), created_at=now, available_at=now))
     audit.record(session, actor.name, "quarantine.replay_requested", item_id, f"corrected value: {body.correction}")
     session.commit()
     names = _names(session)
@@ -108,6 +115,31 @@ def list_dead_letter(session: Session = Depends(get_session)) -> list[DeadOut]:
 
 
 @router.get("/pipeline/queue", response_model=QueueOut)
-def queue() -> QueueOut:
-    """Kafka and NiFi are not connected yet; this says so instead of showing a made-up figure."""
-    return QueueOut(worker_backlog=0, kafka="not_connected", nifi="not_connected")
+def queue(session: Session = Depends(get_session)) -> QueueOut:
+    """Messages waiting for the worker, and messages it gave up on. Kafka and NiFi are not connected yet."""
+    counts = dict(session.execute(select(Outbox.status, func.count()).group_by(Outbox.status)).all())
+    oldest = session.scalar(select(func.min(Outbox.available_at)).where(Outbox.status == "pending"))
+    return QueueOut(
+        worker_backlog=counts.get("pending", 0), dead_messages=counts.get("dead", 0),
+        oldest_pending_seconds=max(0, int((clock.now() - oldest).total_seconds())) if oldest else None,
+        kafka="not_connected", nifi="not_connected",
+    )
+
+
+@router.get("/evidence/{evidence_id}/raw")
+def raw_evidence(
+    evidence_id: str,
+    actor: Actor = Depends(require_role("analyst", "manager", "steward", "admin")),
+    session: Session = Depends(get_session),
+) -> Response:
+    """The original payload exactly as it was collected, after checking its checksum."""
+    ev = session.get(Evidence, evidence_id)
+    if ev is None:
+        raise HTTPException(404, f"Evidence {evidence_id} not found")
+    try:
+        body = get_store().get(ev.object_key)
+    except EvidenceMissing:
+        raise HTTPException(404, "The original payload is not in storage (seeded demo evidence has no stored file)") from None
+    if sha256(body) != ev.sha256:
+        raise HTTPException(500, "The stored payload no longer matches its checksum")
+    return Response(content=body, media_type="application/json", headers={"X-Content-SHA256": ev.sha256})

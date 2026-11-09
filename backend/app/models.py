@@ -26,7 +26,7 @@ ASSESSMENT_STATUSES = ("unassessed", "partial", "complete", "awaiting_validation
 DISPOSITIONS = ("new", "confirmed", "monitor", "dismissed")
 NODE_KINDS = ("origin", "supplier", "plant", "product")
 RUN_STATUSES = ("ok", "partial", "failed")
-QUARANTINE_STATUSES = ("quarantined", "replay_requested")
+QUARANTINE_STATUSES = ("quarantined", "replay_requested", "resolved")
 OPTION_TYPES = ("sourcing", "inventory", "logistics")
 QUALIFICATIONS = ("qualified", "unknown", "expired")
 SPEC_FITS = ("meets", "partial", "unknown")
@@ -159,6 +159,8 @@ class QuarantineItem(Base):
     bad_value: Mapped[str] = mapped_column(Text, server_default=text("''"))
     status: Mapped[str] = mapped_column(String(30), server_default=text("'quarantined'"))
     correction: Mapped[str | None] = mapped_column(Text)
+    ingestion_id: Mapped[str | None] = mapped_column(ForeignKey("ingestion.id"))
+    record_json: Mapped[str | None] = mapped_column(Text)  # the record as received, so a replay can correct and reprocess it
 
 
 class DeadLetter(Base):
@@ -463,3 +465,83 @@ class SimLog(Base):
     run_id: Mapped[str] = mapped_column(ForeignKey("sim_run.id", ondelete="CASCADE"))
     at: Mapped[datetime] = mapped_column(TS)  # virtual time
     text: Mapped[str] = mapped_column(Text)
+
+
+# ---- Ingestion ----
+
+
+class Ingestion(Base):
+    """One collected payload. The same bytes from the same source are collected only once."""
+
+    __tablename__ = "ingestion"
+    __table_args__ = (
+        UniqueConstraint("source_id", "sha256", name="uq_ingestion_source_sha"),
+        _check("status", ("received", "processed", "failed"), "ck_ingestion_status"),
+        _check("mode", MODES, "ck_ingestion_mode"),
+    )
+    id: Mapped[str] = mapped_column(String(40), primary_key=True)
+    source_id: Mapped[str] = mapped_column(ForeignKey("source.id"))
+    received_at: Mapped[datetime] = mapped_column(TS)
+    evidence_id: Mapped[str] = mapped_column(ForeignKey("evidence.id"))
+    object_key: Mapped[str] = mapped_column(String(500))
+    sha256: Mapped[str] = mapped_column(String(64))
+    mode: Mapped[str] = mapped_column(String(20))
+    scenario_run: Mapped[str | None] = mapped_column(String(100))
+    status: Mapped[str] = mapped_column(String(20), server_default=text("'received'"))
+    records: Mapped[int | None] = mapped_column(Integer)
+    mapping_version: Mapped[str | None] = mapped_column(String(60))
+    error: Mapped[str | None] = mapped_column(Text)
+
+
+class Outbox(Base):
+    """Messages written in the same transaction as the change that caused them. The worker consumes them."""
+
+    __tablename__ = "outbox"
+    __table_args__ = (
+        _check("status", ("pending", "done", "dead"), "ck_outbox_status"),
+        Index("ix_outbox_ready", "status", "available_at"),
+        UniqueConstraint("topic", "key", name="uq_outbox_topic_key"),
+    )
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    topic: Mapped[str] = mapped_column(String(60))
+    key: Mapped[str] = mapped_column(String(100))  # idempotency key: one message per ingestion or replay
+    payload: Mapped[dict] = mapped_column(JSONB)
+    created_at: Mapped[datetime] = mapped_column(TS)
+    available_at: Mapped[datetime] = mapped_column(TS)
+    attempts: Mapped[int] = mapped_column(Integer, server_default=text("0"))
+    status: Mapped[str] = mapped_column(String(20), server_default=text("'pending'"))
+    last_error: Mapped[str | None] = mapped_column(Text)
+    processed_at: Mapped[datetime | None] = mapped_column(TS)
+
+
+class Observation(Base):
+    """A validated, normalised record from a source. Raw evidence stays in storage."""
+
+    __tablename__ = "observation"
+    __table_args__ = (
+        UniqueConstraint("source_id", "record_id", name="uq_observation_source_record"),
+        _check("commodity", COMMODITIES, "ck_observation_commodity"),
+        _check("mode", MODES, "ck_observation_mode"),
+        _check("outcome", ("alert_raised", "merged", "no_rule_match", "below_threshold", "late"), "ck_observation_outcome"),
+        CheckConstraint("confidence_pct >= 0 AND confidence_pct <= 100", name="ck_observation_confidence"),
+        Index("ix_observation_lookup", "source_id", "country", "kind", "published_at"),
+    )
+    id: Mapped[str] = mapped_column(String(40), primary_key=True)
+    ingestion_id: Mapped[str] = mapped_column(ForeignKey("ingestion.id"))
+    source_id: Mapped[str] = mapped_column(ForeignKey("source.id"))
+    record_id: Mapped[str] = mapped_column(String(100))
+    record_sha256: Mapped[str] = mapped_column(String(64))
+    commodity: Mapped[str] = mapped_column(String(20))
+    kind: Mapped[str] = mapped_column(String(20))  # policy, logistics, price
+    event_type: Mapped[str] = mapped_column(String(60))
+    country: Mapped[str] = mapped_column(String(100))
+    value: Mapped[Decimal | None] = mapped_column(Numeric(18, 4))  # delay days, price change %
+    headline: Mapped[str] = mapped_column(Text)
+    published_at: Mapped[datetime] = mapped_column(TS)
+    confidence_pct: Mapped[int] = mapped_column(Integer)
+    mode: Mapped[str] = mapped_column(String(20))
+    scenario_run: Mapped[str | None] = mapped_column(String(100))
+    mapping_version: Mapped[str] = mapped_column(String(60))
+    ingested_at: Mapped[datetime] = mapped_column(TS)
+    outcome: Mapped[str] = mapped_column(String(30))
+    alert_id: Mapped[str | None] = mapped_column(ForeignKey("alert.id"))

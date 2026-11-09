@@ -4,6 +4,8 @@ import pytest
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 
+from app import worker
+
 
 def who(role, id_=None, name=None):
     return {"X-Actor-Id": id_ or f"u-{role}", "X-Actor-Name": name or role.title(), "X-Actor-Role": role}
@@ -62,6 +64,14 @@ def test_quarantine_list_and_replay_request(client, seeded):
     assert audit_events(seeded, "quarantine.replay_requested") == [("Steward", "Q-0031", "corrected value: 3")]
 
 
+def test_replay_of_a_seeded_item_fails_clearly_because_its_record_was_not_kept(client, seeded):
+    client.post("/api/quarantine/Q-0031/replay", json={"correction": "3"}, headers=STEWARD)
+    assert client.get("/api/pipeline/queue").json()["workerBacklog"] == 1
+    worker.drain(seeded)
+    q = next(x for x in client.get("/api/quarantine").json() if x["id"] == "Q-0031")
+    assert q["status"] == "quarantined" and q["reason"].startswith("Replay failed: The original record was not retained")
+
+
 def test_quarantine_replay_permissions_and_validation(client):
     url = "/api/quarantine/Q-0032/replay"
     assert client.post(url, json={"correction": "USD"}).status_code == 401
@@ -74,7 +84,7 @@ def test_quarantine_replay_permissions_and_validation(client):
 def test_dead_letter_and_queue(client):
     dead = client.get("/api/dead-letter").json()
     assert [d["id"] for d in dead] == ["DL-0004"] and dead[0]["attempts"] == 3
-    assert client.get("/api/pipeline/queue").json() == {"workerBacklog": 0, "kafka": "not_connected", "nifi": "not_connected"}
+    assert client.get("/api/pipeline/queue").json() == {"workerBacklog": 0, "deadMessages": 0, "oldestPendingSeconds": None, "kafka": "not_connected", "nifi": "not_connected"}
 
 
 # ---- S08: rules ----
@@ -283,7 +293,10 @@ def test_start_a_run(client, seeded):
     assert (s["status"], s["runId"], s["seed"], s["emitted"], s["totalEvents"], s["offsetHours"]) == ("running", "run-4711-001", 4711, 1, 3, 0)
     assert s["virtualNow"].startswith("2026-11-07T08:00") and len(s["log"]) == 1 and "export restriction" in s["log"][0]["text"]
     assert client.get("/api/simulator/run").json()["runId"] == "run-4711-001"
-    assert "Simulator run-4711-001" in client.get("/api/runs").json()[0]["note"]
+    assert client.get("/api/pipeline/queue").json()["workerBacklog"] == 1  # collected, waiting for the worker
+    worker.drain(seeded)
+    assert client.get("/api/pipeline/queue").json()["workerBacklog"] == 0
+    assert "(sim-policy v1)" in client.get("/api/runs").json()[0]["note"]
     assert start(client).status_code == 409  # one run at a time
     assert audit_events(seeded, "simulator.started")[0][1] == "run-4711-001"
 
@@ -319,8 +332,9 @@ def test_pause_and_resume(client):
     assert client.post("/api/simulator/run/resume", headers=DEMO).status_code == 409
 
 
-def test_injected_failures_reach_source_health(client):
+def test_injected_failures_reach_source_health(client, seeded):
     start(client)
+    worker.drain(seeded)
     inject = lambda kind: client.post("/api/simulator/run/inject", json={"kind": kind}, headers=DEMO)
     states = lambda: {s["id"]: s["state"] for s in client.get("/api/sources").json()}
 
@@ -332,13 +346,16 @@ def test_injected_failures_reach_source_health(client):
 
     before = len(client.get("/api/quarantine").json())
     assert inject("malformed").status_code == 200 and inject("missing_field").status_code == 200
+    worker.drain(seeded)
     q = client.get("/api/quarantine").json()
     assert len(q) == before + 2 and {x["reason"] for x in q[:2]} == {"Payload is not valid JSON", "Missing required field: country"}
-    assert q[0]["id"] == "Q-0034" and q[0]["status"] == "quarantined"
+    assert q[0]["status"] == "quarantined"
 
-    for kind, key in (("duplicate", "duplicate"), ("late", "accepted"), ("rate_limit", "accepted")):
-        assert inject(kind).status_code == 200
-        assert client.get("/api/runs").json()[0]["status"] in ("ok",)
+    assert inject("duplicate").status_code == 200
+    worker.drain(seeded)
+    assert client.get("/api/runs").json()[0]["duplicate"] == 1
+    assert inject("late").status_code == 200 and inject("rate_limit").status_code == 200
+    worker.drain(seeded)
     assert client.get("/api/simulator/run").json()["log"][-1]["text"].startswith("Injected HTTP 429")
     assert client.post("/api/simulator/run/inject", json={"kind": "weird"}, headers=DEMO).status_code == 422
 

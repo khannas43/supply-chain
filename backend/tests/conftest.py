@@ -7,7 +7,7 @@ from alembic.config import Config
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import make_url
 
-from app import clock
+from app import clock, storage
 from app.config import get_settings
 
 
@@ -79,3 +79,12 @@ def client(seeded):
     app.dependency_overrides[get_session] = override
     yield TestClient(app)
     app.dependency_overrides.clear()
+
+
+@pytest.fixture(autouse=True)
+def evidence_store(tmp_path):
+    """A throwaway evidence directory per test."""
+    store = storage.FileEvidenceStore(tmp_path / "evidence")
+    storage.set_store(store)
+    yield store
+    storage.set_store(None)

@@ -9,7 +9,7 @@ export interface Remote<T> {
 }
 
 // Loads a path. Keeps the previous data while a new request is in flight so screens do not flicker.
-export function useApi<T>(path: string | null): Remote<T> {
+export function useApi<T>(path: string | null, opts: { pollMs?: number } = {}): Remote<T> {
   const [data, setData] = useState<T | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(path !== null)
@@ -18,7 +18,7 @@ export function useApi<T>(path: string | null): Remote<T> {
   useEffect(() => {
     if (path === null) return
     let live = true
-    setLoading(true)
+    setLoading((was) => was || data === null)
     api
       .get<T>(path)
       .then((d) => live && (setData(d), setError(null)))
@@ -28,6 +28,14 @@ export function useApi<T>(path: string | null): Remote<T> {
       live = false
     }
   }, [path, tick])
+
+  // Refresh in the background (for screens that show what the worker is doing). Skipped while the tab is hidden.
+  const { pollMs } = opts
+  useEffect(() => {
+    if (!pollMs || path === null) return
+    const id = setInterval(() => !document.hidden && setTick((t) => t + 1), pollMs)
+    return () => clearInterval(id)
+  }, [pollMs, path])
 
   const reload = useCallback(() => setTick((t) => t + 1), [])
   return { data, error, loading, reload }

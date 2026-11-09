@@ -17,7 +17,7 @@ const FAILURES: { k: FailureKind; label: string; hint: string }[] = [
 
 export function Simulator() {
   const scenarios = useApi<ScenarioData[]>('/simulator/scenarios')
-  const run = useApi<SimState>('/simulator/run')
+  const run = useApi<SimState>('/simulator/run', { pollMs: 5000 })
   const [pick, setPick] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -97,7 +97,7 @@ export function Simulator() {
                 <tbody>{[...sim.log].reverse().map((l, i) => <tr key={i}><td>{formatTime(l.at)}</td><td className="mono">{l.runId}</td><td>{l.text} <span className="badge b-sim">Simulated</span></td></tr>)}</tbody>
               </table></div>
             )}
-            {sim.log.length > 0 && <p className="muted small" style={{ marginBottom: 0 }}>The scenario events are logged here and recorded as ingestion runs. They do not create alerts until the ingestion path is connected; the alerts in the <Link to="/risk">risk inbox</Link> are seeded.</p>}
+            {sim.log.length > 0 && <p className="muted small" style={{ marginBottom: 0 }}>Each event is collected as evidence and processed by the worker, so a moment later it appears in <Link to="/sources">source health</Link> and, if a published rule says so, as an alert in the <Link to="/risk">risk inbox</Link>.</p>}
           </section>
         </>
       )}

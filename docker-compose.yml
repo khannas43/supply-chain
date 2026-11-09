@@ -29,6 +29,9 @@ services:
       KEYCLOAK_INTERNAL_URL: ${KEYCLOAK_INTERNAL_URL:-http://host.docker.internal:8180}
       KEYCLOAK_REALM: ${KEYCLOAK_REALM:-supplychain}
       KEYCLOAK_ISSUER: ${KEYCLOAK_ISSUER:-http://localhost:8180/realms/supplychain}
+      EVIDENCE_DIR: /data/evidence
+    volumes:
+      - evidence:/data/evidence
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
@@ -43,6 +46,21 @@ services:
       retries: 5
     restart: unless-stopped
 
+  # Consumes the outbox: parses, validates and processes collected payloads, applies the published
+  # rules and raises alerts. Same image as the API.
+  worker:
+    image: supplychain-api:dev
+    command: ["python", "-m", "app.worker"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-supplychain}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-supplychain}
+      EVIDENCE_DIR: /data/evidence
+    volumes:
+      - evidence:/data/evidence
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
   web:
     build: ./frontend
     image: supplychain-web:dev
@@ -55,3 +73,4 @@ services:
 
 volumes:
   pgdata:
+  evidence:

@@ -10,6 +10,12 @@ class Settings(BaseSettings):
     # it is replaced by Keycloak token validation and must never face a network.
     auth_mode: str = "dev"
 
+    # Where preserved original payloads live. A Docker volume today; the EvidenceStore interface
+    # lets an S3-compatible store replace it without touching the pipeline.
+    evidence_dir: str = "/data/evidence"
+    worker_poll_seconds: float = 1.0
+    worker_max_attempts: int = 3
+
     database_url: str = "postgresql+psycopg://supplychain:change-me@db:5432/supplychain"
 
     # Keycloak runs outside this stack (existing `citizen` instance, reached through a port-forward).

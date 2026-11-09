@@ -13,7 +13,7 @@ def test_alert_shape_matches_the_frontend_type(client):
     assert a["exposedNodeIds"] == ["w-supx", "w-milly", "w-plantz", "w-prodp"]
     assert a["exposed"] == {"value": 100.0, "unit": "t", "horizon": "30 days"}
     assert a["daysOfCover"] == 6.0
-    assert set(a["evidence"]) == {"source", "objectKey", "sha256", "publishedAt", "ingestedAt"}
+    assert set(a["evidence"]) == {"id", "source", "objectKey", "sha256", "publishedAt", "ingestedAt"}
 
 
 def test_alert_without_assessment_has_no_exposure(client):

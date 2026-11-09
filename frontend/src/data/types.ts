@@ -6,6 +6,7 @@ export type AssessmentStatus = 'unassessed' | 'partial' | 'complete' | 'awaiting
 export type Disposition = 'new' | 'confirmed' | 'monitor' | 'dismissed'
 
 export interface Evidence {
+  id?: string
   source: string
   objectKey: string
   sha256: string

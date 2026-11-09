@@ -16,7 +16,7 @@ export function RiskInbox() {
   const { commodity, openEvidence } = useApp()
   const { can } = useAuth()
   const [params, setParams] = useSearchParams()
-  const remote = useApi<Alert[]>(`/alerts?commodity=${commodity}`)
+  const remote = useApi<Alert[]>(`/alerts?commodity=${commodity}`, { pollMs: 5000 })
   const items = remote.data ?? []
   const [sev, setSev] = useState<'all' | Severity>('all')
   const [mode, setMode] = useState<'all' | Mode>('all')

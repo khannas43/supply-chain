@@ -23,7 +23,7 @@ from .models import Base
 SEED_FILE = Path(__file__).resolve().parent.parent / "seed" / "demo.json"
 LOAD_ONLY_IF_EMPTY = {"audit_event", "action_status_history"}
 # Tables the application fills while it runs. They are emptied by --reset along with the seeded ones.
-RUNTIME_TABLES = ("sim_log", "sim_run", "import_record", "option_shortlist")
+RUNTIME_TABLES = ("sim_log", "sim_run", "import_record", "option_shortlist", "outbox")
 
 
 def _convert(table: Table, row: dict) -> dict:

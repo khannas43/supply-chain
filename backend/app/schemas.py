@@ -24,6 +24,7 @@ class Out(BaseModel):
 
 
 class EvidenceOut(Out):
+    id: str
     source: str
     object_key: str
     sha256: str
@@ -352,7 +353,7 @@ class QuarantineOut(Out):
     object_key: str
     field: str
     bad_value: str
-    status: Literal["quarantined", "replay_requested"]
+    status: Literal["quarantined", "replay_requested", "resolved"]
     correction: str | None = None
 
 
@@ -372,6 +373,8 @@ class DeadOut(Out):
 
 class QueueOut(Out):
     worker_backlog: int
+    dead_messages: int
+    oldest_pending_seconds: int | None
     kafka: Literal["connected", "not_connected"]
     nifi: Literal["connected", "not_connected"]
 

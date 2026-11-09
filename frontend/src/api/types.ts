@@ -145,7 +145,7 @@ export interface QuarantineData {
   objectKey: string
   field: string
   badValue: string
-  status: 'quarantined' | 'replay_requested'
+  status: 'quarantined' | 'replay_requested' | 'resolved'
   correction?: string | null
 }
 
@@ -161,6 +161,8 @@ export interface DeadData {
 
 export interface QueueData {
   workerBacklog: number
+  deadMessages: number
+  oldestPendingSeconds: number | null
   kafka: 'connected' | 'not_connected'
   nifi: 'connected' | 'not_connected'
 }

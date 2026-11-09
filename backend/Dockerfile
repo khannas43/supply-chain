@@ -12,7 +12,9 @@ COPY app ./app
 COPY alembic.ini ./
 COPY alembic ./alembic
 COPY seed ./seed
-RUN useradd --system --uid 10001 app
+RUN useradd --system --uid 10001 app \
+ && mkdir -p /data/evidence \
+ && chown -R app /data
 USER app
 
 EXPOSE 8000

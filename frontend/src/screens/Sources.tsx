@@ -12,11 +12,13 @@ export function Sources() {
   const [tab, setTab] = useState<Tab>('sources')
   const { can } = useAuth()
   const { openEvidence } = useApp()
-  const sources = useApi<SourceHealth[]>('/sources')
-  const runs = useApi<RunData[]>('/runs')
-  const quarantine = useApi<QuarantineData[]>('/quarantine')
-  const dead = useApi<DeadData[]>('/dead-letter')
-  const queue = useApi<QueueData>(tab === 'queue' ? '/pipeline/queue' : null)
+  // refreshed in the background: this is where the worker's results appear
+  const poll = { pollMs: 5000 }
+  const sources = useApi<SourceHealth[]>('/sources', poll)
+  const runs = useApi<RunData[]>('/runs', poll)
+  const quarantine = useApi<QuarantineData[]>('/quarantine', poll)
+  const dead = useApi<DeadData[]>('/dead-letter', poll)
+  const queue = useApi<QueueData>(tab === 'queue' ? '/pipeline/queue' : null, poll)
   const [fix, setFix] = useState<Record<string, string>>({})
   const [error, setError] = useState<string | null>(null)
 
@@ -100,8 +102,10 @@ export function Sources() {
                   <td className="mono">{q.badValue || <span className="muted">(empty)</span>}</td>
                   <td><button className="btn" onClick={() => openEvidence({ title: `${q.id}: ${q.reason}`, mode: 'simulated', evidence: { source: q.sourceName, objectKey: q.objectKey, sha256: '(computed when stored)', publishedAt: q.receivedAt, ingestedAt: q.receivedAt } })}>View</button></td>
                   <td>
-                    {q.status === 'replay_requested' ? (
-                      <span className="badge b-ok">Replay requested{q.correction ? `: ${q.correction}` : ''}</span>
+                    {q.status === 'resolved' ? (
+                      <span className="badge b-ok">Resolved by replay</span>
+                    ) : q.status === 'replay_requested' ? (
+                      <span className="badge b-warn">Replay queued{q.correction ? `: ${q.correction}` : ''}</span>
                     ) : can('quarantine.resolve') ? (
                       <div className="row">
                         <input aria-label={`Corrected value for ${q.id}`} value={fix[q.id] ?? ''} onChange={(e) => setFix({ ...fix, [q.id]: e.target.value })} placeholder="Corrected value" />
@@ -113,7 +117,7 @@ export function Sources() {
               ))}</tbody>
             </table></div>
           )}
-          <p className="muted small" style={{ padding: '0 16px' }}>A replay request saves the corrected value. The replay runs through the same pipeline once ingestion is connected. Nothing repairs business meaning automatically.</p>
+          <p className="muted small" style={{ padding: '0 16px' }}>A replay applies your corrected value to the original record and runs it through the same pipeline. If it passes, the item is resolved; if not, it returns here with the new reason. Nothing repairs business meaning automatically.</p>
         </section>
       )}
 
@@ -135,7 +139,8 @@ export function Sources() {
           <header><h2>Processing queue</h2></header>
           {queue.data === null ? <div className="muted" role="status">Loading…</div> : (
             <dl className="kv">
-              <dt>Worker backlog</dt><dd>{queue.data.workerBacklog} events waiting</dd>
+              <dt>Worker backlog</dt><dd>{queue.data.workerBacklog} message{queue.data.workerBacklog === 1 ? '' : 's'} waiting{queue.data.oldestPendingSeconds != null && <span className="muted small"> (oldest {queue.data.oldestPendingSeconds} s)</span>}</dd>
+              <dt>Gave up on</dt><dd>{queue.data.deadMessages} message{queue.data.deadMessages === 1 ? '' : 's'}{queue.data.deadMessages > 0 && ' (see Dead letter)'}</dd>
               <dt>Kafka lag</dt><dd className={queue.data.kafka === 'connected' ? '' : 'muted'}>{queue.data.kafka === 'connected' ? 'Connected' : 'Not connected yet. Kafka is added after the core journey.'}</dd>
               <dt>NiFi</dt><dd className={queue.data.nifi === 'connected' ? '' : 'muted'}>{queue.data.nifi === 'connected' ? 'Connected' : 'Not connected yet. Flow status and a link to NiFi will appear here.'}</dd>
             </dl>

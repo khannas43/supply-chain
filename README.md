@@ -2,7 +2,7 @@
 
 Local application that maps a supply chain, detects commodity risk events, assesses business impact and records a response, for wheat and tungsten. Everything runs locally in Docker.
 
-Status: nine screens on the API; Docker stack with database, schema, demo data and an API skeleton. The API serves alerts, network traversal and assessments ; all nine screens use it. Writes need an identity (development headers for now).
+Status: nine screens on the API; ingestion path (collect, worker, rules, alerts) working with the simulator; Docker stack with database, schema, demo data, API and worker. The API serves alerts, network traversal and assessments ; all nine screens use it. Writes need an identity (development headers for now).
 
 ## Layout
 
@@ -11,7 +11,7 @@ Status: nine screens on the API; Docker stack with database, schema, demo data a
 | `frontend/` | React, TypeScript and Vite app (nine screens, mock data) |
 | `backend/` | FastAPI application, database models, Alembic migrations, demo seed and tests |
 | `db/` | PostgreSQL 16 with PostGIS, built on an arm64-capable base image |
-| `docker-compose.yml` | The stack: `db`, `api`, `web` |
+| `docker-compose.yml` | The stack: `db`, `api`, `worker`, `web`, and the `evidence` volume |
 | `.env.example` | Settings template; copy to `.env` |
 
 ## Run the stack
@@ -99,6 +99,27 @@ Interactive docs at http://127.0.0.1:8100/api/docs. Field names are camelCase, m
 | `GET /api/network/traverse` | Upstream and/or downstream suppliers from `focus`, bounded by `depth` (1 to 5) and `limit`, with `direction`, `material` filter, `truncated` flag and `cycleEdgeIds` |
 
 Traversal runs as a recursive query in PostgreSQL. Calculations are in `backend/app/calc.py` (Decimal, with the wheat worked example as a test).
+
+## How data flows
+
+```
+simulator / source  ->  collect  ->  evidence + outbox  ->  worker  ->  observation  ->  rules  ->  alert
+(provider-shaped        (store the    (original kept,       (parse, map,   (validated,    (published   (exposure
+ JSON payloads)          bytes)        message queued)       validate,      deduplicated)  version)     matched,
+                                                             dedupe)                                    trail kept)
+```
+
+- **Collect** (`app/collect.py`) stores the original payload in the evidence store, records where it came from and queues one message. It is the job NiFi will do. Collecting the same bytes from a source twice records a duplicate and stops.
+- **Evidence** is kept in the `evidence` Docker volume behind a small interface (`app/storage.py`), so an S3-compatible store can replace it. Objects are immutable and checksummed. Analysts, managers, stewards and admins can open the original from the evidence drawer (`GET /api/evidence/{id}/raw`).
+- **Worker** (`app/worker.py`, the `worker` service) takes messages from the database outbox, one transaction each, with retries and backoff. Messages it cannot process go to the dead-letter list. Processing is idempotent, so a retry never raises a second alert. Kafka can replace the outbox transport later without changing either side.
+- **Validation** quarantines a record with its reason and location instead of guessing: invalid JSON, a missing or invalid field, an unknown country, a record ID resent with different content. One bad record does not block the good ones beside it.
+- **Rules** (`app/alerting.py`) use the *published* version of each rule; a draft never applies, and the alert records the version that raised it. Repeats of the same event within a scenario run join the existing alert. Late records are kept as history and change nothing.
+- **Replay** of a quarantined record applies the steward's corrected value to the original record and runs it through the same pipeline. It resolves the item, or returns it to quarantine with the new reason.
+- A new alert is shown as *partial* (exposed suppliers found, no consequence data) or *unassessed* (nothing matched). It has no assessment until inventory, demand and price data exist; it is never presented as zero exposure.
+
+Not built yet: NiFi and Kafka, a mapping editor (mappings are versioned in code), live source connectors, and treating a stale source as stale input to the rules (the meaning needs agreeing first).
+
+Watch the worker with `docker compose logs -f worker`.
 
 ## Backend tests
 
