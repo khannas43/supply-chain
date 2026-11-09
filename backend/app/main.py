@@ -4,6 +4,7 @@ from sqlalchemy import text
 
 from .config import get_settings
 from .db import get_engine
+from .routers import alerts, network
 
 router = APIRouter(prefix="/api")
 
@@ -48,3 +49,5 @@ app = FastAPI(
     openapi_url="/api/openapi.json",
 )
 app.include_router(router)
+app.include_router(alerts.router)
+app.include_router(network.router)

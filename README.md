@@ -2,7 +2,7 @@
 
 Local application that maps a supply chain, detects commodity risk events, assesses business impact and records a response, for wheat and tungsten. Everything runs locally in Docker.
 
-Status: frontend prototype of nine screens on mock data; Docker stack with database, schema, demo data and an API skeleton. The API does not serve business data yet.
+Status: frontend prototype of nine screens on mock data; Docker stack with database, schema, demo data and an API skeleton. The API serves alerts, network traversal and assessments (read-only, not yet authenticated); the frontend still uses mock data.
 
 ## Layout
 
@@ -66,6 +66,20 @@ cd frontend && npm run seed:export
 ```
 
 After changing models: `docker compose run --rm -u root -v "$PWD/backend:/srv" -w /srv api alembic revision --autogenerate -m "describe change"`, then review the generated file. `alembic check` reports drift between models and migrations.
+
+## API
+
+Read-only so far. Interactive docs at http://127.0.0.1:8100/api/docs. Field names are camelCase, matching the frontend types. Login is not enforced yet; it arrives with Keycloak.
+
+| Endpoint | Returns |
+| --- | --- |
+| `GET /api/alerts` | Alerts; filters `commodity`, `severity`, `mode`, `disposition` |
+| `GET /api/alerts/{id}` | One alert with evidence, rule version, matched nodes, exposure and days of cover |
+| `GET /api/alerts/{id}/assessment` | Latest assessment snapshot with calculated measures, active assumption, reference option and version history. Measures that need an approved assumption are null, with the reason |
+| `GET /api/network/nodes` | Network nodes; filter `commodity` |
+| `GET /api/network/traverse` | Upstream and/or downstream suppliers from `focus`, bounded by `depth` (1 to 5) and `limit`, with `direction`, `material` filter, `truncated` flag and `cycleEdgeIds` |
+
+Traversal runs as a recursive query in PostgreSQL. Calculations are in `backend/app/calc.py` (Decimal, with the wheat worked example as a test).
 
 ## Backend tests
 
