@@ -1,0 +1,57 @@
+name: supplychain
+
+# Host ports are chosen to avoid other projects on this machine (5173, 5432, 8080, 3001-3003).
+# Everything is bound to 127.0.0.1.
+services:
+  db:
+    build: ./db
+    image: supplychain-db:16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-supplychain}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-supplychain}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:${DB_PORT:-5442}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build: ./backend
+    image: supplychain-api:dev
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-supplychain}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-supplychain}
+      KEYCLOAK_INTERNAL_URL: ${KEYCLOAK_INTERNAL_URL:-http://host.docker.internal:8180}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-supplychain}
+      KEYCLOAK_ISSUER: ${KEYCLOAK_ISSUER:-http://localhost:8180/realms/supplychain}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${API_PORT:-8100}:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  web:
+    build: ./frontend
+    image: supplychain-web:dev
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${WEB_PORT:-8095}:80"
+    restart: unless-stopped
+
+volumes:
+  pgdata:
