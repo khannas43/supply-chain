@@ -2,14 +2,14 @@
 
 Local application that maps a supply chain, detects commodity risk events, assesses business impact and records a response, for wheat and tungsten. Everything runs locally in Docker.
 
-Status: frontend prototype of nine screens on mock data; Docker stack with database, API skeleton and web server. The API does not serve business data yet.
+Status: frontend prototype of nine screens on mock data; Docker stack with database, schema, demo data and an API skeleton. The API does not serve business data yet.
 
 ## Layout
 
 | Path | Content |
 | --- | --- |
 | `frontend/` | React, TypeScript and Vite app (nine screens, mock data) |
-| `backend/` | FastAPI application (health endpoints so far) |
+| `backend/` | FastAPI application, database models, Alembic migrations, demo seed and tests |
 | `db/` | PostgreSQL 16 with PostGIS, built on an arm64-capable base image |
 | `docker-compose.yml` | The stack: `db`, `api`, `web` |
 | `.env.example` | Settings template; copy to `.env` |
@@ -49,10 +49,30 @@ npm run dev        # http://127.0.0.1:5180
 
 The prototype uses a development identity switch in the top bar. Data is in memory and resets on reload.
 
-## Backend tests
+## Database
 
 ```
-docker compose run --rm --no-deps --entrypoint "" -v "$PWD/backend:/srv" -w /srv api \
+docker compose exec api alembic upgrade head     # create or update the schema
+docker compose exec api python -m app.seed       # load the demo data (safe to repeat)
+docker compose exec api python -m app.seed --reset   # empty the seeded tables and reload
+```
+
+The schema is in `backend/app/models.py` and `backend/alembic/versions/`. Rules enforced by the database itself: an assumption cannot be decided by its proposer, one active assumption per alert, one published and one draft version per rule, actions point at an existing assessment snapshot, and audit events cannot be changed or deleted.
+
+The demo data is `backend/seed/demo.json`, generated from the frontend demo data:
+
+```
+cd frontend && npm run seed:export
+```
+
+After changing models: `docker compose run --rm -u root -v "$PWD/backend:/srv" -w /srv api alembic revision --autogenerate -m "describe change"`, then review the generated file. `alembic check` reports drift between models and migrations.
+
+## Backend tests
+
+The tests create a throwaway database on the stack's PostgreSQL server, so the stack must be running.
+
+```
+docker compose run --rm --no-deps -u root -v "$PWD/backend:/srv" -w /srv api \
   sh -c "pip install -q -r requirements-dev.txt && python -m pytest -q"
 ```
 

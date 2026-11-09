@@ -3,94 +3,12 @@ import { useAuth } from '../auth/AuthContext'
 import { IDENTITIES } from '../auth/users'
 import { alerts as seedAlerts, NOW } from './mock'
 import { initialAssumptions, initialVersions } from './impact'
+import { seedActions, seedAudit } from './seedActions'
 import type {
   ActionItem, ActionStatus, Alert, Assumption, AuditEntry, Disposition, ResponseOption, VersionNote,
 } from './types'
 
 // In-memory demo state shared across screens. It resets on reload and stands in for the API.
-
-const seedActions: ActionItem[] = [
-  {
-    id: 'AC-W-001',
-    alertId: 'AL-W-001',
-    commodity: 'wheat',
-    optionId: 'O-W-1',
-    optionName: 'Alternative Supplier V',
-    ownerId: 'u-manager',
-    ownerName: 'Procurement Manager',
-    targetDate: '2026-11-18',
-    rationale: 'Only qualified sourcing option; open commercial talks and request a firm quote while the assumption is being approved.',
-    status: 'in_progress',
-    createdAt: '2026-11-08T11:00:00Z',
-    createdBy: 'Procurement Manager',
-    assessmentVersion: 1,
-    assumptionStatus: 'proposed',
-    history: [
-      { at: '2026-11-08T11:00:00Z', actor: 'Procurement Manager', from: null, to: 'open', note: 'Decision recorded' },
-      { at: '2026-11-08T15:30:00Z', actor: 'Procurement Manager', from: 'open', to: 'in_progress', note: 'Supplier V contacted for a firm quote' },
-    ],
-  },
-  {
-    id: 'AC-W-002',
-    alertId: 'AL-W-001',
-    commodity: 'wheat',
-    optionId: 'O-W-3',
-    optionName: 'Transfer stock from Plant Z2',
-    ownerId: 'u-analyst-b',
-    ownerName: 'Risk Analyst B',
-    targetDate: '2026-11-08',
-    rationale: 'Bridge cover with 40 t from Plant Z2 while the alternative supplier is arranged.',
-    status: 'review',
-    createdAt: '2026-11-08T11:15:00Z',
-    createdBy: 'Procurement Manager',
-    assessmentVersion: 1,
-    assumptionStatus: 'proposed',
-    history: [
-      { at: '2026-11-08T11:15:00Z', actor: 'Procurement Manager', from: null, to: 'open', note: 'Decision recorded' },
-      { at: '2026-11-08T16:00:00Z', actor: 'Risk Analyst B', from: 'open', to: 'review', note: 'Transfer quantity confirmed with Plant Z2, ready for review' },
-    ],
-  },
-  {
-    id: 'AC-T-001',
-    alertId: 'AL-T-001',
-    commodity: 'tungsten',
-    optionId: 'O-T-1',
-    optionName: 'Alternative APT supplier, Country V',
-    ownerId: 'u-manager',
-    ownerName: 'Procurement Manager',
-    targetDate: '2026-11-20',
-    rationale: 'Only qualified option that covers the horizon; start sample qualification and commercial talks.',
-    status: 'in_progress',
-    createdAt: '2026-11-07T10:00:00Z',
-    createdBy: 'Procurement Manager',
-    assessmentVersion: 2,
-    assumptionStatus: 'approved',
-    history: [
-      { at: '2026-11-07T10:00:00Z', actor: 'Procurement Manager', from: null, to: 'open', note: 'Decision recorded' },
-      { at: '2026-11-08T09:00:00Z', actor: 'Procurement Manager', from: 'open', to: 'in_progress', note: 'Supplier contacted' },
-    ],
-  },
-  {
-    id: 'AC-T-002',
-    alertId: 'AL-T-001',
-    commodity: 'tungsten',
-    optionId: 'O-T-3',
-    optionName: 'Release strategic stock',
-    ownerId: 'u-analyst-a',
-    ownerName: 'Risk Analyst A',
-    targetDate: '2026-11-08',
-    rationale: 'Bridge cover while the alternative supplier qualifies.',
-    status: 'review',
-    createdAt: '2026-11-06T17:00:00Z',
-    createdBy: 'Procurement Manager',
-    assessmentVersion: 1,
-    assumptionStatus: 'proposed',
-    history: [
-      { at: '2026-11-06T17:00:00Z', actor: 'Procurement Manager', from: null, to: 'open', note: 'Decision recorded' },
-      { at: '2026-11-08T12:00:00Z', actor: 'Risk Analyst A', from: 'open', to: 'review', note: 'Quantity check done, ready for review' },
-    ],
-  },
-]
 
 interface Store {
   alerts: Alert[]
@@ -119,9 +37,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [versions, setVersions] = useState(initialVersions)
   const [shortlist, setShortlist] = useState<string[]>([])
   const [actions, setActions] = useState<ActionItem[]>(seedActions)
-  const [audit, setAudit] = useState<AuditEntry[]>([
-    { at: '2026-11-07T09:30:00Z', actor: 'Risk Analyst B', event: 'assumption.approved', ref: 'AS-T-1', detail: '60% affected share approved' },
-  ])
+  const [audit, setAudit] = useState<AuditEntry[]>(seedAudit)
 
   const log = useCallback(
     (event: string, ref: string, detail: string) =>

@@ -9,6 +9,9 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY app ./app
+COPY alembic.ini ./
+COPY alembic ./alembic
+COPY seed ./seed
 RUN useradd --system --uid 10001 app
 USER app
 
