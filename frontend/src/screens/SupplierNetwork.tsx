@@ -10,14 +10,14 @@ import type { Alert, NetNode } from '../data/types'
 
 type Direction = 'upstream' | 'downstream' | 'both'
 
-const defaultFocus = { wheat: 'w-milly', tungsten: 't-carbide' } as const
+const defaultFocus = { wheat: 'w-rott', tungsten: 't-goslar' } as const
 
 export function SupplierNetwork() {
   const { commodity } = useApp()
   const [params, setParams] = useSearchParams()
   const [direction, setDirection] = useState<Direction>('both')
   const [depth, setDepth] = useState(3)
-  const [limit, setLimit] = useState(25)
+  const [limit, setLimit] = useState(40)
   const [material, setMaterial] = useState('')
   const [selected, setSelected] = useState<{ type: 'node' | 'edge'; id: string } | null>(null)
 
@@ -125,7 +125,7 @@ export function SupplierNetwork() {
           </select></div>
         <div className="field"><label htmlFor="n-limit">Result limit</label>
           <select id="n-limit" value={limit} onChange={(e) => setLimit(Number(e.target.value))}>
-            {[3, 5, 10, 25].map((d) => <option key={d} value={d}>{d} nodes</option>)}
+            {[10, 25, 40, 60, 100].map((d) => <option key={d} value={d}>{d} nodes</option>)}
           </select></div>
         <div className="field"><label htmlFor="n-mat">Material filter</label>
           <input id="n-mat" value={material} onChange={(e) => setMaterial(e.target.value)} placeholder="e.g. concentrate" /></div>

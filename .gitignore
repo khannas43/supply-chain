@@ -12,3 +12,6 @@ __pycache__/
 
 # Client and planning documents stay local (public repo)
 docs/
+
+# generated large sample data (see seed/generate_large.py)
+backend/seed/demo-large.json

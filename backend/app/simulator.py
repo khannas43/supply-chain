@@ -9,6 +9,7 @@ Everything is labelled simulated. Records are stamped with the real clock, the r
 import json
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -41,33 +42,22 @@ class Scenario:
     events: tuple[Event, ...]
 
 
-SCENARIOS: dict[str, Scenario] = {
-    s.id: s
-    for s in (
-        Scenario("SC-W-1", "Wheat policy and logistics event", "wheat", 4711, (
-            Event(0, "policy", "Policy announcement: export restriction, Country A (simulated)", dict(
-                commodity="wheat", country="Country A", policyType="export_restriction", confidencePct=60,
-                headline="Export restriction announced on wheat, Country A")),
-            Event(6, "logistics", "Logistics report: port congestion, Country B corridor (simulated)", dict(
-                commodity="wheat", country="Country B", eventType="port_delay", delayDays=4, confidencePct=40,
-                headline="Port congestion on the main grain corridor, Country B")),
-            Event(30, "policy", "Policy clarification published; scope unchanged (simulated)", dict(
-                commodity="wheat", country="Country A", policyType="clarification", confidencePct=70,
-                headline="Clarification published; scope of the restriction unchanged")),
-        )),
-        Scenario("SC-T-1", "Tungsten export-policy event", "tungsten", 1042, (
-            Event(0, "policy", "Policy announcement: export licence tightening, Country T (simulated)", dict(
-                commodity="tungsten", country="Country T", policyType="export_licence", confidencePct=85,
-                headline="Export licences for tungsten concentrate tightened, Country T")),
-            Event(12, "price", "Price series update: concentrate above threshold (simulated)", dict(
-                commodity="tungsten", indicator="price_change_30d_pct", value=18.5, confidencePct=70,
-                headline="Tungsten concentrate price up 18.5% over 30 days")),
-            Event(36, "policy", "Licence quota notice, Country T (simulated)", dict(
-                commodity="tungsten", country="Country T", policyType="export_quota", confidencePct=80,
-                headline="Export licence quota notice, Country T")),
-        )),
-    )
-}
+SCENARIOS_FILE = Path(__file__).resolve().parent.parent / "seed" / "scenarios.json"
+
+
+def load_scenarios(path: Path = SCENARIOS_FILE) -> dict[str, Scenario]:
+    """Scenarios are data, not code: seed/scenarios.json, or any file in the same format."""
+    raw = json.loads(path.read_text())["scenarios"]
+    return {
+        r["id"]: Scenario(
+            r["id"], r["name"], r["commodity"], r["seed"],
+            tuple(Event(e["at"], e["kind"], e["text"], e.get("fields", {})) for e in r["events"]),
+        )
+        for r in raw
+    }
+
+
+SCENARIOS: dict[str, Scenario] = load_scenarios()
 
 FAILURES = ("rate_limit", "timeout", "recover", "duplicate", "late", "malformed", "missing_field")
 MAX_ADVANCE_HOURS = 168

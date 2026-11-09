@@ -31,37 +31,37 @@ def test_migration_is_reversible(scratch_db, alembic_cfg):
     eng.dispose()
 
 
-def test_seed_loads_every_row(engine):
-    inserted = seed.load(engine)
-    expected = json.loads(seed.SEED_FILE.read_text())
+def test_seed_loads_every_row(engine, fixture_file):
+    inserted = seed.load(engine, path=fixture_file)
+    expected = json.loads(fixture_file.read_text())
     assert inserted == {name: len(rows) for name, rows in expected.items() if rows}
     with engine.connect() as c:
         assert count(c, "alert") == 4
         assert count(c, "supply_edge") == 13
 
 
-def test_seed_is_idempotent(engine):
-    seed.load(engine)
-    again = seed.load(engine)
+def test_seed_is_idempotent(engine, fixture_file):
+    seed.load(engine, path=fixture_file)
+    again = seed.load(engine, path=fixture_file)
     assert sum(again.values()) == 0
     with engine.connect() as c:
         assert count(c, "audit_event") == 1
         assert count(c, "action_status_history") == 8
 
 
-def test_seed_reset_reloads(seeded):
-    result = seed.load(seeded, reset=True)
+def test_seed_reset_reloads(seeded, fixture_file):
+    result = seed.load(seeded, path=fixture_file, reset=True)
     assert result["alert"] == 4
     with seeded.connect() as c:
         assert count(c, "alert") == 4
 
 
-def test_reset_also_clears_what_the_application_created(seeded):
+def test_reset_also_clears_what_the_application_created(seeded, fixture_file):
     with seeded.begin() as c:
         c.execute(text("INSERT INTO sim_run (id, scenario_id, seed, status, active_slot, started_at, started_by) VALUES ('r', 'SC-W-1', 1, 'running', 1, now(), 'me')"))
         c.execute(text("INSERT INTO import_record (id, dataset, version, rows, rejected, checksum, committed_by, committed_at) VALUES ('IMP-1', 'price', 1, 1, 0, 'abc', 'x', now())"))
         c.execute(text("INSERT INTO option_shortlist (option_id, shortlisted_by_id, shortlisted_by_name, shortlisted_at) VALUES ('O-W-1', 'u', 'U', now())"))
-    seed.load(seeded, reset=True)
+    seed.load(seeded, path=fixture_file, reset=True)
     with seeded.connect() as c:
         assert [count(c, t) for t in ("sim_run", "import_record", "option_shortlist")] == [0, 0, 0]
 

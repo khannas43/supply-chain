@@ -1,0 +1,1421 @@
+{
+  "person": [
+    {
+      "id": "u-viewer",
+      "name": "Executive Viewer",
+      "roles": [
+        "viewer"
+      ],
+      "source": "demo",
+      "last_seen": null
+    },
+    {
+      "id": "u-analyst-a",
+      "name": "Risk Analyst A",
+      "roles": [
+        "analyst"
+      ],
+      "source": "demo",
+      "last_seen": null
+    },
+    {
+      "id": "u-analyst-b",
+      "name": "Risk Analyst B",
+      "roles": [
+        "analyst"
+      ],
+      "source": "demo",
+      "last_seen": null
+    },
+    {
+      "id": "u-manager",
+      "name": "Procurement Manager",
+      "roles": [
+        "manager"
+      ],
+      "source": "demo",
+      "last_seen": null
+    },
+    {
+      "id": "u-steward",
+      "name": "Data Steward",
+      "roles": [
+        "steward"
+      ],
+      "source": "demo",
+      "last_seen": null
+    },
+    {
+      "id": "u-admin",
+      "name": "Platform Admin",
+      "roles": [
+        "admin"
+      ],
+      "source": "demo",
+      "last_seen": null
+    },
+    {
+      "id": "u-demo",
+      "name": "Demo Operator",
+      "roles": [
+        "demo_operator"
+      ],
+      "source": "demo",
+      "last_seen": null
+    },
+    {
+      "id": "u-analyst-wheat",
+      "name": "Wheat Analyst",
+      "roles": [
+        "analyst"
+      ],
+      "source": "demo",
+      "last_seen": null
+    },
+    {
+      "id": "u-analyst-tungsten",
+      "name": "Tungsten Analyst",
+      "roles": [
+        "analyst"
+      ],
+      "source": "demo",
+      "last_seen": null
+    }
+  ],
+  "country": [
+    {
+      "code": "CTA",
+      "name": "Country A"
+    },
+    {
+      "code": "CTB",
+      "name": "Country B"
+    },
+    {
+      "code": "CTT",
+      "name": "Country T"
+    },
+    {
+      "code": "CTV",
+      "name": "Country V"
+    }
+  ],
+  "country_alias": [
+    {
+      "alias": "A",
+      "country_code": "CTA"
+    },
+    {
+      "alias": "Country-A",
+      "country_code": "CTA"
+    },
+    {
+      "alias": "CTRY_A",
+      "country_code": "CTA"
+    },
+    {
+      "alias": "B",
+      "country_code": "CTB"
+    },
+    {
+      "alias": "Country-B",
+      "country_code": "CTB"
+    },
+    {
+      "alias": "T",
+      "country_code": "CTT"
+    },
+    {
+      "alias": "Country-T",
+      "country_code": "CTT"
+    },
+    {
+      "alias": "CTRY_T",
+      "country_code": "CTT"
+    },
+    {
+      "alias": "V",
+      "country_code": "CTV"
+    },
+    {
+      "alias": "Country-V",
+      "country_code": "CTV"
+    }
+  ],
+  "commodity_form": [
+    {
+      "commodity": "wheat",
+      "form": "Milling grade",
+      "note": "Protein and moisture spec per contract"
+    },
+    {
+      "commodity": "wheat",
+      "form": "Feed grade",
+      "note": "Not interchangeable with milling grade"
+    },
+    {
+      "commodity": "tungsten",
+      "form": "Concentrate (65% WO3)",
+      "note": "Basis for WO3-equivalent conversion"
+    },
+    {
+      "commodity": "tungsten",
+      "form": "APT",
+      "note": "Ammonium paratungstate"
+    },
+    {
+      "commodity": "tungsten",
+      "form": "Carbide powder",
+      "note": "Carbide-grade, qualified suppliers only"
+    }
+  ],
+  "unit_conversion": [
+    {
+      "id": "CV-1",
+      "from_unit": "t",
+      "to_unit": "kg",
+      "factor": 1000,
+      "effective_from": "2024-01-01",
+      "source": "SI"
+    },
+    {
+      "id": "CV-2",
+      "from_unit": "bushel (wheat, 60 lb)",
+      "to_unit": "t",
+      "factor": 0.0272155,
+      "effective_from": "2024-01-01",
+      "source": "Approved unit table v2"
+    },
+    {
+      "id": "CV-3",
+      "from_unit": "USD",
+      "to_unit": "EUR",
+      "factor": 0.92,
+      "effective_from": "2026-11-01",
+      "source": "Approved rate table v3 (synthetic)"
+    }
+  ],
+  "source": [
+    {
+      "id": "src-policy",
+      "name": "Policy feed (simulator)",
+      "mode": "simulated",
+      "enabled": true,
+      "last_attempt": "2026-11-09T08:30:00Z",
+      "last_usable": "2026-11-08T14:20:00Z",
+      "policy_hours": 48,
+      "last_error": null
+    },
+    {
+      "id": "src-logistics",
+      "name": "Logistics feed (simulator)",
+      "mode": "simulated",
+      "enabled": true,
+      "last_attempt": "2026-11-09T08:30:00Z",
+      "last_usable": "2026-11-08T08:05:00Z",
+      "policy_hours": 12,
+      "last_error": null
+    },
+    {
+      "id": "src-price",
+      "name": "Price series (replay)",
+      "mode": "replay",
+      "enabled": true,
+      "last_attempt": "2026-11-09T08:30:00Z",
+      "last_usable": "2026-11-08T16:30:00Z",
+      "policy_hours": 24,
+      "last_error": null
+    },
+    {
+      "id": "src-import",
+      "name": "Manual file imports",
+      "mode": "simulated",
+      "enabled": true,
+      "last_attempt": "2026-11-06T09:00:00Z",
+      "last_usable": "2026-11-06T09:00:00Z",
+      "policy_hours": 168,
+      "last_error": null
+    }
+  ],
+  "source_commodity": [
+    {
+      "source_id": "src-policy",
+      "commodity": "wheat"
+    },
+    {
+      "source_id": "src-policy",
+      "commodity": "tungsten"
+    },
+    {
+      "source_id": "src-logistics",
+      "commodity": "wheat"
+    },
+    {
+      "source_id": "src-price",
+      "commodity": "tungsten"
+    },
+    {
+      "source_id": "src-import",
+      "commodity": "wheat"
+    },
+    {
+      "source_id": "src-import",
+      "commodity": "tungsten"
+    }
+  ],
+  "rule": [
+    {
+      "id": "R-W-EXP",
+      "name": "wheat-export-policy",
+      "commodity": "wheat"
+    },
+    {
+      "id": "R-W-LOG",
+      "name": "wheat-logistics",
+      "commodity": "wheat"
+    },
+    {
+      "id": "R-T-EXP",
+      "name": "tungsten-export-policy",
+      "commodity": "tungsten"
+    },
+    {
+      "id": "R-T-PRC",
+      "name": "tungsten-price",
+      "commodity": "tungsten"
+    }
+  ],
+  "rule_version": [
+    {
+      "rule_id": "R-W-EXP",
+      "v": "1.1",
+      "status": "superseded",
+      "thresholds": [
+        {
+          "key": "conf",
+          "label": "Confidence floor to raise an alert",
+          "value": 60,
+          "unit": "%"
+        },
+        {
+          "key": "sev",
+          "label": "Severity score (1 low to 4 critical)",
+          "value": 2,
+          "unit": "score"
+        },
+        {
+          "key": "stale",
+          "label": "Stale after",
+          "value": 24,
+          "unit": "hours"
+        }
+      ],
+      "created_by": "Risk Analyst A",
+      "created_at": "2026-10-20T10:00:00Z",
+      "published_by": "Risk Analyst A",
+      "published_at": "2026-10-20T10:30:00Z"
+    },
+    {
+      "rule_id": "R-W-EXP",
+      "v": "1.2",
+      "status": "published",
+      "thresholds": [
+        {
+          "key": "conf",
+          "label": "Confidence floor to raise an alert",
+          "value": 50,
+          "unit": "%"
+        },
+        {
+          "key": "sev",
+          "label": "Severity score (1 low to 4 critical)",
+          "value": 3,
+          "unit": "score"
+        },
+        {
+          "key": "stale",
+          "label": "Stale after",
+          "value": 48,
+          "unit": "hours"
+        }
+      ],
+      "created_by": "Risk Analyst A",
+      "created_at": "2026-10-28T10:00:00Z",
+      "published_by": "Risk Analyst B",
+      "published_at": "2026-10-28T11:00:00Z"
+    },
+    {
+      "rule_id": "R-W-LOG",
+      "v": "1.0",
+      "status": "published",
+      "thresholds": [
+        {
+          "key": "delay",
+          "label": "Port delay threshold",
+          "value": 3,
+          "unit": "days"
+        },
+        {
+          "key": "sev",
+          "label": "Severity score (1 low to 4 critical)",
+          "value": 2,
+          "unit": "score"
+        },
+        {
+          "key": "stale",
+          "label": "Stale after",
+          "value": 12,
+          "unit": "hours"
+        }
+      ],
+      "created_by": "Risk Analyst A",
+      "created_at": "2026-10-20T10:00:00Z",
+      "published_by": "Risk Analyst A",
+      "published_at": "2026-10-20T10:30:00Z"
+    },
+    {
+      "rule_id": "R-T-EXP",
+      "v": "1.0",
+      "status": "published",
+      "thresholds": [
+        {
+          "key": "conf",
+          "label": "Confidence floor to raise an alert",
+          "value": 60,
+          "unit": "%"
+        },
+        {
+          "key": "sev",
+          "label": "Severity score (1 low to 4 critical)",
+          "value": 4,
+          "unit": "score"
+        },
+        {
+          "key": "stale",
+          "label": "Stale after",
+          "value": 48,
+          "unit": "hours"
+        }
+      ],
+      "created_by": "Risk Analyst B",
+      "created_at": "2026-10-21T10:00:00Z",
+      "published_by": "Risk Analyst B",
+      "published_at": "2026-10-21T10:30:00Z"
+    },
+    {
+      "rule_id": "R-T-PRC",
+      "v": "1.0",
+      "status": "published",
+      "thresholds": [
+        {
+          "key": "chg",
+          "label": "30-day price change",
+          "value": 15,
+          "unit": "%"
+        },
+        {
+          "key": "sev",
+          "label": "Severity score (1 low to 4 critical)",
+          "value": 1,
+          "unit": "score"
+        },
+        {
+          "key": "stale",
+          "label": "Stale after",
+          "value": 24,
+          "unit": "hours"
+        }
+      ],
+      "created_by": "Risk Analyst B",
+      "created_at": "2026-10-21T10:00:00Z",
+      "published_by": "Risk Analyst A",
+      "published_at": "2026-10-21T10:30:00Z"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "EV-AL-W-001",
+      "source": "Simulated policy feed",
+      "object_key": "evidence/sim/wheat-policy/run-0003/obs-000124.json",
+      "sha256": "9f2c41b7a0e3d58c1f6a77b2e0c4d93a5b18e6f0a2c7d4e91b3f5a6c8d0e2f41",
+      "published_at": "2026-11-07T13:55:00Z",
+      "ingested_at": "2026-11-07T14:20:00Z",
+      "mode": "simulated",
+      "scenario_run": "wheat-policy / run-0003"
+    },
+    {
+      "id": "EV-AL-W-002",
+      "source": "Simulated logistics feed",
+      "object_key": "evidence/sim/wheat-policy/run-0003/obs-000131.json",
+      "sha256": "4be07d1c93a5f6280d7e1b4c6a9f3e50c2d8b7a14f6e0925c3d1a8b6f7e40c19",
+      "published_at": "2026-11-08T07:40:00Z",
+      "ingested_at": "2026-11-08T08:05:00Z",
+      "mode": "simulated",
+      "scenario_run": "wheat-policy / run-0003"
+    },
+    {
+      "id": "EV-AL-T-001",
+      "source": "Simulated policy feed",
+      "object_key": "evidence/sim/tungsten-export/run-0001/obs-000022.json",
+      "sha256": "c81d5a30e7f294b6a1d3c8e05f72b94d6a0e1c3f8b57d2a49e6c0f1b3d85a7e2",
+      "published_at": "2026-11-06T09:50:00Z",
+      "ingested_at": "2026-11-06T10:10:00Z",
+      "mode": "simulated",
+      "scenario_run": "tungsten-export / run-0001"
+    },
+    {
+      "id": "EV-AL-T-002",
+      "source": "Replayed price series",
+      "object_key": "evidence/replay/tungsten-price/obs-000410.csv",
+      "sha256": "1a7e5c0d92b4f8365e1c7a0d49f2b6e83c5a1d70f4e9b2c6a83d1e5f07b94c2a",
+      "published_at": "2026-11-08T16:00:00Z",
+      "ingested_at": "2026-11-08T16:30:00Z",
+      "mode": "replay",
+      "scenario_run": "tungsten-export / replay-0002"
+    }
+  ],
+  "node": [
+    {
+      "id": "w-supx",
+      "commodity": "wheat",
+      "name": "Supplier X",
+      "kind": "origin",
+      "tier": "Tier 3",
+      "country": "Country A",
+      "site": "Farm cooperative X"
+    },
+    {
+      "id": "w-supw",
+      "commodity": "wheat",
+      "name": "Supplier W",
+      "kind": "origin",
+      "tier": "Tier 3",
+      "country": "Country B",
+      "site": "Port elevator W"
+    },
+    {
+      "id": "w-traderq",
+      "commodity": "wheat",
+      "name": "Trader Q",
+      "kind": "supplier",
+      "tier": "Tier 2",
+      "country": "Country C",
+      "site": null
+    },
+    {
+      "id": "w-milly",
+      "commodity": "wheat",
+      "name": "Mill Y",
+      "kind": "supplier",
+      "tier": "Tier 1",
+      "country": "Country D",
+      "site": "Mill Y main"
+    },
+    {
+      "id": "w-plantz",
+      "commodity": "wheat",
+      "name": "Plant Z",
+      "kind": "plant",
+      "tier": null,
+      "country": "Country D",
+      "site": null
+    },
+    {
+      "id": "w-prodp",
+      "commodity": "wheat",
+      "name": "Product P (flour)",
+      "kind": "product",
+      "tier": null,
+      "country": "Country D",
+      "site": null
+    },
+    {
+      "id": "t-minem",
+      "commodity": "tungsten",
+      "name": "Mine M",
+      "kind": "origin",
+      "tier": "Tier 4",
+      "country": "Country T",
+      "site": null
+    },
+    {
+      "id": "t-minen",
+      "commodity": "tungsten",
+      "name": "Mine N",
+      "kind": "origin",
+      "tier": "Tier 4",
+      "country": "Country U",
+      "site": null
+    },
+    {
+      "id": "t-conc",
+      "commodity": "tungsten",
+      "name": "Concentrator C",
+      "kind": "supplier",
+      "tier": "Tier 3",
+      "country": "Country T",
+      "site": null
+    },
+    {
+      "id": "t-apt",
+      "commodity": "tungsten",
+      "name": "APT Refiner R",
+      "kind": "supplier",
+      "tier": "Tier 2",
+      "country": "Country V",
+      "site": null
+    },
+    {
+      "id": "t-carbide",
+      "commodity": "tungsten",
+      "name": "Carbide Maker K",
+      "kind": "supplier",
+      "tier": "Tier 1",
+      "country": "Country D",
+      "site": null
+    },
+    {
+      "id": "t-plantk",
+      "commodity": "tungsten",
+      "name": "Plant K",
+      "kind": "plant",
+      "tier": null,
+      "country": "Country D",
+      "site": null
+    },
+    {
+      "id": "t-prodr",
+      "commodity": "tungsten",
+      "name": "Product R (cutting tool)",
+      "kind": "product",
+      "tier": null,
+      "country": "Country D",
+      "site": null
+    }
+  ],
+  "supply_edge": [
+    {
+      "id": "e1",
+      "from_node": "w-supx",
+      "to_node": "w-milly",
+      "material": "wheat, milling grade",
+      "source": "Curated supplier file v1",
+      "confidence": "medium",
+      "effective_from": "2025-01-01",
+      "effective_to": null,
+      "uncertain": false,
+      "note": null
+    },
+    {
+      "id": "e2",
+      "from_node": "w-supw",
+      "to_node": "w-traderq",
+      "material": "wheat, milling grade",
+      "source": "Curated supplier file v1",
+      "confidence": "low",
+      "effective_from": "2025-03-01",
+      "effective_to": null,
+      "uncertain": true,
+      "note": "Link inferred from shipping records; not confirmed by supplier."
+    },
+    {
+      "id": "e3",
+      "from_node": "w-traderq",
+      "to_node": "w-milly",
+      "material": "wheat, milling grade",
+      "source": "Curated supplier file v1",
+      "confidence": "medium",
+      "effective_from": "2025-03-01",
+      "effective_to": null,
+      "uncertain": false,
+      "note": null
+    },
+    {
+      "id": "e4",
+      "from_node": "w-milly",
+      "to_node": "w-traderq",
+      "material": "wheat, surplus resale",
+      "source": "Curated supplier file v1",
+      "confidence": "low",
+      "effective_from": "2025-06-01",
+      "effective_to": null,
+      "uncertain": false,
+      "note": "Back-flow link that creates a cycle; traversal must stop on revisit."
+    },
+    {
+      "id": "e5",
+      "from_node": "w-milly",
+      "to_node": "w-plantz",
+      "material": "flour input",
+      "source": "Curated supplier file v1",
+      "confidence": "high",
+      "effective_from": "2024-01-01",
+      "effective_to": null,
+      "uncertain": false,
+      "note": null
+    },
+    {
+      "id": "e6",
+      "from_node": "w-plantz",
+      "to_node": "w-prodp",
+      "material": "flour",
+      "source": "Curated BOM v1",
+      "confidence": "high",
+      "effective_from": "2024-01-01",
+      "effective_to": null,
+      "uncertain": false,
+      "note": null
+    },
+    {
+      "id": "e7",
+      "from_node": "t-minem",
+      "to_node": "t-conc",
+      "material": "tungsten ore",
+      "source": "Curated supplier file v1",
+      "confidence": "high",
+      "effective_from": "2024-06-01",
+      "effective_to": null,
+      "uncertain": false,
+      "note": null
+    },
+    {
+      "id": "e8",
+      "from_node": "t-minen",
+      "to_node": "t-conc",
+      "material": "tungsten ore",
+      "source": "Curated supplier file v1",
+      "confidence": "medium",
+      "effective_from": "2025-02-01",
+      "effective_to": null,
+      "uncertain": false,
+      "note": null
+    },
+    {
+      "id": "e9",
+      "from_node": "t-conc",
+      "to_node": "t-carbide",
+      "material": "tungsten concentrate",
+      "source": "Curated supplier file v1",
+      "confidence": "medium",
+      "effective_from": "2024-06-01",
+      "effective_to": null,
+      "uncertain": true,
+      "note": "Direct shipment assumed; APT route not confirmed."
+    },
+    {
+      "id": "e10",
+      "from_node": "t-conc",
+      "to_node": "t-apt",
+      "material": "tungsten concentrate",
+      "source": "Curated supplier file v1",
+      "confidence": "high",
+      "effective_from": "2024-06-01",
+      "effective_to": null,
+      "uncertain": false,
+      "note": null
+    },
+    {
+      "id": "e11",
+      "from_node": "t-apt",
+      "to_node": "t-carbide",
+      "material": "APT / tungsten oxide",
+      "source": "Curated supplier file v1",
+      "confidence": "high",
+      "effective_from": "2024-06-01",
+      "effective_to": null,
+      "uncertain": false,
+      "note": null
+    },
+    {
+      "id": "e12",
+      "from_node": "t-carbide",
+      "to_node": "t-plantk",
+      "material": "tungsten carbide powder",
+      "source": "Curated BOM v1",
+      "confidence": "high",
+      "effective_from": "2024-01-01",
+      "effective_to": null,
+      "uncertain": false,
+      "note": null
+    },
+    {
+      "id": "e13",
+      "from_node": "t-plantk",
+      "to_node": "t-prodr",
+      "material": "carbide insert",
+      "source": "Curated BOM v1",
+      "confidence": "high",
+      "effective_from": "2024-01-01",
+      "effective_to": null,
+      "uncertain": false,
+      "note": null
+    }
+  ],
+  "alert": [
+    {
+      "id": "AL-W-001",
+      "commodity": "wheat",
+      "title": "Export restriction announced, Country A",
+      "summary": "Policy announcement restricting wheat exports from Country A. The announcement alone does not quantify lost supply.",
+      "location": "Country A",
+      "severity": "high",
+      "confidence": "medium",
+      "observed_at": "2026-11-07T14:20:00Z",
+      "mode": "simulated",
+      "scenario_run": "wheat-policy / run-0003",
+      "assessment_status": "partial",
+      "disposition": "new",
+      "rule_id": "R-W-EXP",
+      "rule_v": "1.2",
+      "rule_inputs": [
+        "policy_type = export_restriction",
+        "country = A",
+        "commodity = wheat"
+      ],
+      "evidence_id": "EV-AL-W-001"
+    },
+    {
+      "id": "AL-W-002",
+      "commodity": "wheat",
+      "title": "Port congestion, Country B corridor",
+      "summary": "Logistics delay reported on the main grain export corridor. Impact on contracted volume unknown.",
+      "location": "Country B",
+      "severity": "medium",
+      "confidence": "low",
+      "observed_at": "2026-11-08T08:05:00Z",
+      "mode": "simulated",
+      "scenario_run": "wheat-policy / run-0003",
+      "assessment_status": "unassessed",
+      "disposition": "new",
+      "rule_id": "R-W-LOG",
+      "rule_v": "1.0",
+      "rule_inputs": [
+        "event_type = port_delay",
+        "country = B",
+        "delay_days >= 3"
+      ],
+      "evidence_id": "EV-AL-W-002"
+    },
+    {
+      "id": "AL-T-001",
+      "commodity": "tungsten",
+      "title": "Export licence tightening, Country T",
+      "summary": "Simulated export-policy event affecting tungsten concentrate. Affected share not yet approved.",
+      "location": "Country T",
+      "severity": "critical",
+      "confidence": "high",
+      "observed_at": "2026-11-06T10:10:00Z",
+      "mode": "simulated",
+      "scenario_run": "tungsten-export / run-0001",
+      "assessment_status": "awaiting_validation",
+      "disposition": "confirmed",
+      "rule_id": "R-T-EXP",
+      "rule_v": "1.0",
+      "rule_inputs": [
+        "policy_type = export_licence",
+        "country = T",
+        "material = tungsten concentrate"
+      ],
+      "evidence_id": "EV-AL-T-001"
+    },
+    {
+      "id": "AL-T-002",
+      "commodity": "tungsten",
+      "title": "Concentrate price spike",
+      "summary": "Price movement above threshold. Price signals do not establish supplier disruption.",
+      "location": "Global",
+      "severity": "low",
+      "confidence": "medium",
+      "observed_at": "2026-11-08T16:30:00Z",
+      "mode": "replay",
+      "scenario_run": "tungsten-export / replay-0002",
+      "assessment_status": "unassessed",
+      "disposition": "monitor",
+      "rule_id": "R-T-PRC",
+      "rule_v": "1.0",
+      "rule_inputs": [
+        "price_change_30d > 15%"
+      ],
+      "evidence_id": "EV-AL-T-002"
+    }
+  ],
+  "alert_exposed_node": [
+    {
+      "alert_id": "AL-W-001",
+      "node_id": "w-supx",
+      "position": 0
+    },
+    {
+      "alert_id": "AL-W-001",
+      "node_id": "w-milly",
+      "position": 1
+    },
+    {
+      "alert_id": "AL-W-001",
+      "node_id": "w-plantz",
+      "position": 2
+    },
+    {
+      "alert_id": "AL-W-001",
+      "node_id": "w-prodp",
+      "position": 3
+    },
+    {
+      "alert_id": "AL-W-002",
+      "node_id": "w-supw",
+      "position": 0
+    },
+    {
+      "alert_id": "AL-T-001",
+      "node_id": "t-minem",
+      "position": 0
+    },
+    {
+      "alert_id": "AL-T-001",
+      "node_id": "t-conc",
+      "position": 1
+    },
+    {
+      "alert_id": "AL-T-001",
+      "node_id": "t-carbide",
+      "position": 2
+    },
+    {
+      "alert_id": "AL-T-001",
+      "node_id": "t-plantk",
+      "position": 3
+    },
+    {
+      "alert_id": "AL-T-001",
+      "node_id": "t-prodr",
+      "position": 4
+    }
+  ],
+  "response_option": [
+    {
+      "id": "O-W-1",
+      "alert_id": "AL-W-001",
+      "type": "sourcing",
+      "name": "Alternative Supplier V",
+      "qualification": "qualified",
+      "spec_fit": "meets",
+      "capacity": "150 t / month (stated, not verified)",
+      "unit_price": 230,
+      "quantity_available": null,
+      "lead_time_days": 10,
+      "quote_valid_until": "2026-12-15",
+      "note": "Qualified milling grade. Commercial terms not agreed."
+    },
+    {
+      "id": "O-W-2",
+      "alert_id": "AL-W-001",
+      "type": "sourcing",
+      "name": "Alternative Supplier U",
+      "qualification": "unknown",
+      "spec_fit": "unknown",
+      "capacity": "80 t / month (stated, not verified)",
+      "unit_price": 224,
+      "quantity_available": null,
+      "lead_time_days": 7,
+      "quote_valid_until": "2026-12-01",
+      "note": "Qualification not on file. Unknown qualification is not approved."
+    },
+    {
+      "id": "O-W-3",
+      "alert_id": "AL-W-001",
+      "type": "inventory",
+      "name": "Transfer stock from Plant Z2",
+      "qualification": "qualified",
+      "spec_fit": "meets",
+      "capacity": "40 t available",
+      "unit_price": null,
+      "quantity_available": 40,
+      "lead_time_days": 1,
+      "quote_valid_until": null,
+      "note": "Internal transfer. Handling cost not included."
+    },
+    {
+      "id": "O-W-4",
+      "alert_id": "AL-W-001",
+      "type": "logistics",
+      "name": "Expedited freight on current route",
+      "qualification": "qualified",
+      "spec_fit": "meets",
+      "capacity": "Route-limited",
+      "unit_price": 212,
+      "quantity_available": null,
+      "lead_time_days": 8,
+      "quote_valid_until": "2026-11-01",
+      "note": "Quote has expired. Needs a fresh quote."
+    },
+    {
+      "id": "O-T-1",
+      "alert_id": "AL-T-001",
+      "type": "sourcing",
+      "name": "Alternative APT supplier, Country V",
+      "qualification": "qualified",
+      "spec_fit": "meets",
+      "capacity": "6 t / quarter (stated, not verified)",
+      "unit_price": 46000,
+      "quantity_available": null,
+      "lead_time_days": 60,
+      "quote_valid_until": "2026-12-31",
+      "note": "Qualified for carbide-grade powder."
+    },
+    {
+      "id": "O-T-2",
+      "alert_id": "AL-T-001",
+      "type": "sourcing",
+      "name": "Recycled tungsten scrap blend",
+      "qualification": "unknown",
+      "spec_fit": "partial",
+      "capacity": "3 t / quarter (stated, not verified)",
+      "unit_price": 41000,
+      "quantity_available": null,
+      "lead_time_days": 45,
+      "quote_valid_until": "2027-01-31",
+      "note": "Specification only partly meets requirement; qualification pending."
+    },
+    {
+      "id": "O-T-3",
+      "alert_id": "AL-T-001",
+      "type": "inventory",
+      "name": "Release strategic stock",
+      "qualification": "qualified",
+      "spec_fit": "meets",
+      "capacity": "3 t available",
+      "unit_price": null,
+      "quantity_available": 3,
+      "lead_time_days": 2,
+      "quote_valid_until": null,
+      "note": "Reduces buffer for other programmes; approval needed."
+    },
+    {
+      "id": "O-T-4",
+      "alert_id": "AL-T-001",
+      "type": "sourcing",
+      "name": "Spot purchase via trader",
+      "qualification": "qualified",
+      "spec_fit": "meets",
+      "capacity": "2 t (spot)",
+      "unit_price": 52000,
+      "quantity_available": null,
+      "lead_time_days": 30,
+      "quote_valid_until": "2026-11-20",
+      "note": "Quote expires soon. Price is spot and volatile."
+    }
+  ],
+  "assumption": [
+    {
+      "id": "AS-W-1",
+      "alert_id": "AL-W-001",
+      "affected_share_pct": 100,
+      "basis": "Scenario: all contracted Country A volume replaced over the horizon (worked example).",
+      "proposed_by_id": "u-analyst-a",
+      "proposed_by_name": "Risk Analyst A",
+      "proposed_at": "2026-11-08T10:00:00Z",
+      "status": "proposed",
+      "decided_by_id": null,
+      "decided_by_name": null,
+      "decided_at": null,
+      "decision_note": null
+    },
+    {
+      "id": "AS-T-1",
+      "alert_id": "AL-T-001",
+      "affected_share_pct": 60,
+      "basis": "Licence tightening expected to cut concentrate exports by 60% over 90 days (SME estimate, simulated).",
+      "proposed_by_id": "u-analyst-a",
+      "proposed_by_name": "Risk Analyst A",
+      "proposed_at": "2026-11-06T16:00:00Z",
+      "status": "approved",
+      "decided_by_id": "u-analyst-b",
+      "decided_by_name": "Risk Analyst B",
+      "decided_at": "2026-11-07T09:30:00Z",
+      "decision_note": "Accepted for scenario purposes."
+    }
+  ],
+  "assessment": [
+    {
+      "alert_id": "AL-W-001",
+      "version": 1,
+      "created_at": "2026-11-07T15:00:00Z",
+      "note": "Initial partial assessment: exposure and cover only",
+      "calc_version": "impact-calc 0.3",
+      "assumption_id": null,
+      "exposed_value": 100,
+      "exposed_unit": "t",
+      "exposed_horizon": "30 days",
+      "reference_option_id": "O-W-1",
+      "inputs": {
+        "asOf": "2026-11-07",
+        "usableStock": 120,
+        "stockUnit": "t",
+        "demandPerDay": 20,
+        "baselinePrice": 200,
+        "currency": "USD",
+        "priceUnit": "per t",
+        "notes": [
+          "Usable stock only; reserved stock excluded",
+          "Constant demand, no other receipts assumed"
+        ]
+      },
+      "paths": [
+        {
+          "nodes": [
+            "Supplier X (Country A)",
+            "Mill Y",
+            "Plant Z",
+            "Product P"
+          ],
+          "classification": "potential",
+          "basis": "Country match; sourcing share from Supplier X not confirmed (link confidence: medium)"
+        },
+        {
+          "nodes": [
+            "Supplier W (Country B)",
+            "Trader Q",
+            "Mill Y"
+          ],
+          "classification": "unknown",
+          "basis": "Link inferred from shipping records; not part of this event"
+        }
+      ],
+      "missing": [
+        "Freight and other additional costs (not included in the cost figure)",
+        "Share of Mill Y volume sourced from Supplier X (allocation unknown)"
+      ]
+    },
+    {
+      "alert_id": "AL-T-001",
+      "version": 1,
+      "created_at": "2026-11-06T11:00:00Z",
+      "note": "Initial partial assessment: exposure and cover only",
+      "calc_version": "impact-calc 0.3",
+      "assumption_id": null,
+      "exposed_value": 18,
+      "exposed_unit": "t WO3 eq.",
+      "exposed_horizon": "90 days",
+      "reference_option_id": "O-T-1",
+      "inputs": {
+        "asOf": "2026-11-06",
+        "usableStock": 9,
+        "stockUnit": "t WO3 eq.",
+        "demandPerDay": 0.2,
+        "baselinePrice": 38000,
+        "currency": "USD",
+        "priceUnit": "per t WO3 eq.",
+        "notes": [
+          "Usable stock only",
+          "Constant demand, no other receipts assumed"
+        ]
+      },
+      "paths": [
+        {
+          "nodes": [
+            "Mine M (Country T)",
+            "Concentrator C",
+            "Carbide Maker K",
+            "Plant K",
+            "Product R"
+          ],
+          "classification": "confirmed",
+          "basis": "Direct supplier contract; Concentrator C route to Carbide Maker K assumed direct (uncertain link)"
+        },
+        {
+          "nodes": [
+            "Mine M (Country T)",
+            "Concentrator C",
+            "APT Refiner R",
+            "Carbide Maker K"
+          ],
+          "classification": "potential",
+          "basis": "APT route; share of volume not confirmed"
+        }
+      ],
+      "missing": [
+        "Inbound receipts schedule not supplied (time-phased balance not possible)",
+        "Freight and duties not included in the cost figure"
+      ]
+    },
+    {
+      "alert_id": "AL-T-001",
+      "version": 2,
+      "created_at": "2026-11-07T09:30:00Z",
+      "note": "Disruption assumption AS-T-1 approved (60% affected share)",
+      "calc_version": "impact-calc 0.3",
+      "assumption_id": "AS-T-1",
+      "exposed_value": 18,
+      "exposed_unit": "t WO3 eq.",
+      "exposed_horizon": "90 days",
+      "reference_option_id": "O-T-1",
+      "inputs": {
+        "asOf": "2026-11-06",
+        "usableStock": 9,
+        "stockUnit": "t WO3 eq.",
+        "demandPerDay": 0.2,
+        "baselinePrice": 38000,
+        "currency": "USD",
+        "priceUnit": "per t WO3 eq.",
+        "notes": [
+          "Usable stock only",
+          "Constant demand, no other receipts assumed"
+        ]
+      },
+      "paths": [
+        {
+          "nodes": [
+            "Mine M (Country T)",
+            "Concentrator C",
+            "Carbide Maker K",
+            "Plant K",
+            "Product R"
+          ],
+          "classification": "confirmed",
+          "basis": "Direct supplier contract; Concentrator C route to Carbide Maker K assumed direct (uncertain link)"
+        },
+        {
+          "nodes": [
+            "Mine M (Country T)",
+            "Concentrator C",
+            "APT Refiner R",
+            "Carbide Maker K"
+          ],
+          "classification": "potential",
+          "basis": "APT route; share of volume not confirmed"
+        }
+      ],
+      "missing": [
+        "Inbound receipts schedule not supplied (time-phased balance not possible)",
+        "Freight and duties not included in the cost figure"
+      ]
+    }
+  ],
+  "action": [
+    {
+      "id": "AC-W-001",
+      "alert_id": "AL-W-001",
+      "commodity": "wheat",
+      "option_id": "O-W-1",
+      "owner_id": "u-manager",
+      "owner_name": "Procurement Manager",
+      "target_date": "2026-11-18",
+      "rationale": "Only qualified sourcing option; open commercial talks and request a firm quote while the assumption is being approved.",
+      "status": "in_progress",
+      "created_at": "2026-11-08T11:00:00Z",
+      "created_by": "Procurement Manager",
+      "assessment_version": 1,
+      "assumption_status": "proposed"
+    },
+    {
+      "id": "AC-W-002",
+      "alert_id": "AL-W-001",
+      "commodity": "wheat",
+      "option_id": "O-W-3",
+      "owner_id": "u-analyst-b",
+      "owner_name": "Risk Analyst B",
+      "target_date": "2026-11-08",
+      "rationale": "Bridge cover with 40 t from Plant Z2 while the alternative supplier is arranged.",
+      "status": "review",
+      "created_at": "2026-11-08T11:15:00Z",
+      "created_by": "Procurement Manager",
+      "assessment_version": 1,
+      "assumption_status": "proposed"
+    },
+    {
+      "id": "AC-T-001",
+      "alert_id": "AL-T-001",
+      "commodity": "tungsten",
+      "option_id": "O-T-1",
+      "owner_id": "u-manager",
+      "owner_name": "Procurement Manager",
+      "target_date": "2026-11-20",
+      "rationale": "Only qualified option that covers the horizon; start sample qualification and commercial talks.",
+      "status": "in_progress",
+      "created_at": "2026-11-07T10:00:00Z",
+      "created_by": "Procurement Manager",
+      "assessment_version": 2,
+      "assumption_status": "approved"
+    },
+    {
+      "id": "AC-T-002",
+      "alert_id": "AL-T-001",
+      "commodity": "tungsten",
+      "option_id": "O-T-3",
+      "owner_id": "u-analyst-a",
+      "owner_name": "Risk Analyst A",
+      "target_date": "2026-11-08",
+      "rationale": "Bridge cover while the alternative supplier qualifies.",
+      "status": "review",
+      "created_at": "2026-11-06T17:00:00Z",
+      "created_by": "Procurement Manager",
+      "assessment_version": 1,
+      "assumption_status": "proposed"
+    }
+  ],
+  "action_status_history": [
+    {
+      "action_id": "AC-W-001",
+      "at": "2026-11-08T11:00:00Z",
+      "actor": "Procurement Manager",
+      "from_status": null,
+      "to_status": "open",
+      "note": "Decision recorded"
+    },
+    {
+      "action_id": "AC-W-001",
+      "at": "2026-11-08T15:30:00Z",
+      "actor": "Procurement Manager",
+      "from_status": "open",
+      "to_status": "in_progress",
+      "note": "Supplier V contacted for a firm quote"
+    },
+    {
+      "action_id": "AC-W-002",
+      "at": "2026-11-08T11:15:00Z",
+      "actor": "Procurement Manager",
+      "from_status": null,
+      "to_status": "open",
+      "note": "Decision recorded"
+    },
+    {
+      "action_id": "AC-W-002",
+      "at": "2026-11-08T16:00:00Z",
+      "actor": "Risk Analyst B",
+      "from_status": "open",
+      "to_status": "review",
+      "note": "Transfer quantity confirmed with Plant Z2, ready for review"
+    },
+    {
+      "action_id": "AC-T-001",
+      "at": "2026-11-07T10:00:00Z",
+      "actor": "Procurement Manager",
+      "from_status": null,
+      "to_status": "open",
+      "note": "Decision recorded"
+    },
+    {
+      "action_id": "AC-T-001",
+      "at": "2026-11-08T09:00:00Z",
+      "actor": "Procurement Manager",
+      "from_status": "open",
+      "to_status": "in_progress",
+      "note": "Supplier contacted"
+    },
+    {
+      "action_id": "AC-T-002",
+      "at": "2026-11-06T17:00:00Z",
+      "actor": "Procurement Manager",
+      "from_status": null,
+      "to_status": "open",
+      "note": "Decision recorded"
+    },
+    {
+      "action_id": "AC-T-002",
+      "at": "2026-11-08T12:00:00Z",
+      "actor": "Risk Analyst A",
+      "from_status": "open",
+      "to_status": "review",
+      "note": "Quantity check done, ready for review"
+    }
+  ],
+  "audit_event": [
+    {
+      "at": "2026-11-07T09:30:00Z",
+      "actor": "Risk Analyst B",
+      "event": "assumption.approved",
+      "ref": "AS-T-1",
+      "detail": "60% affected share approved"
+    }
+  ],
+  "ingestion_run": [
+    {
+      "id": "RUN-0112",
+      "source_id": "src-policy",
+      "started_at": "2026-11-08T14:20:00Z",
+      "status": "ok",
+      "accepted": 3,
+      "duplicate": 0,
+      "quarantined": 0,
+      "note": ""
+    },
+    {
+      "id": "RUN-0113",
+      "source_id": "src-logistics",
+      "started_at": "2026-11-08T08:05:00Z",
+      "status": "partial",
+      "accepted": 4,
+      "duplicate": 1,
+      "quarantined": 1,
+      "note": "One row rejected: delay_days not numeric"
+    },
+    {
+      "id": "RUN-0114",
+      "source_id": "src-price",
+      "started_at": "2026-11-08T16:30:00Z",
+      "status": "partial",
+      "accepted": 29,
+      "duplicate": 0,
+      "quarantined": 1,
+      "note": "One row missing currency"
+    },
+    {
+      "id": "RUN-0115",
+      "source_id": "src-logistics",
+      "started_at": "2026-11-09T08:30:00Z",
+      "status": "failed",
+      "accepted": 0,
+      "duplicate": 0,
+      "quarantined": 0,
+      "note": "HTTP 429, retried after backoff; no usable data yet"
+    },
+    {
+      "id": "RUN-0116",
+      "source_id": "src-import",
+      "started_at": "2026-11-06T09:00:00Z",
+      "status": "ok",
+      "accepted": 14,
+      "duplicate": 0,
+      "quarantined": 0,
+      "note": "Supplier network file v1"
+    }
+  ],
+  "quarantine_item": [
+    {
+      "id": "Q-0031",
+      "source_id": "src-logistics",
+      "run_id": "RUN-0113",
+      "received_at": "2026-11-08T08:05:00Z",
+      "reason": "delay_days is not a number",
+      "source_row": "row 3 of obs-000130.json",
+      "object_key": "evidence/sim/wheat-policy/run-0003/obs-000130.json",
+      "field": "delay_days",
+      "bad_value": "three",
+      "status": "quarantined",
+      "correction": null
+    },
+    {
+      "id": "Q-0032",
+      "source_id": "src-price",
+      "run_id": "RUN-0114",
+      "received_at": "2026-11-08T16:30:00Z",
+      "reason": "Missing required field: currency",
+      "source_row": "row 18 of obs-000409.csv",
+      "object_key": "evidence/replay/tungsten-price/obs-000409.csv",
+      "field": "currency",
+      "bad_value": "",
+      "status": "quarantined",
+      "correction": null
+    }
+  ],
+  "dead_letter": [
+    {
+      "id": "DL-0004",
+      "source_id": "src-policy",
+      "received_at": "2026-11-05T11:12:00Z",
+      "reason": "Schema version 9 not supported (mapping v1 only)",
+      "object_key": "evidence/sim/wheat-policy/run-0002/obs-000099.json",
+      "attempts": 3
+    }
+  ]
+}

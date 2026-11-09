@@ -35,10 +35,10 @@ DATASETS: dict[str, Dataset] = {
             dates=("effective_from",), enums=(("confidence", ("low", "medium", "high")),), applied=True,
             sample=(
                 "from_id,to_id,material,source,effective_from,confidence\n"
-                'w-supx,w-milly,"wheat, milling grade",Curated file v2,2026-01-01,medium\n'
-                "w-milly,w-plantz,flour input,Curated file v2,2026-01-01,high\n"
-                'w-supw,w-traderq,"wheat, milling grade",Curated file v2,2026-13-40,low\n'
-                "w-nowhere,w-milly,wheat flour,Curated file v2,2026-01-01,low"
+                'w-prairie,w-hmv,durum wheat,Curated file v2,2026-01-01,medium\n'
+                '"w-pampa","w-istanbul","wheat, milling grade",Curated file v2,2026-01-01,low\n'
+                'w-eyre,w-rott,"wheat, milling grade",Curated file v2,2026-13-40,low\n'
+                "w-nowhere,w-rott,wheat flour,Curated file v2,2026-01-01,low"
             ),
         ),
         Dataset(
@@ -46,9 +46,9 @@ DATASETS: dict[str, Dataset] = {
             numeric=("usable_qty",), dates=("as_of",),
             sample=(
                 "plant_id,material,usable_qty,unit,as_of\n"
-                "w-plantz,wheat flour input,120,t,2026-11-07\n"
-                "t-plantk,tungsten carbide powder,9,t,2026-11-06\n"
-                "w-plantz,wheat flour input,n/a,t,2026-11-07"
+                "w-p-duisburg,wheat flour input,640,t,2026-11-06\n"
+                "t-p-essen,tungsten carbide powder,2.4,t,2026-11-06\n"
+                "w-p-lyon,durum semolina,n/a,t,2026-11-06"
             ),
         ),
         Dataset(
@@ -56,8 +56,8 @@ DATASETS: dict[str, Dataset] = {
             numeric=("rate_per_day",), dates=("as_of",),
             sample=(
                 "plant_id,material,rate_per_day,unit,as_of\n"
-                "w-plantz,wheat flour input,20,t,2026-11-07\n"
-                "t-plantk,tungsten carbide powder,0.2,t,2026-11-06"
+                "w-p-duisburg,wheat flour input,40,t,2026-11-06\n"
+                "t-p-essen,tungsten carbide powder,0.06,t,2026-11-06"
             ),
         ),
         Dataset(
@@ -65,9 +65,9 @@ DATASETS: dict[str, Dataset] = {
             numeric=("price",), dates=("effective_date",),
             sample=(
                 "material,price,currency,unit,effective_date\n"
-                "wheat milling,200,USD,t,2026-11-01\n"
-                "tungsten concentrate,38000,USD,t,2026-11-01\n"
-                "tungsten concentrate,38500,,t,2026-11-02"
+                "wheat milling,285,USD,t,2026-11-01\n"
+                "tungsten concentrate,41500,USD,t,2026-11-01\n"
+                "tungsten concentrate,41800,,t,2026-11-02"
             ),
         ),
         Dataset(
@@ -77,8 +77,8 @@ DATASETS: dict[str, Dataset] = {
             enums=(("qualification", ("qualified", "unknown", "expired")),),
             sample=(
                 "supplier_id,material,qualification,lead_time_days,unit_price,quote_valid_until\n"
-                "alt-v,wheat milling,qualified,10,230,2026-12-15\n"
-                "alt-u,wheat milling,maybe,7,224,2026-12-01"
+                "w-rouen,wheat milling,qualified,30,318,2026-12-03\n"
+                "t-goslar,APT,maybe,55,52400,2026-12-14"
             ),
         ),
     )

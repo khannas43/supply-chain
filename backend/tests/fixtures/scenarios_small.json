@@ -1,0 +1,93 @@
+{
+  "scenarios": [
+    {
+      "id": "SC-W-1",
+      "name": "Wheat policy and logistics event",
+      "commodity": "wheat",
+      "seed": 4711,
+      "events": [
+        {
+          "at": 0,
+          "kind": "policy",
+          "text": "Policy announcement: export restriction, Country A (simulated)",
+          "fields": {
+            "commodity": "wheat",
+            "country": "Country A",
+            "policyType": "export_restriction",
+            "confidencePct": 60,
+            "headline": "Export restriction announced on wheat, Country A"
+          }
+        },
+        {
+          "at": 6,
+          "kind": "logistics",
+          "text": "Logistics report: port congestion, Country B corridor (simulated)",
+          "fields": {
+            "commodity": "wheat",
+            "country": "Country B",
+            "eventType": "port_delay",
+            "delayDays": 4,
+            "confidencePct": 40,
+            "headline": "Port congestion on the main grain corridor, Country B"
+          }
+        },
+        {
+          "at": 30,
+          "kind": "policy",
+          "text": "Policy clarification published; scope unchanged (simulated)",
+          "fields": {
+            "commodity": "wheat",
+            "country": "Country A",
+            "policyType": "clarification",
+            "confidencePct": 70,
+            "headline": "Clarification published; scope of the restriction unchanged"
+          }
+        }
+      ]
+    },
+    {
+      "id": "SC-T-1",
+      "name": "Tungsten export-policy event",
+      "commodity": "tungsten",
+      "seed": 1042,
+      "events": [
+        {
+          "at": 0,
+          "kind": "policy",
+          "text": "Policy announcement: export licence tightening, Country T (simulated)",
+          "fields": {
+            "commodity": "tungsten",
+            "country": "Country T",
+            "policyType": "export_licence",
+            "confidencePct": 85,
+            "headline": "Export licences for tungsten concentrate tightened, Country T"
+          }
+        },
+        {
+          "at": 12,
+          "kind": "price",
+          "text": "Price series update: concentrate above threshold (simulated)",
+          "fields": {
+            "commodity": "tungsten",
+            "indicator": "price_change_30d_pct",
+            "value": 18.5,
+            "confidencePct": 70,
+            "headline": "Tungsten concentrate price up 18.5% over 30 days"
+          }
+        },
+        {
+          "at": 36,
+          "kind": "policy",
+          "text": "Licence quota notice, Country T (simulated)",
+          "fields": {
+            "commodity": "tungsten",
+            "country": "Country T",
+            "policyType": "export_quota",
+            "confidencePct": 80,
+            "headline": "Export licence quota notice, Country T"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -9,7 +9,7 @@ Status: nine screens on the API; ingestion path (collect, worker, rules, alerts)
 | Path | Content |
 | --- | --- |
 | `frontend/` | React, TypeScript and Vite app (nine screens, mock data) |
-| `backend/` | FastAPI application, database models, Alembic migrations, demo seed and tests |
+| `backend/` | FastAPI application, database models, Alembic migrations, sample data (`seed/`) and tests |
 | `db/` | PostgreSQL 16 with PostGIS, built on an arm64-capable base image |
 | `docker-compose.yml` | The stack: `db`, `api`, `worker`, `web`, the `evidence` volume, and an optional `keycloak` |
 | `keycloak/` | The `supplychain` realm (roles, clients, seed users) and `setup.py` to install it in any Keycloak |
@@ -19,14 +19,19 @@ Status: nine screens on the API; ingestion path (collect, worker, rules, alerts)
 ## Run the stack
 
 ```
-cp .env.example .env        # then set POSTGRES_PASSWORD
+cp .env.example .env        # then set POSTGRES_PASSWORD, KEYCLOAK_ADMIN_PASSWORD and DEMO_USER_PASSWORD
 docker compose up -d --build
+docker compose exec api alembic upgrade head       # first time, and after pulling new migrations
+docker compose exec api python -m app.seed         # first time: the demo data
 ```
+
+Open http://127.0.0.1:8095 and sign in as one of the seed users (table below) with `DEMO_USER_PASSWORD`. Keycloak starts with the stack and a one-shot `keycloak-setup` service installs the realm and gives the seed users their password.
 
 | Service | URL on this machine |
 | --- | --- |
 | Web app (frontend and `/api`) | http://127.0.0.1:8095 |
 | API directly, with docs | http://127.0.0.1:8100/api/docs |
+| Keycloak admin console | http://localhost:8180 (user `KEYCLOAK_ADMIN`) |
 | PostgreSQL | `127.0.0.1:5442` |
 
 Host ports avoid other projects on the same machine; change them in `.env`.
@@ -56,16 +61,10 @@ The top bar has a development identity switch (replaced by Keycloak). `?as=u-dem
 ```
 docker compose exec api alembic upgrade head     # create or update the schema
 docker compose exec api python -m app.seed       # load the demo data (safe to repeat)
-docker compose exec api python -m app.seed --reset   # empty the seeded tables and everything the app created, then reload
+docker compose exec api python -m app.seed --reset   # empty the seeded tables and everything the app created, then reload (see Sample data)
 ```
 
 The schema is in `backend/app/models.py` and `backend/alembic/versions/`. Rules enforced by the database itself: an assumption cannot be decided by its proposer, one active assumption per alert, one published and one draft version per rule, actions point at an existing assessment snapshot, and audit events cannot be changed or deleted.
-
-The demo data is `backend/seed/demo.json`, generated from the demo data files in `frontend/src/data` (the application itself reads only from the API):
-
-```
-cd frontend && npm run seed:export
-```
 
 After changing models: `docker compose run --rm -u root -v "$PWD/backend:/srv" -w /srv api alembic revision --autogenerate -m "describe change"`, then review the generated file. `alembic check` reports drift between models and migrations.
 
@@ -123,6 +122,41 @@ Not built yet: NiFi and Kafka, a mapping editor (mappings are versioned in code)
 
 Watch the worker with `docker compose logs -f worker`.
 
+## Sample data
+
+**The demo set** (`backend/seed/demo.json`) is real geography with fictional companies and synthetic events: every country is real, every company, plant, price, volume and event is invented, and every event is labelled simulated or replay. Nothing in it describes a real policy, shipment or supplier.
+
+| | Wheat | Tungsten |
+| --- | --- | --- |
+| Supplier network | 37 nodes in 13 countries: origins (Russia, Ukraine, Kazakhstan, Romania, Australia, Canada, France, Germany, United States, Argentina), exporters and terminals, four Tier 1 blenders and millers, five plants, four products | 38 nodes in 15 countries: mines (China, Russia, Vietnam, South Korea, Portugal, Austria, Canada, Australia, Bolivia, Rwanda), concentrators and traders, APT refiners, four carbide-powder makers, four plants, four products |
+| Links | 51, with confidence, source and dates; uncertain links, and a loop between two blenders | 51, with the same, and a loop between two traders |
+| Alerts | 7, from export restrictions and quotas to port delays; new, confirmed, monitored and dismissed | 6, from export controls to price spikes |
+| Assessments | Three assessed alerts with one to three versions each; assumptions approved, superseded and rejected | Two assessed alerts, one waiting for an approver |
+| Response options | 12 across the assessed alerts: qualified and unqualified, quotes valid, expiring and expired, inventory | 9 |
+| Actions | 7, open, in progress, in review (one overdue) and done; one flagged because the assessment moved on | 5, the same mix |
+
+It also holds the trail behind every alert: the observation, the ingestion and the original payload (open it from the evidence drawer), plus observations that were *not* alerts (merged, late, below threshold, no rule), quarantined records you can correct and replay, dead-letter entries, an import history, 56 pipeline runs and a 69-event audit trail. One source is stale on purpose.
+
+**It never goes stale.** Dates are written relative to a reference moment and moved to "now" when loaded, so sources are as fresh or stale as designed, quotes expire when intended and actions are overdue when intended, whenever you load it. Re-load any time with `docker compose exec api python -m app.seed --reset`.
+
+**Scenarios** for the simulator are data too (`backend/seed/scenarios.json`): *Black Sea wheat disruption* and *Tungsten export controls*.
+
+**Edit it.** The demo set is written in readable Python (`backend/seed/build_demo.py`). Change it, rebuild, and the tests check it against the real engine (payloads pass the validators, exposure matches the traversal, calculations are what was designed):
+
+```
+docker compose run --rm --no-deps -u root -v "$PWD/backend:/srv" -w /srv api python seed/build_demo.py
+```
+
+**A large set** for testing at scale adds hundreds of generated nodes, alerts, assessments and actions to the demo set (the same arguments always give the same data; `demo-large.json` is not committed):
+
+```
+docker compose run --rm --no-deps -u root -v "$PWD/backend:/srv" -w /srv api python seed/generate_large.py --nodes 400 --alerts 200
+docker compose cp backend/seed/demo-large.json api:/tmp/demo-large.json
+docker compose exec api python -m app.seed --reset --file /tmp/demo-large.json
+```
+
+The tests use their own small fixture (`backend/tests/fixtures/`), so changing the demo set does not break them. The Import screen offers a sample file for each dataset that fits the demo network.
+
 ## Backend tests
 
 The tests create a throwaway database on the stack's PostgreSQL server, so the stack must be running.
@@ -141,17 +175,11 @@ Two modes, set by `AUTH_MODE` in `.env`:
 
 **Roles and scope.** The six roles are realm roles in Keycloak (`viewer`, `analyst`, `manager`, `steward`, `admin`, `demo_operator`); a user may hold several. An optional `commodity_scope` user attribute (`wheat` or `tungsten`) limits what that user sees; out-of-scope items answer 404. Roles are enforced on every write endpoint and on the reads behind the source health, rules and data, and simulator screens.
 
-**Try it with the Keycloak container** (no existing Keycloak needed):
+**Keycloak is part of the stack.** The seed users below get `DEMO_USER_PASSWORD` the first time; after that, change passwords in the Keycloak console and they are never overwritten (`docker compose run --rm keycloak-setup` is safe to repeat). To use the identity switch instead of signing in (local development only):
 
 ```
-echo "KEYCLOAK_ADMIN_PASSWORD=$(openssl rand -hex 12)" >> .env       # once
-docker compose --profile keycloak up -d keycloak
-set -a; . ./.env; set +a
-DEMO_USER_PASSWORD='choose-a-password' python3 keycloak/setup.py       # sets the seed users' password
-AUTH_MODE=keycloak KEYCLOAK_INTERNAL_URL=http://keycloak:8080 docker compose --profile keycloak up -d api
+AUTH_MODE=dev docker compose up -d api        # back to normal: docker compose up -d api
 ```
-
-Open http://127.0.0.1:8095 and sign in as one of the seed users below. Put `AUTH_MODE=keycloak` and `KEYCLOAK_INTERNAL_URL=http://keycloak:8080` in `.env` to make that permanent. Stop it with `docker compose --profile keycloak stop keycloak`; its data stays in a volume.
 
 | User | Roles | Sees |
 | --- | --- | --- |
@@ -164,7 +192,7 @@ Open http://127.0.0.1:8095 and sign in as one of the seed users below. Put `AUTH
 | `wheat.analyst` | analyst | wheat only |
 | `tungsten.analyst` | analyst | tungsten only |
 
-**Use an existing Keycloak instead.** Run `keycloak/setup.py` against it with its admin login; it creates the `supplychain` realm (an existing realm is left alone) and sets the seed passwords. For the instance in the local Kubernetes cluster, reach it with `kubectl -n citizen port-forward svc/keycloak 8180:8080`, then point the API at it with `KEYCLOAK_INTERNAL_URL=http://host.docker.internal:8180` in `.env` and `KEYCLOAK_ISSUER` set to the URL browsers use (`http://localhost:8180/realms/supplychain`). Realm settings live in `keycloak/supplychain-realm.json`; no passwords are stored in the repository.
+**Using another Keycloak instead** is possible: run `keycloak/setup.py` against it with its admin login (it creates the `supplychain` realm if missing and sets seed passwords), then set `KEYCLOAK_INTERNAL_URL` (how the API reaches it) and `KEYCLOAK_ISSUER` (the address browsers use) in `.env`. Realm settings live in `keycloak/supplychain-realm.json`; no passwords are stored in the repository.
 
 **Action owners** are chosen from `GET /api/people`: everyone who has signed in (demo identities are listed in dev mode only), so a person can be assigned work once they have signed in once.
 
@@ -172,8 +200,9 @@ Open http://127.0.0.1:8095 and sign in as one of the seed users below. Put `AUTH
 
 ```
 cd e2e && npm install
-APP_URL=http://127.0.0.1:8095 npm run roles                              # dev mode: every role's screens load without errors
-DEMO_USER_PASSWORD='...' npm run login                                   # keycloak mode: the real sign-in, roles and scope
+set -a; . ../.env; set +a
+npm run login                                       # the real sign-in, roles and scope (needs AUTH_MODE=keycloak, the default)
+AUTH_MODE=dev docker compose up -d api && npm run roles    # dev mode: every role's screens load without errors
 ```
 
 They use the installed Chrome (`CHROME_PATH` to change it).

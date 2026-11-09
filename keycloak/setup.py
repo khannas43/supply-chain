@@ -9,6 +9,8 @@ through `kubectl port-forward`. Standard library only.
 The admin password can also come from KEYCLOAK_ADMIN_PASSWORD. Seed users get DEMO_USER_PASSWORD if
 set, otherwise a random password that is printed once. Nothing secret is written to a file.
 Realm settings are only applied when the realm does not exist; an existing realm is left alone.
+A seed user who already has a password keeps it, so running this again never overwrites a password
+that someone changed; use --reset-passwords to set them all again.
 """
 
 import argparse
@@ -64,6 +66,7 @@ def main():
     ap.add_argument("--admin-password", default=os.environ.get("KEYCLOAK_ADMIN_PASSWORD"))
     ap.add_argument("--realm-file", default=str(REALM_FILE))
     ap.add_argument("--keep-passwords", action="store_true", help="do not set seed user passwords")
+    ap.add_argument("--reset-passwords", action="store_true", help="set every seed user's password, even if they have one")
     ap.add_argument("--wait", type=int, default=120, help="seconds to wait for Keycloak to come up")
     a = ap.parse_args()
     if not a.admin_password:
@@ -95,16 +98,28 @@ def main():
     if a.keep_passwords:
         return
     password = os.environ.get("DEMO_USER_PASSWORD") or secrets.token_urlsafe(12)
+    generated = not os.environ.get("DEMO_USER_PASSWORD")
+    changed = 0
     for u in realm_def["users"]:
         status, found = call("GET", f"{base}/admin/realms/{realm}/users?username={urllib.parse.quote(u['username'])}&exact=true", token)
         if status != 200 or not found:
             print(f"  ! user {u['username']} not found, skipped")
             continue
-        status, body = call("PUT", f"{base}/admin/realms/{realm}/users/{found[0]['id']}/reset-password", token,
+        uid = found[0]["id"]
+        if not a.reset_passwords:
+            status, creds = call("GET", f"{base}/admin/realms/{realm}/users/{uid}/credentials", token)
+            if status == 200 and any(c.get("type") == "password" for c in creds):
+                continue
+        status, body = call("PUT", f"{base}/admin/realms/{realm}/users/{uid}/reset-password", token,
                             {"type": "password", "value": password, "temporary": False})
         if status not in (200, 204):
             sys.exit(f"Setting the password for {u['username']} failed ({status}): {body}")
-    print(f"\nSeed users can sign in with this password (shown once, not stored): {password}")
+        changed += 1
+    if changed:
+        shown = f"shown once, not stored: {password}" if generated else "from DEMO_USER_PASSWORD"
+        print(f"\nSet a password for {changed} seed user(s) ({shown}).")
+    else:
+        print("\nEvery seed user already has a password; none was changed.")
     print("\n  user                   roles            scope")
     for u in realm_def["users"]:
         scope = ",".join(u.get("attributes", {}).get("commodity_scope", [])) or "all"

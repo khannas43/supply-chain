@@ -7,7 +7,9 @@ from alembic.config import Config
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import make_url
 
-from app import clock, storage
+from pathlib import Path
+
+from app import clock, simulator, storage
 from app.config import get_settings
 
 
@@ -48,12 +50,40 @@ def engine(scratch_db):
     eng.dispose()
 
 
+FIXTURES = Path(__file__).parent / "fixtures"
+
+
+@pytest.fixture(autouse=True)
+def small_scenarios():
+    """Tests run against the small fixture network, so they use the scenarios written for it."""
+    original = simulator.SCENARIOS
+    simulator.SCENARIOS = simulator.load_scenarios(FIXTURES / "scenarios_small.json")
+    yield
+    simulator.SCENARIOS = original
+
+
+@pytest.fixture
+def fixture_file():
+    return FIXTURES / "small.json"
+
+
 @pytest.fixture
 def seeded(engine):
     from app import seed
 
-    seed.load(engine)
+    seed.load(engine, path=FIXTURES / "small.json")
     return engine
+
+
+@pytest.fixture(autouse=True)
+def dev_auth(monkeypatch):
+    """Tests identify callers by header unless a test turns keycloak mode on, whatever the stack is set to."""
+    from app import config
+
+    monkeypatch.setenv("AUTH_MODE", "dev")
+    config.get_settings.cache_clear()
+    yield
+    config.get_settings.cache_clear()
 
 
 @pytest.fixture(autouse=True)

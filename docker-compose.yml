@@ -26,11 +26,11 @@ services:
     image: supplychain-api:dev
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-supplychain}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-supplychain}
-      KEYCLOAK_INTERNAL_URL: ${KEYCLOAK_INTERNAL_URL:-http://host.docker.internal:8180}
+      KEYCLOAK_INTERNAL_URL: ${KEYCLOAK_INTERNAL_URL:-http://keycloak:8080}
       KEYCLOAK_REALM: ${KEYCLOAK_REALM:-supplychain}
       KEYCLOAK_ISSUER: ${KEYCLOAK_ISSUER:-http://localhost:8180/realms/supplychain}
       EVIDENCE_DIR: /data/evidence
-      AUTH_MODE: ${AUTH_MODE:-dev}
+      AUTH_MODE: ${AUTH_MODE:-keycloak}
       KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-supplychain-web}
       KEYCLOAK_AUDIENCE: ${KEYCLOAK_AUDIENCE:-supplychain-api}
     volumes:
@@ -49,16 +49,13 @@ services:
       retries: 5
     restart: unless-stopped
 
-  # Optional: a Keycloak of our own, for when the existing one is not used. Start it with
-  #   docker compose --profile keycloak up -d keycloak
-  # then run keycloak/setup.py. It imports the `supplychain` realm on first start.
+  # Sign-in. Imports the `supplychain` realm on first start; keycloak-setup then gives the seed users a password.
   keycloak:
-    profiles: ["keycloak"]
     image: quay.io/keycloak/keycloak:26.0
     command: ["start-dev", "--import-realm"]
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
-      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?set KEYCLOAK_ADMIN_PASSWORD in .env}
       # the address browsers use; the API reaches Keycloak at http://keycloak:8080 inside the network
       KC_HOSTNAME: ${KEYCLOAK_PUBLIC_URL:-http://localhost:8180}
       KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
@@ -68,6 +65,21 @@ services:
     ports:
       - "127.0.0.1:8180:8080"
     restart: unless-stopped
+
+  # Runs once per `docker compose up`: installs the realm if it is missing and sets a password for any
+  # seed user who has none. Safe to repeat; it never overwrites a password that was changed.
+  keycloak-setup:
+    image: python:3.12-slim
+    command: ["python", "/keycloak/setup.py", "--url", "http://keycloak:8080", "--wait", "240"]
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      DEMO_USER_PASSWORD: ${DEMO_USER_PASSWORD:?set DEMO_USER_PASSWORD in .env}
+    volumes:
+      - ./keycloak:/keycloak:ro
+    depends_on:
+      - keycloak
+    restart: "no"
 
   # Consumes the outbox: parses, validates and processes collected payloads, applies the published
   # rules and raises alerts. Same image as the API.

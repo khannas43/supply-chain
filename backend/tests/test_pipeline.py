@@ -7,6 +7,10 @@ from sqlalchemy.exc import IntegrityError
 from app import worker
 
 
+# Import samples for the small fixture network (the application ships samples for the demo network).
+SAMPLES = {'supplier_network': 'from_id,to_id,material,source,effective_from,confidence\nw-supx,w-milly,"wheat, milling grade",Curated file v2,2026-01-01,medium\nw-milly,w-plantz,flour input,Curated file v2,2026-01-01,high\nw-supw,w-traderq,"wheat, milling grade",Curated file v2,2026-13-40,low\nw-nowhere,w-milly,wheat flour,Curated file v2,2026-01-01,low', 'inventory': 'plant_id,material,usable_qty,unit,as_of\nw-plantz,wheat flour input,120,t,2026-11-07\nt-plantk,tungsten carbide powder,9,t,2026-11-06\nw-plantz,wheat flour input,n/a,t,2026-11-07'}
+
+
 def who(role, id_=None, name=None):
     return {"X-Actor-Id": id_ or f"u-{role}", "X-Actor-Name": name or role.title(), "X-Actor-Role": role}
 
@@ -202,7 +206,7 @@ def csv_body(dataset_id, text_):
 
 
 def test_validate_reports_without_saving(client, seeded):
-    sample = dataset(client, "supplier_network")["sample"]
+    sample = SAMPLES["supplier_network"]
     r = client.post("/api/imports/validate", json=csv_body("supplier_network", sample), headers=ANALYST).json()
     assert r["headerErrors"] == [] and r["valid"] == 2 and r["duplicates"] == 0 and r["alreadyImportedAs"] is None
     assert [(x["row"], x["field"]) for x in r["rejected"]] == [(4, "effective_from"), (5, "from_id")]
@@ -225,7 +229,7 @@ def test_validate_checks(client):
 
 
 def test_commit_applies_valid_rows_and_quarantines_the_rest(client, seeded):
-    sample = dataset(client, "supplier_network")["sample"]
+    sample = SAMPLES["supplier_network"]
     r = client.post("/api/imports", json=csv_body("supplier_network", sample), headers=STEWARD)
     assert r.status_code == 201, r.text
     imp = r.json()
@@ -245,7 +249,7 @@ def test_commit_applies_valid_rows_and_quarantines_the_rest(client, seeded):
 
 
 def test_importing_the_same_file_twice_changes_nothing(client, seeded):
-    sample = dataset(client, "supplier_network")["sample"]
+    sample = SAMPLES["supplier_network"]
     client.post("/api/imports", json=csv_body("supplier_network", sample), headers=STEWARD)
     again = client.post("/api/imports", json=csv_body("supplier_network", sample), headers=ADMIN)
     assert again.status_code == 409 and "IMP-001" in again.json()["detail"]
@@ -254,14 +258,14 @@ def test_importing_the_same_file_twice_changes_nothing(client, seeded):
 
 
 def test_other_datasets_are_recorded_but_not_applied(client, seeded):
-    sample = dataset(client, "inventory")["sample"]
+    sample = SAMPLES["inventory"]
     imp = client.post("/api/imports", json=csv_body("inventory", sample), headers=STEWARD).json()
     assert imp["applied"] is False and imp["rows"] == 2 and imp["rejected"] == 1 and imp["version"] == 1
     assert count(seeded, "supply_edge") == 13
 
 
 def test_commit_permissions_and_refusals(client):
-    sample = dataset(client, "supplier_network")["sample"]
+    sample = SAMPLES["supplier_network"]
     body = csv_body("supplier_network", sample)
     assert client.post("/api/imports", json=body).status_code == 401
     for h in (ANALYST, MANAGER, VIEWER, DEMO):

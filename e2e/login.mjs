@@ -41,7 +41,7 @@ ok('data loads with the token', (await page.locator('.tile .big').first().innerT
 await page.screenshot({ path: new URL('./out/' + Date.now() + '.png', import.meta.url).pathname }).catch(() => undefined)
 
 // a disposition is saved under the name from the token
-await page.goto(APP + '/risk?alert=AL-W-001')
+await page.goto(APP + '/risk?alert=AL-W-002')
 await page.getByRole('button', { name: 'Confirmed' }).click()
 await page.fill('#rationale', 'Policy text verified against the source')
 await page.getByRole('button', { name: /Record confirmed/ }).click()
@@ -67,7 +67,8 @@ ok('a wheat-only user sees only the wheat switch', (await page.locator('.seg but
 ok('and is told so', (await page.locator('.devrole').innerText()).includes('wheat only'))
 await page.goto(APP + '/risk'); await page.waitForSelector('text=Port congestion')
 const rows = await page.locator('tbody tr').count()
-ok('their inbox has only wheat alerts', rows === 2, `${rows} rows`)
+const tungsten = await page.getByText('tungsten', { exact: false }).count()
+ok('their inbox has the 7 wheat alerts and no tungsten ones', rows === 7 && tungsten === 0, `${rows} rows`)
 const status = await page.evaluate(async () => {
   const k = Object.keys(sessionStorage).find((x) => x.startsWith('oidc.user:'))
   const t = JSON.parse(sessionStorage.getItem(k)).access_token

@@ -87,7 +87,7 @@ function Body({ o, alerts }: { o: OverviewData; alerts: Alert[] }) {
                     <tr key={a.id}>
                       <td><Link to={`/risk?alert=${a.id}`}>{a.title}</Link></td>
                       <td>{a.exposed!.value} {a.exposed!.unit} <span className="muted small">/ {a.exposed!.horizon}</span></td>
-                      <td>{a.daysOfCover != null ? `${a.daysOfCover} days` : <span className="muted">unavailable</span>}</td>
+                      <td>{a.daysOfCover != null ? `${Math.round(a.daysOfCover * 10) / 10} days` : <span className="muted">unavailable</span>}</td>
                       <td><ModeBadge mode={a.mode} /></td>
                     </tr>
                   ))}

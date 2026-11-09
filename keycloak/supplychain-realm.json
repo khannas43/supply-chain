@@ -109,7 +109,8 @@
       "lastName": "Viewer",
       "realmRoles": [
         "viewer"
-      ]
+      ],
+      "id": "u-viewer"
     },
     {
       "username": "risk.analyst.a",
@@ -120,7 +121,8 @@
       "lastName": "A",
       "realmRoles": [
         "analyst"
-      ]
+      ],
+      "id": "u-analyst-a"
     },
     {
       "username": "risk.analyst.b",
@@ -131,7 +133,8 @@
       "lastName": "B",
       "realmRoles": [
         "analyst"
-      ]
+      ],
+      "id": "u-analyst-b"
     },
     {
       "username": "procurement.manager",
@@ -142,7 +145,8 @@
       "lastName": "Manager",
       "realmRoles": [
         "manager"
-      ]
+      ],
+      "id": "u-manager"
     },
     {
       "username": "data.steward",
@@ -153,7 +157,8 @@
       "lastName": "Steward",
       "realmRoles": [
         "steward"
-      ]
+      ],
+      "id": "u-steward"
     },
     {
       "username": "platform.admin",
@@ -164,7 +169,8 @@
       "lastName": "Admin",
       "realmRoles": [
         "admin"
-      ]
+      ],
+      "id": "u-admin"
     },
     {
       "username": "demo.operator",
@@ -175,7 +181,8 @@
       "lastName": "Operator",
       "realmRoles": [
         "demo_operator"
-      ]
+      ],
+      "id": "u-demo"
     },
     {
       "username": "wheat.analyst",
@@ -191,7 +198,8 @@
         "commodity_scope": [
           "wheat"
         ]
-      }
+      },
+      "id": "u-analyst-wheat"
     },
     {
       "username": "tungsten.analyst",
@@ -207,7 +215,8 @@
         "commodity_scope": [
           "tungsten"
         ]
-      }
+      },
+      "id": "u-analyst-tungsten"
     }
   ]
 }

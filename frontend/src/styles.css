@@ -143,7 +143,7 @@ tbody tr.clickable:hover { background: var(--surface-2); }
 .drawer-back { position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 20; }
 .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(440px, 100vw); background: var(--surface); border-left: 1px solid var(--border); z-index: 21; padding: 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
 
-.net-wrap { height: 520px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
+.net-wrap { height: 680px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
 .react-flow__node.rfnode { border-radius: 8px; border: 1.5px solid var(--border); background: var(--surface); color: var(--text); padding: 8px 10px; font-size: 12px; width: 170px; }
 .rfnode.exposed { border-color: var(--bad); box-shadow: 0 0 0 2px var(--bad-soft); }
 .rfnode.focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
