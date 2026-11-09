@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { ROLE_LABEL } from '../auth/roles'
 import { IDENTITIES } from '../auth/users'
@@ -10,23 +11,34 @@ export function Shell() {
   const { mode, user, setUserId, signOut, canView } = useAuth()
   const { commodity, setCommodity } = useApp()
   const visible = SCREENS.filter((s) => canView(s.id))
+  const [reportsOpen, setReportsOpen] = useState(true)
 
   return (
     <div className="shell">
       <nav className="nav" aria-label="Main">
         <div className="brand">Supply Chain Risk</div>
-        {(['Product', 'Support'] as const).map((g) => {
+        {(['Product', 'Reports', 'Support'] as const).map((g) => {
           const items = visible.filter((s) => s.group === g)
           if (!items.length) return null
+          const link = (s: (typeof items)[number], sub = false) => (
+            <NavLink key={s.id} to={s.path} className={({ isActive }) => (isActive ? 'active' : '') + (sub ? ' sub' : '')}>
+              {s.label}
+            </NavLink>
+          )
+          if (g === 'Reports') {
+            return (
+              <div key={g} style={{ display: 'contents' }}>
+                <button className="nav-parent" aria-expanded={reportsOpen} aria-controls="reports-menu" onClick={() => setReportsOpen(!reportsOpen)}>
+                  <span>Reports</span><span aria-hidden="true">{reportsOpen ? '▾' : '▸'}</span>
+                </button>
+                {reportsOpen && <div id="reports-menu" className="submenu">{items.map((s) => link(s, true))}</div>}
+              </div>
+            )
+          }
           return (
             <div key={g} style={{ display: 'contents' }}>
               {g === 'Support' && <h3 className="group">Support</h3>}
-              {items.map((s) => (
-                <NavLink key={s.id} to={s.path} className={({ isActive }) => (isActive ? 'active' : '')}>
-                  <span className="code">{s.id}</span>
-                  {s.label}
-                </NavLink>
-              ))}
+              {items.map((s) => link(s))}
             </div>
           )
         })}

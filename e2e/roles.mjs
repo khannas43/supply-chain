@@ -1,5 +1,6 @@
 import { chromium } from 'playwright-core'
 const APP = process.env.APP_URL ?? 'http://127.0.0.1:8095'
+// Needs the API in dev mode (identity override):  AUTH_MODE=dev docker compose up -d api
 const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true })
 const cases = [
   ['u-analyst-a', '/sources', 'Source and pipeline health'], ['u-analyst-a', '/rules', 'Rules and reference data'],
@@ -7,6 +8,9 @@ const cases = [
   ['u-admin', '/sources', 'Source and pipeline health'], ['u-admin', '/rules', 'Rules and reference data'], ['u-admin', '/simulator', 'Simulator control'],
   ['u-demo', '/sources', 'Source and pipeline health'], ['u-demo', '/simulator', 'Simulator control'],
   ['u-manager', '/actions', 'Action register'], ['u-manager', '/response', 'Response comparison'], ['u-viewer', '/overview', 'overview'],
+  ['u-viewer', '/reports/risk-exposure', 'Risk exposure'], ['u-manager', '/reports/supplier-concentration', 'Supplier concentration'], ['u-viewer', '/reports/actions', 'Actions and decisions'],
+  ['u-steward', '/reports/data-lifecycle', 'Data life cycle'], ['u-admin', '/reports/data-lifecycle', 'Data life cycle'], ['u-analyst-a', '/reports/data-lifecycle', 'Data life cycle'],
+  ['u-viewer', '/reports/data-lifecycle', 'Access denied'], ['u-manager', '/reports/data-lifecycle', 'Access denied'],
   ['u-manager', '/rules', 'Access denied'], ['u-viewer', '/sources', 'Access denied'], ['u-analyst-a', '/simulator', 'Access denied'],
 ]
 let bad = 0

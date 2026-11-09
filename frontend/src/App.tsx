@@ -12,6 +12,7 @@ import { Actions } from './screens/Actions'
 import { Sources } from './screens/Sources'
 import { RulesData } from './screens/RulesData'
 import { Simulator } from './screens/Simulator'
+import { ActionsReport, ConcentrationReport, LifecycleReport, RiskExposureReport } from './screens/Reports'
 
 const BUILT: Record<string, JSX.Element> = {
   S01: <Overview />,
@@ -23,6 +24,10 @@ const BUILT: Record<string, JSX.Element> = {
   S07: <Sources />,
   S08: <RulesData />,
   S09: <Simulator />,
+  RP1: <RiskExposureReport />,
+  RP2: <ConcentrationReport />,
+  RP3: <ActionsReport />,
+  RP4: <LifecycleReport />,
 }
 
 export default function App() {

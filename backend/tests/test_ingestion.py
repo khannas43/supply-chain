@@ -325,7 +325,7 @@ def test_processing_the_same_message_twice_creates_no_second_alert(seeded):
     c = deliver(seeded, "src-policy", wrap(policy()))
     with seeded.begin() as conn:  # redelivery: the same envelope again under another key
         conn.execute(text("INSERT INTO outbox (topic, key, payload, created_at, available_at) "
-                          "SELECT topic, key || '-again', payload, now(), now() FROM outbox"))
+                          "SELECT topic, key || '-again', payload, created_at, available_at FROM outbox"))
     worker.drain(seeded)
     assert len(alerts(seeded)) == 1 and q(seeded, "SELECT count(*) FROM observation") == [(1,)]
     assert q(seeded, "SELECT status FROM outbox ORDER BY id") == [("done",), ("done",)]

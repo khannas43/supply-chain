@@ -5,7 +5,7 @@ from sqlalchemy import text
 from .config import get_settings
 from .db import get_engine
 from .auth import guard
-from .routers import actions, alerts, assumptions, authconfig, dataimports, network, options, overview, people, pipeline, reference, rules, simulation
+from .routers import actions, alerts, assumptions, authconfig, dataimports, network, options, overview, people, pipeline, reference, reports, rules, simulation
 
 router = APIRouter(prefix="/api")
 
@@ -64,3 +64,4 @@ app.include_router(reference.router)
 app.include_router(simulation.router)
 app.include_router(authconfig.router)
 app.include_router(people.router)
+app.include_router(reports.router)

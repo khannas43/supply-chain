@@ -157,6 +157,10 @@ docker compose exec api python -m app.seed --reset --file /tmp/demo-large.json
 
 The tests use their own small fixture (`backend/tests/fixtures/`), so changing the demo set does not break them. The Import screen offers a sample file for each dataset that fits the demo network.
 
+## Reports
+
+The **Reports** menu holds four read-only reports: risk exposure, supplier concentration, actions and decisions, and data life cycle. The last one runs 16 integrity checks across the path from source to decision (evidence present and matching its checksum, rule version recorded, every action tied to an assessment snapshot, and so on) and should always show zero violations. Browser checks: `e2e/reports.mjs`.
+
 ## Backend tests
 
 The tests create a throwaway database on the stack's PostgreSQL server, so the stack must be running.
