@@ -88,3 +88,74 @@ def test_traverse_limits_and_validation(client):
     assert client.get("/api/network/traverse?focus=w-milly&depth=9").status_code == 422
     assert client.get("/api/network/traverse?focus=w-milly&direction=sideways").status_code == 422
     assert client.get("/api/network/traverse?focus=ghost").status_code == 404
+
+
+ANALYST = {"X-Actor-Id": "u-analyst-a", "X-Actor-Name": "Risk Analyst A", "X-Actor-Role": "analyst"}
+
+
+def actor(role):
+    return {"X-Actor-Id": f"u-{role}", "X-Actor-Name": role.title(), "X-Actor-Role": role}
+
+
+def test_disposition_is_recorded_and_audited(client, seeded):
+    r = client.post("/api/alerts/AL-W-001/disposition", json={"disposition": "confirmed", "rationale": " Policy verified "}, headers=ANALYST)
+    assert r.status_code == 200 and r.json()["disposition"] == "confirmed"
+    assert client.get("/api/alerts/AL-W-001").json()["disposition"] == "confirmed"
+    from sqlalchemy import text
+
+    with seeded.connect() as c:
+        row = c.execute(text("SELECT actor, event, ref, detail FROM audit_event WHERE event = 'alert.disposition'")).one()
+    assert tuple(row) == ("Risk Analyst A", "alert.disposition", "AL-W-001", "new -> confirmed: Policy verified")
+
+
+def test_disposition_needs_a_signed_in_analyst(client):
+    body = {"disposition": "monitor", "rationale": "watch"}
+    assert client.post("/api/alerts/AL-W-001/disposition", json=body).status_code == 401
+    for role in ("viewer", "manager", "steward", "admin", "demo_operator"):
+        assert client.post("/api/alerts/AL-W-001/disposition", json=body, headers=actor(role)).status_code == 403, role
+    assert client.get("/api/alerts/AL-W-001").json()["disposition"] == "new"
+
+
+def test_disposition_validation(client):
+    url = "/api/alerts/AL-W-001/disposition"
+    assert client.post(url, json={"disposition": "new", "rationale": "x"}, headers=ANALYST).status_code == 422
+    assert client.post(url, json={"disposition": "monitor", "rationale": "   "}, headers=ANALYST).status_code == 422
+    assert client.post(url, json={"disposition": "monitor"}, headers=ANALYST).status_code == 422
+    assert client.post("/api/alerts/none/disposition", json={"disposition": "monitor", "rationale": "x"}, headers=ANALYST).status_code == 404
+
+
+AS_OF = "asOf=2026-11-09T09:00:00Z"
+
+
+def test_overview_for_wheat(client):
+    r = client.get(f"/api/overview?commodity=wheat&{AS_OF}").json()
+    assert r["activeAlerts"] == 2 and r["alertsBySeverity"] == {"high": 1, "medium": 1}
+    assert r["assessedAlerts"] == 1
+    assert r["actions"] == {"open": 0, "inProgress": 1, "review": 1, "done": 0}
+    assert r["lastAssessmentAt"].startswith("2026-11-07T15:00")
+    assert [(p["day"], p["count"]) for p in r["trend"]][-3:] == [("2026-11-07", 1), ("2026-11-08", 1), ("2026-11-09", 0)]
+    assert len(r["trend"]) == 7
+
+
+def test_overview_excludes_dismissed_alerts(client):
+    client.post("/api/alerts/AL-W-002/disposition", json={"disposition": "dismissed", "rationale": "noise"}, headers=ANALYST)
+    r = client.get(f"/api/overview?commodity=wheat&{AS_OF}").json()
+    assert r["activeAlerts"] == 1 and r["alertsBySeverity"] == {"high": 1}
+
+
+def test_source_freshness_states(client):
+    by_id = {s["id"]: s for s in client.get(f"/api/sources?{AS_OF}").json()}
+    assert by_id["src-policy"]["state"] == "fresh"
+    assert by_id["src-logistics"]["state"] == "stale" and by_id["src-logistics"]["hoursSinceUsable"] == 24.9
+    assert by_id["src-import"]["policyHours"] == 168
+    assert {s["id"] for s in client.get(f"/api/sources?commodity=tungsten&{AS_OF}").json()} == {"src-policy", "src-price", "src-import"}
+
+
+def test_failing_and_paused_sources_never_read_as_fresh(client, seeded):
+    from sqlalchemy import text
+
+    with seeded.begin() as c:
+        c.execute(text("UPDATE source SET last_error = 'Timeout after 30 s' WHERE id = 'src-policy'"))
+        c.execute(text("UPDATE source SET enabled = false WHERE id = 'src-price'"))
+    by_id = {s["id"]: s["state"] for s in client.get(f"/api/sources?{AS_OF}").json()}
+    assert by_id["src-policy"] == "failing" and by_id["src-price"] == "paused"

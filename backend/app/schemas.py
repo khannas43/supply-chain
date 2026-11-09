@@ -4,7 +4,7 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, PlainSerializer
+from pydantic import BaseModel, ConfigDict, Field, PlainSerializer, StringConstraints
 from pydantic.alias_generators import to_camel
 
 # Quantities are Decimal in the server and plain JSON numbers on the wire.
@@ -176,3 +176,46 @@ class AssessmentOut(Out):
     assumption: AssumptionOut | None  # the active assumption, if any
     calc: CalcOut
     versions: list[VersionOut]
+
+
+class DispositionIn(BaseModel):
+    disposition: Literal["confirmed", "monitor", "dismissed"]
+    rationale: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=2000)]
+
+
+class SourceOut(Out):
+    id: str
+    name: str
+    mode: Mode
+    enabled: bool
+    commodities: list[Commodity]
+    last_attempt: datetime | None
+    last_usable: datetime | None
+    policy_hours: int
+    last_error: str | None
+    state: Literal["fresh", "stale", "failing", "paused"]
+    hours_since_usable: Num | None
+
+
+class ActionCountsOut(Out):
+    open: int
+    in_progress: int
+    review: int
+    done: int
+
+
+class TrendPoint(Out):
+    day: date
+    count: int
+
+
+class OverviewOut(Out):
+    commodity: Commodity
+    as_of: datetime
+    active_alerts: int  # not dismissed
+    alerts_by_severity: dict[str, int]
+    assessed_alerts: int  # active alerts that have an assessment
+    actions: ActionCountsOut
+    last_assessment_at: datetime | None
+    trend: list[TrendPoint]  # alerts observed per day, last 7 days
+    sources: list[SourceOut]

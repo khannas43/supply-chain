@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { useStore } from '../data/store'
-import type { Disposition, Mode, Severity } from '../data/types'
+import { api } from '../api/client'
+import { useApi } from '../api/hooks'
+import { Loaded } from '../components/Remote'
+import type { Alert, Disposition, Mode, Severity } from '../data/types'
 import { useApp } from '../components/AppContext'
 import { useAuth } from '../auth/AuthContext'
 import {
@@ -14,13 +16,16 @@ export function RiskInbox() {
   const { commodity, openEvidence } = useApp()
   const { can } = useAuth()
   const [params, setParams] = useSearchParams()
-  const { alerts: items, setDisposition } = useStore()
+  const remote = useApi<Alert[]>(`/alerts?commodity=${commodity}`)
+  const items = remote.data ?? []
   const [sev, setSev] = useState<'all' | Severity>('all')
   const [mode, setMode] = useState<'all' | Mode>('all')
   const [disp, setDisp] = useState<'all' | Disposition>('all')
   const [rationale, setRationale] = useState('')
   const [pending, setPending] = useState<Disposition | null>(null)
   const [log, setLog] = useState<string[]>([])
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   const rows = useMemo(
     () =>
@@ -39,15 +44,25 @@ export function RiskInbox() {
     setPending(null)
     setRationale('')
     setLog([])
+    setSaveError(null)
     setParams(id ? { alert: id } : {})
   }
 
-  const apply = () => {
+  const apply = async () => {
     if (!selected || !pending || !rationale.trim()) return
-    setDisposition(selected.id, pending, rationale.trim())
-    setLog((l) => [`${pending} recorded with rationale (demo state, resets on reload)`, ...l])
-    setPending(null)
-    setRationale('')
+    setSaving(true)
+    setSaveError(null)
+    try {
+      await api.post(`/alerts/${selected.id}/disposition`, { disposition: pending, rationale: rationale.trim() })
+      setLog((l) => [`${pending} recorded and added to the audit trail`, ...l])
+      setPending(null)
+      setRationale('')
+      remote.reload()
+    } catch (e) {
+      setSaveError((e as Error).message)
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -71,6 +86,7 @@ export function RiskInbox() {
           </select></div>
       </div>
 
+      {remote.data === null && <Loaded remote={remote}>{() => null}</Loaded>}
       <div className="split">
         <section className="card" style={{ padding: 0 }}>
           {rows.length === 0 ? (
@@ -152,9 +168,10 @@ export function RiskInbox() {
                       <div className="field" style={{ marginTop: 10 }}>
                         <label htmlFor="rationale">Rationale (required)</label>
                         <textarea id="rationale" value={rationale} onChange={(e) => setRationale(e.target.value)} />
-                        <div><button className="btn primary" disabled={!rationale.trim()} onClick={apply}>Record {pending}</button></div>
+                        <div><button className="btn primary" disabled={!rationale.trim() || saving} onClick={apply}>{saving ? 'Saving…' : `Record ${pending}`}</button></div>
                       </div>
                     )}
+                    {saveError && <div className="notice" role="alert" style={{ marginTop: 8 }}>{saveError}</div>}
                     {log.map((l, i) => <div key={i} className="muted small" style={{ marginTop: 8 }}>{l}</div>)}
                   </>
                 ) : (

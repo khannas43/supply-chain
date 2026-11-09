@@ -1,3 +1,4 @@
+from datetime import UTC, datetime
 from decimal import Decimal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -5,12 +6,13 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .. import calc
+from ..auth import Actor, require_role
 from ..deps import get_session
 from ..models import (
-    Alert, AlertExposedNode, Assessment, Assumption, Evidence, ResponseOption, Rule, RuleVersion,
+    Alert, AlertExposedNode, AuditEvent, Assessment, Assumption, Evidence, ResponseOption, Rule, RuleVersion,
 )
 from ..schemas import (
-    AlertOut, AssessmentOut, AssumptionOut, CalcOut, Commodity, Disposition, EvidenceOut, ExposedOut, Mode,
+    AlertOut, AssessmentOut, AssumptionOut, CalcOut, Commodity, Disposition, DispositionIn, EvidenceOut, ExposedOut, Mode,
     PersonOut, ResponseOptionOut, Severity, VersionOut,
 )
 
@@ -88,6 +90,29 @@ def get_alert(alert_id: str, session: Session = Depends(get_session)) -> AlertOu
     alert = session.get(Alert, alert_id)
     if alert is None:
         raise HTTPException(404, f"Alert {alert_id} not found")
+    return _build_alerts(session, [alert])[0]
+
+
+@router.post("/{alert_id}/disposition", response_model=AlertOut)
+def set_disposition(
+    alert_id: str,
+    body: DispositionIn,
+    actor: Actor = Depends(require_role("analyst")),
+    session: Session = Depends(get_session),
+) -> AlertOut:
+    """Confirm, monitor or dismiss an alert. A rationale is required and the change is audited."""
+    alert = session.get(Alert, alert_id)
+    if alert is None:
+        raise HTTPException(404, f"Alert {alert_id} not found")
+    previous = alert.disposition
+    alert.disposition = body.disposition
+    session.add(
+        AuditEvent(
+            at=datetime.now(UTC), actor=actor.name, event="alert.disposition", ref=alert_id,
+            detail=f"{previous} -> {body.disposition}: {body.rationale}",
+        )
+    )
+    session.commit()
     return _build_alerts(session, [alert])[0]
 
 

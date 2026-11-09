@@ -30,8 +30,8 @@ export interface Alert {
   ruleInputs: string[]
   evidence: Evidence
   exposedNodeIds: string[]
-  exposed?: { value: number; unit: string; horizon: string }
-  daysOfCover?: number
+  exposed?: { value: number; unit: string; horizon: string } | null
+  daysOfCover?: number | null
 }
 
 export type NodeKind = 'origin' | 'supplier' | 'plant' | 'product'
@@ -41,9 +41,9 @@ export interface NetNode {
   commodity: Commodity
   name: string
   kind: NodeKind
-  tier?: string
+  tier?: string | null
   country: string
-  site?: string
+  site?: string | null
 }
 
 export interface NetEdge {
@@ -55,7 +55,7 @@ export interface NetEdge {
   confidence: Confidence
   effectiveFrom: string
   uncertain?: boolean
-  note?: string
+  note?: string | null
 }
 
 export interface SourceStatus {

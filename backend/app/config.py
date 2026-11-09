@@ -6,6 +6,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=None, extra="ignore")
 
+    # "dev": the caller's identity is read from X-Actor-* headers. For local development only;
+    # it is replaced by Keycloak token validation and must never face a network.
+    auth_mode: str = "dev"
+
     database_url: str = "postgresql+psycopg://supplychain:change-me@db:5432/supplychain"
 
     # Keycloak runs outside this stack (existing `citizen` instance, reached through a port-forward).

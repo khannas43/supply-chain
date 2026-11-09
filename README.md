@@ -2,7 +2,7 @@
 
 Local application that maps a supply chain, detects commodity risk events, assesses business impact and records a response, for wheat and tungsten. Everything runs locally in Docker.
 
-Status: frontend prototype of nine screens on mock data; Docker stack with database, schema, demo data and an API skeleton. The API serves alerts, network traversal and assessments (read-only, not yet authenticated); the frontend still uses mock data.
+Status: frontend prototype of nine screens on mock data; Docker stack with database, schema, demo data and an API skeleton. The API serves alerts, network traversal and assessments ; screens S01 to S03 use it, the other six still use mock data. Writes need an identity (development headers for now).
 
 ## Layout
 
@@ -69,13 +69,16 @@ After changing models: `docker compose run --rm -u root -v "$PWD/backend:/srv" -
 
 ## API
 
-Read-only so far. Interactive docs at http://127.0.0.1:8100/api/docs. Field names are camelCase, matching the frontend types. Login is not enforced yet; it arrives with Keycloak.
+Interactive docs at http://127.0.0.1:8100/api/docs. Field names are camelCase, matching the frontend types. Read endpoints are open. Write endpoints need a signed-in role; until Keycloak is connected the caller is identified by `X-Actor-Id`, `X-Actor-Name` and `X-Actor-Role` headers (`AUTH_MODE=dev`, local development only).
 
 | Endpoint | Returns |
 | --- | --- |
 | `GET /api/alerts` | Alerts; filters `commodity`, `severity`, `mode`, `disposition` |
 | `GET /api/alerts/{id}` | One alert with evidence, rule version, matched nodes, exposure and days of cover |
 | `GET /api/alerts/{id}/assessment` | Latest assessment snapshot with calculated measures, active assumption, reference option and version history. Measures that need an approved assumption are null, with the reason |
+| `POST /api/alerts/{id}/disposition` | Confirm, monitor or dismiss an alert. Analyst role; rationale required; writes an audit event |
+| `GET /api/overview?commodity=` | Counts, action totals, last assessment, 7-day trend and source freshness for the overview screen |
+| `GET /api/sources` | Sources with freshness state (fresh, stale, failing, paused) |
 | `GET /api/network/nodes` | Network nodes; filter `commodity` |
 | `GET /api/network/traverse` | Upstream and/or downstream suppliers from `focus`, bounded by `depth` (1 to 5) and `limit`, with `direction`, `material` filter, `truncated` flag and `cycleEdgeIds` |
 

@@ -2,9 +2,13 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Background, Controls, MarkerType, ReactFlow, type Edge, type Node } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
-import { alerts, edges as allEdges, nodes as allNodes, traverse, type Direction } from '../data/mock'
+import { useApi, useDebounced } from '../api/hooks'
+import type { TraverseResult } from '../api/types'
 import { useApp } from '../components/AppContext'
 import { ConfidenceBadge, PageHead } from '../components/ui'
+import type { Alert, NetNode } from '../data/types'
+
+type Direction = 'upstream' | 'downstream' | 'both'
 
 const defaultFocus = { wheat: 'w-milly', tungsten: 't-carbide' } as const
 
@@ -17,22 +21,30 @@ export function SupplierNetwork() {
   const [material, setMaterial] = useState('')
   const [selected, setSelected] = useState<{ type: 'node' | 'edge'; id: string } | null>(null)
 
-  const commodityNodes = allNodes.filter((n) => n.commodity === commodity)
+  const nodesRemote = useApi<NetNode[]>(`/network/nodes?commodity=${commodity}`)
+  const alertsRemote = useApi<Alert[]>(`/alerts?commodity=${commodity}`)
+  const commodityNodes = (nodesRemote.data ?? []).filter((n) => n.commodity === commodity)
+
   const focusParam = params.get('focus')
-  const focusId = commodityNodes.some((n) => n.id === focusParam) ? focusParam! : defaultFocus[commodity]
-  const alert = alerts.find((a) => a.id === params.get('alert') && a.commodity === commodity)
+  const focusId = commodityNodes.some((n) => n.id === focusParam) ? focusParam! : commodityNodes.some((n) => n.id === defaultFocus[commodity]) ? defaultFocus[commodity] : commodityNodes[0]?.id
+  const alert = (alertsRemote.data ?? []).find((a) => a.id === params.get('alert') && a.commodity === commodity)
   const exposed = useMemo(() => new Set(alert?.exposedNodeIds ?? []), [alert])
+
+  // the material box is typed into; ask the API once typing pauses
+  const materialQuery = useDebounced(material.trim(), 300)
+  const query = focusId
+    ? `/network/traverse?focus=${encodeURIComponent(focusId)}&direction=${direction}&depth=${depth}&limit=${limit}${materialQuery ? `&material=${encodeURIComponent(materialQuery)}` : ''}`
+    : null
+  const traverse = useApi<TraverseResult>(query)
+  const result = traverse.data && traverse.data.focus === focusId ? traverse.data : null
 
   // keep the selection from pointing at something that is no longer on screen
   useEffect(() => setSelected(null), [commodity, focusId])
 
-  const result = useMemo(
-    () => traverse(focusId, direction, depth, material, limit),
-    [focusId, direction, depth, material, limit],
-  )
-  const cycles = new Set(result.cycleEdgeIds)
+  const cycles = useMemo(() => new Set(result?.cycleEdgeIds ?? []), [result])
 
   const flowNodes: Node[] = useMemo(() => {
+    if (!result) return []
     const perLevel = new Map<number, number>()
     return result.nodes.map(({ node, level }) => {
       const row = perLevel.get(level) ?? 0
@@ -58,7 +70,7 @@ export function SupplierNetwork() {
 
   const flowEdges: Edge[] = useMemo(
     () =>
-      result.edges.map((e) => {
+      (result?.edges ?? []).map((e) => {
         const cyc = cycles.has(e.id)
         const colour = cyc ? 'var(--warn)' : 'var(--muted)'
         return {
@@ -70,21 +82,26 @@ export function SupplierNetwork() {
           markerEnd: { type: MarkerType.ArrowClosed, color: colour },
         }
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [result],
+    [result, cycles],
   )
 
-  const selNode = selected?.type === 'node' ? allNodes.find((n) => n.id === selected.id) : undefined
-  const selEdge = selected?.type === 'edge' ? allEdges.find((e) => e.id === selected.id) : undefined
-  const nodeName = (id: string) => allNodes.find((n) => n.id === id)?.name ?? id
-  const relatedAlerts = selNode ? alerts.filter((a) => a.exposedNodeIds.includes(selNode.id)) : []
-  const uncertainShown = result.edges.filter((e) => e.uncertain).length
+  const nodeName = (id: string) => commodityNodes.find((n) => n.id === id)?.name ?? id
+  const selNode = selected?.type === 'node' ? result?.nodes.find((n) => n.node.id === selected.id)?.node : undefined
+  const selEdge = selected?.type === 'edge' ? result?.edges.find((e) => e.id === selected.id) : undefined
+  const relatedAlerts = selNode ? (alertsRemote.data ?? []).filter((a) => a.exposedNodeIds.includes(selNode.id)) : []
+  const uncertainShown = result?.edges.filter((e) => e.uncertain).length ?? 0
+  const error = nodesRemote.error ?? traverse.error ?? alertsRemote.error
+  const retry = () => { nodesRemote.reload(); alertsRemote.reload(); traverse.reload() }
 
   return (
     <div className="page">
       <PageHead title="Supplier network">
         Upstream and downstream links around a supplier, with the source, date and confidence of each link. This view is read-only; changes arrive through import.
       </PageHead>
+
+      {error && (
+        <div className="notice" role="alert">{error} <button className="btn" onClick={retry}>Retry</button></div>
+      )}
 
       {alert && (
         <div className="notice info">
@@ -95,7 +112,7 @@ export function SupplierNetwork() {
 
       <div className="row">
         <div className="field"><label htmlFor="n-focus">Focus supplier</label>
-          <select id="n-focus" value={focusId} onChange={(e) => { const p = new URLSearchParams(params); p.set('focus', e.target.value); setParams(p) }}>
+          <select id="n-focus" value={focusId ?? ''} onChange={(e) => { const p = new URLSearchParams(params); p.set('focus', e.target.value); setParams(p) }}>
             {commodityNodes.map((n) => <option key={n.id} value={n.id}>{n.name}</option>)}
           </select></div>
         <div className="field"><label htmlFor="n-dir">Direction</label>
@@ -114,11 +131,16 @@ export function SupplierNetwork() {
           <input id="n-mat" value={material} onChange={(e) => setMaterial(e.target.value)} placeholder="e.g. concentrate" /></div>
       </div>
 
-      <div className="row small">
-        <strong>Showing {result.nodes.length} of {result.totalReachable} reachable nodes</strong>
-        {result.truncated && <span className="badge b-warn">Result limit reached, raise the limit or narrow the depth</span>}
-        {result.cycleEdgeIds.length > 0 && <span className="badge b-warn">{result.cycleEdgeIds.length} cycle link{result.cycleEdgeIds.length > 1 ? 's' : ''} detected and not followed</span>}
-        {uncertainShown > 0 && <span className="badge b-neutral">{uncertainShown} uncertain link{uncertainShown > 1 ? 's' : ''}</span>}
+      <div className="row small" aria-live="polite">
+        {result ? (
+          <>
+            <strong>Showing {result.nodes.length} of {result.totalReachable} reachable nodes</strong>
+            {result.truncated && <span className="badge b-warn">Result limit reached, raise the limit or narrow the depth</span>}
+            {result.cycleEdgeIds.length > 0 && <span className="badge b-warn">{result.cycleEdgeIds.length} cycle link{result.cycleEdgeIds.length > 1 ? 's' : ''} detected and not followed</span>}
+            {uncertainShown > 0 && <span className="badge b-neutral">{uncertainShown} uncertain link{uncertainShown > 1 ? 's' : ''}</span>}
+          </>
+        ) : !error && <span className="muted">Loading network…</span>}
+        {traverse.loading && result && <span className="muted">Updating…</span>}
       </div>
 
       <div className="split">
