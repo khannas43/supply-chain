@@ -11,7 +11,9 @@ Status: nine screens on the API; ingestion path (collect, worker, rules, alerts)
 | `frontend/` | React, TypeScript and Vite app (nine screens, mock data) |
 | `backend/` | FastAPI application, database models, Alembic migrations, demo seed and tests |
 | `db/` | PostgreSQL 16 with PostGIS, built on an arm64-capable base image |
-| `docker-compose.yml` | The stack: `db`, `api`, `worker`, `web`, and the `evidence` volume |
+| `docker-compose.yml` | The stack: `db`, `api`, `worker`, `web`, the `evidence` volume, and an optional `keycloak` |
+| `keycloak/` | The `supplychain` realm (roles, clients, seed users) and `setup.py` to install it in any Keycloak |
+| `e2e/` | Browser checks (Playwright) for sign-in, roles and screens |
 | `.env.example` | Settings template; copy to `.env` |
 
 ## Run the stack
@@ -130,15 +132,51 @@ docker compose run --rm --no-deps -u root -v "$PWD/backend:/srv" -w /srv api \
   sh -c "pip install -q -r requirements-dev.txt && python -m pytest -q"
 ```
 
-## Identity
+## Sign-in
 
-Login will use an existing Keycloak instance in the local Kubernetes cluster (namespace `citizen`), with a separate realm for this project. Reach it with:
+Two modes, set by `AUTH_MODE` in `.env`:
+
+- **`dev`** (default): the top bar has an identity switch (`/simulator?as=u-demo` opens the app as that identity). The API trusts identity headers in this mode, so it is for local development only and must never face a network.
+- **`keycloak`**: the browser signs in with Authorization Code and PKCE. The API accepts only a valid access token on every request except health checks and the login settings: RS256 signature checked against the realm's keys, issuer and audience matched, not expired. Identity headers are ignored. A user with no role in the application gets "No access yet".
+
+**Roles and scope.** The six roles are realm roles in Keycloak (`viewer`, `analyst`, `manager`, `steward`, `admin`, `demo_operator`); a user may hold several. An optional `commodity_scope` user attribute (`wheat` or `tungsten`) limits what that user sees; out-of-scope items answer 404. Roles are enforced on every write endpoint and on the reads behind the source health, rules and data, and simulator screens.
+
+**Try it with the Keycloak container** (no existing Keycloak needed):
 
 ```
-kubectl -n citizen port-forward svc/keycloak 8180:8080
+echo "KEYCLOAK_ADMIN_PASSWORD=$(openssl rand -hex 12)" >> .env       # once
+docker compose --profile keycloak up -d keycloak
+set -a; . ./.env; set +a
+DEMO_USER_PASSWORD='choose-a-password' python3 keycloak/setup.py       # sets the seed users' password
+AUTH_MODE=keycloak KEYCLOAK_INTERNAL_URL=http://keycloak:8080 docker compose --profile keycloak up -d api
 ```
 
-Containers reach the forwarded port through `host.docker.internal`. Settings are in `.env`. `/api/health/keycloak` reports whether the realm is reachable.
+Open http://127.0.0.1:8095 and sign in as one of the seed users below. Put `AUTH_MODE=keycloak` and `KEYCLOAK_INTERNAL_URL=http://keycloak:8080` in `.env` to make that permanent. Stop it with `docker compose --profile keycloak stop keycloak`; its data stays in a volume.
+
+| User | Roles | Sees |
+| --- | --- | --- |
+| `executive.viewer` | viewer | both commodities |
+| `risk.analyst.a`, `risk.analyst.b` | analyst | both |
+| `procurement.manager` | manager | both |
+| `data.steward` | steward | both |
+| `platform.admin` | admin | both |
+| `demo.operator` | demo_operator | both |
+| `wheat.analyst` | analyst | wheat only |
+| `tungsten.analyst` | analyst | tungsten only |
+
+**Use an existing Keycloak instead.** Run `keycloak/setup.py` against it with its admin login; it creates the `supplychain` realm (an existing realm is left alone) and sets the seed passwords. For the instance in the local Kubernetes cluster, reach it with `kubectl -n citizen port-forward svc/keycloak 8180:8080`, then point the API at it with `KEYCLOAK_INTERNAL_URL=http://host.docker.internal:8180` in `.env` and `KEYCLOAK_ISSUER` set to the URL browsers use (`http://localhost:8180/realms/supplychain`). Realm settings live in `keycloak/supplychain-realm.json`; no passwords are stored in the repository.
+
+**Action owners** are chosen from `GET /api/people`: everyone who has signed in (demo identities are listed in dev mode only), so a person can be assigned work once they have signed in once.
+
+## Browser checks
+
+```
+cd e2e && npm install
+APP_URL=http://127.0.0.1:8095 npm run roles                              # dev mode: every role's screens load without errors
+DEMO_USER_PASSWORD='...' npm run login                                   # keycloak mode: the real sign-in, roles and scope
+```
+
+They use the installed Chrome (`CHROME_PATH` to change it).
 
 ## Notes
 

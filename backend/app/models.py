@@ -545,3 +545,18 @@ class Observation(Base):
     ingested_at: Mapped[datetime] = mapped_column(TS)
     outcome: Mapped[str] = mapped_column(String(30))
     alert_id: Mapped[str | None] = mapped_column(ForeignKey("alert.id"))
+
+
+# ---- People ----
+
+
+class Person(Base):
+    """People who can be named as action owners. Filled when someone signs in; demo rows come from the seed."""
+
+    __tablename__ = "person"
+    __table_args__ = (_check("source", ("login", "demo"), "ck_person_source"),)
+    id: Mapped[str] = mapped_column(String(100), primary_key=True)  # the token subject, or a demo id
+    name: Mapped[str] = mapped_column(String(200))
+    roles: Mapped[list] = mapped_column(JSONB)
+    source: Mapped[str] = mapped_column(String(10))
+    last_seen: Mapped[datetime | None] = mapped_column(TS)

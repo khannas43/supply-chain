@@ -5,7 +5,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .. import audit, clock
-from ..auth import Actor, require_role
+from .. import scope
+from ..auth import Actor, read_role, require_role
 from ..deps import get_session
 from ..models import Rule, RuleVersion
 from ..schemas import Commodity, DraftIn, RuleOut, RuleVersionOut, ThresholdOut
@@ -45,8 +46,14 @@ def _check_value(label: str, unit: str, value: Decimal) -> None:
 
 
 @router.get("", response_model=list[RuleOut])
-def list_rules(commodity: Commodity | None = None, session: Session = Depends(get_session)) -> list[RuleOut]:
+def list_rules(
+    commodity: Commodity | None = None,
+    session: Session = Depends(get_session),
+    actor: Actor | None = Depends(read_role("analyst", "steward", "admin")),
+) -> list[RuleOut]:
     query = select(Rule).order_by(Rule.commodity, Rule.name)
+    if (visible := scope.clause(actor, Rule.commodity)) is not None:
+        query = query.where(visible)
     if commodity:
         query = query.where(Rule.commodity == commodity)
     return [_out(session, r) for r in session.scalars(query)]
@@ -66,6 +73,7 @@ def save_draft(
     rule = session.get(Rule, rule_id)
     if rule is None:
         raise HTTPException(404, f"Rule {rule_id} not found")
+    scope.require(actor, rule.commodity, f"Rule {rule_id} not found")
     versions = _versions(session, rule_id)
     latest = versions[-1]
     published = next((x for x in versions if x.status == "published"), latest)
@@ -103,6 +111,7 @@ def publish(
     target = session.get(RuleVersion, (rule_id, version)) if rule else None
     if rule is None or target is None:
         raise HTTPException(404, f"Rule {rule_id} version {version} not found")
+    scope.require(actor, rule.commodity, f"Rule {rule_id} version {version} not found")
     if target.status != "draft":
         raise HTTPException(409, f"Only a draft can be published; this version is {target.status}")
     for other in session.scalars(select(RuleVersion).where(RuleVersion.rule_id == rule_id, RuleVersion.status == "published")):

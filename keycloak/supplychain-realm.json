@@ -1,0 +1,213 @@
+{
+  "realm": "supplychain",
+  "displayName": "Supply Chain Risk",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "bruteForceProtected": true,
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "roles": {
+    "realm": [
+      {
+        "name": "viewer",
+        "description": "Executive Viewer: read-only view of exposure, impact and actions"
+      },
+      {
+        "name": "analyst",
+        "description": "Risk Analyst: reviews alerts, proposes and approves assumptions, owns risk rules"
+      },
+      {
+        "name": "manager",
+        "description": "Procurement Manager: selects responses, assigns owners, owns the action register"
+      },
+      {
+        "name": "steward",
+        "description": "Data Steward: imports data, resolves quarantined records, maintains reference data"
+      },
+      {
+        "name": "admin",
+        "description": "Platform Admin: sources, rules and simulator; reads everything"
+      },
+      {
+        "name": "demo_operator",
+        "description": "Demo Operator: controls the simulator"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "supplychain-web",
+      "name": "Supply Chain web app",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://127.0.0.1:8095/*",
+        "http://localhost:8095/*",
+        "http://127.0.0.1:5180/*",
+        "http://localhost:5180/*"
+      ],
+      "webOrigins": [
+        "http://127.0.0.1:8095",
+        "http://localhost:8095",
+        "http://127.0.0.1:5180",
+        "http://localhost:5180"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://127.0.0.1:8095/*##http://localhost:8095/*##http://127.0.0.1:5180/*##http://localhost:5180/*"
+      },
+      "protocolMappers": [
+        {
+          "name": "api-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.client.audience": "supplychain-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        },
+        {
+          "name": "commodity-scope",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "commodity_scope",
+            "claim.name": "commodity_scope",
+            "jsonType.label": "String",
+            "multivalued": "true",
+            "access.token.claim": "true",
+            "id.token.claim": "false",
+            "userinfo.token.claim": "false"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "supplychain-api",
+      "name": "Supply Chain API",
+      "enabled": true,
+      "bearerOnly": true
+    }
+  ],
+  "users": [
+    {
+      "username": "executive.viewer",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "executive.viewer@example.invalid",
+      "firstName": "Executive",
+      "lastName": "Viewer",
+      "realmRoles": [
+        "viewer"
+      ]
+    },
+    {
+      "username": "risk.analyst.a",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "risk.analyst.a@example.invalid",
+      "firstName": "Risk Analyst",
+      "lastName": "A",
+      "realmRoles": [
+        "analyst"
+      ]
+    },
+    {
+      "username": "risk.analyst.b",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "risk.analyst.b@example.invalid",
+      "firstName": "Risk Analyst",
+      "lastName": "B",
+      "realmRoles": [
+        "analyst"
+      ]
+    },
+    {
+      "username": "procurement.manager",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "procurement.manager@example.invalid",
+      "firstName": "Procurement",
+      "lastName": "Manager",
+      "realmRoles": [
+        "manager"
+      ]
+    },
+    {
+      "username": "data.steward",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "data.steward@example.invalid",
+      "firstName": "Data",
+      "lastName": "Steward",
+      "realmRoles": [
+        "steward"
+      ]
+    },
+    {
+      "username": "platform.admin",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "platform.admin@example.invalid",
+      "firstName": "Platform",
+      "lastName": "Admin",
+      "realmRoles": [
+        "admin"
+      ]
+    },
+    {
+      "username": "demo.operator",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "demo.operator@example.invalid",
+      "firstName": "Demo",
+      "lastName": "Operator",
+      "realmRoles": [
+        "demo_operator"
+      ]
+    },
+    {
+      "username": "wheat.analyst",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "wheat.analyst@example.invalid",
+      "firstName": "Wheat",
+      "lastName": "Analyst",
+      "realmRoles": [
+        "analyst"
+      ],
+      "attributes": {
+        "commodity_scope": [
+          "wheat"
+        ]
+      }
+    },
+    {
+      "username": "tungsten.analyst",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "tungsten.analyst@example.invalid",
+      "firstName": "Tungsten",
+      "lastName": "Analyst",
+      "realmRoles": [
+        "analyst"
+      ],
+      "attributes": {
+        "commodity_scope": [
+          "tungsten"
+        ]
+      }
+    }
+  ]
+}

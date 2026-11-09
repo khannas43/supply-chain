@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from .. import audit
-from ..auth import Actor, require_role
+from ..auth import Actor, read_role, require_role
 from ..deps import get_session
 from ..ids import next_id
 from ..models import CommodityForm, Country, CountryAlias, UnitConversion
@@ -18,7 +18,7 @@ def _conversion(c: UnitConversion) -> ConversionOut:
 
 
 @router.get("", response_model=ReferenceOut)
-def reference(session: Session = Depends(get_session)) -> ReferenceOut:
+def reference(session: Session = Depends(get_session), _actor: Actor | None = Depends(read_role("analyst", "steward", "admin"))) -> ReferenceOut:
     aliases: dict[str, list[str]] = {}
     for a in session.scalars(select(CountryAlias).order_by(CountryAlias.alias)):
         aliases.setdefault(a.country_code, []).append(a.alias)

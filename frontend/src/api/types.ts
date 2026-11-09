@@ -221,3 +221,5 @@ export interface SimState {
   log: { at: string; runId: string; text: string }[]
 }
 export type FailureKind = 'rate_limit' | 'timeout' | 'recover' | 'duplicate' | 'late' | 'malformed' | 'missing_field'
+
+export interface PersonData { id: string; name: string; roles: string[] }

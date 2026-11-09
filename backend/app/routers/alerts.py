@@ -6,7 +6,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .. import assess, audit, calc
-from ..auth import Actor, require_role
+from .. import scope
+from ..auth import Actor, maybe_actor, require_role
 from ..deps import get_session
 from ..models import (
     Alert, AlertExposedNode, AuditEvent, Assessment, Assumption, Evidence, ResponseOption, Rule, RuleVersion,
@@ -69,8 +70,11 @@ def list_alerts(
     mode: Mode | None = None,
     disposition: Disposition | None = None,
     session: Session = Depends(get_session),
+    actor: Actor | None = Depends(maybe_actor),
 ) -> list[AlertOut]:
     query = select(Alert).order_by(Alert.observed_at.desc(), Alert.id)
+    if (visible := scope.clause(actor, Alert.commodity)) is not None:
+        query = query.where(visible)
     for column, value in ((Alert.commodity, commodity), (Alert.severity, severity), (Alert.mode, mode), (Alert.disposition, disposition)):
         if value is not None:
             query = query.where(column == value)
@@ -78,10 +82,11 @@ def list_alerts(
 
 
 @router.get("/{alert_id}", response_model=AlertOut)
-def get_alert(alert_id: str, session: Session = Depends(get_session)) -> AlertOut:
+def get_alert(alert_id: str, session: Session = Depends(get_session), actor: Actor | None = Depends(maybe_actor)) -> AlertOut:
     alert = session.get(Alert, alert_id)
     if alert is None:
         raise HTTPException(404, f"Alert {alert_id} not found")
+    scope.require(actor, alert.commodity, f"Alert {alert_id} not found")
     return _build_alerts(session, [alert])[0]
 
 
@@ -96,6 +101,7 @@ def set_disposition(
     alert = session.get(Alert, alert_id)
     if alert is None:
         raise HTTPException(404, f"Alert {alert_id} not found")
+    scope.require(actor, alert.commodity, f"Alert {alert_id} not found")
     previous = alert.disposition
     alert.disposition = body.disposition
     audit.record(session, actor.name, "alert.disposition", alert_id, f"{previous} -> {body.disposition}: {body.rationale}")
@@ -114,13 +120,15 @@ def assumption_out(a: Assumption) -> AssumptionOut:
 
 
 @router.get("/{alert_id}/assessment", response_model=AssessmentOut)
-def get_assessment(alert_id: str, session: Session = Depends(get_session)) -> AssessmentOut:
+def get_assessment(alert_id: str, session: Session = Depends(get_session), actor: Actor | None = Depends(maybe_actor)) -> AssessmentOut:
     """The latest assessment snapshot with its calculated measures.
 
     Measures that need an approved disruption assumption stay null, with the reason, until one exists.
     """
-    if session.get(Alert, alert_id) is None:
+    alert = session.get(Alert, alert_id)
+    if alert is None:
         raise HTTPException(404, f"Alert {alert_id} not found")
+    scope.require(actor, alert.commodity, f"Alert {alert_id} not found")
     ctx = assess.load(session, alert_id)
     if ctx is None:
         raise HTTPException(404, f"Alert {alert_id} has no assessment yet")

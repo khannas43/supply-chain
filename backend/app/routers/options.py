@@ -7,7 +7,8 @@ from sqlalchemy.orm import Session
 
 from .. import assess, audit, calc, clock
 from .. import options as rules
-from ..auth import Actor, require_role
+from .. import scope
+from ..auth import Actor, maybe_actor, require_role
 from ..deps import get_session
 from ..ids import next_id
 from ..models import Action, ActionStatusHistory, Alert, OptionShortlist, ResponseOption
@@ -22,13 +23,16 @@ def list_options(
     alert_id: str,
     as_of: date | None = Query(None, alias="asOf"),
     session: Session = Depends(get_session),
+    actor: Actor | None = Depends(maybe_actor),
 ) -> ResponseOptionsOut:
     """Options for an alert: eligible ones ranked, inventory listed apart, ineligible ones with the reason.
 
     Gap and cost need an approved disruption assumption and stay null without one.
     """
-    if session.get(Alert, alert_id) is None:
+    alert = session.get(Alert, alert_id)
+    if alert is None:
         raise HTTPException(404, f"Alert {alert_id} not found")
+    scope.require(actor, alert.commodity, f"Alert {alert_id} not found")
     ctx = assess.load(session, alert_id)
     if ctx is None:
         raise HTTPException(404, f"Alert {alert_id} has no assessment yet")
@@ -78,8 +82,10 @@ def set_shortlist(
     actor: Actor = Depends(require_role("analyst", "manager")),
     session: Session = Depends(get_session),
 ) -> dict:
-    if session.get(ResponseOption, option_id) is None:
+    option = session.get(ResponseOption, option_id)
+    if option is None:
         raise HTTPException(404, f"Option {option_id} not found")
+    scope.require(actor, session.get(Alert, option.alert_id).commodity, f"Option {option_id} not found")
     current = session.get(OptionShortlist, option_id)
     if body.shortlisted and current is None:
         session.add(OptionShortlist(option_id=option_id, shortlisted_by_id=actor.id, shortlisted_by_name=actor.name, shortlisted_at=clock.now()))
@@ -105,6 +111,7 @@ def create_decision(
     if option is None:
         raise HTTPException(404, f"Option {option_id} not found")
     alert = session.get(Alert, option.alert_id)
+    scope.require(actor, alert.commodity, f"Option {option_id} not found")
     ctx = assess.load(session, option.alert_id)
     if ctx is None:
         raise HTTPException(409, "This alert has no assessment yet")

@@ -7,7 +7,7 @@ import { useApp } from './AppContext'
 import { EvidenceDrawer } from './EvidenceDrawer'
 
 export function Shell() {
-  const { user, setUserId, canView } = useAuth()
+  const { mode, user, setUserId, signOut, canView } = useAuth()
   const { commodity, setCommodity } = useApp()
   const visible = SCREENS.filter((s) => canView(s.id))
 
@@ -34,21 +34,28 @@ export function Shell() {
       <div className="main">
         <header className="topbar">
           <div className="seg" role="group" aria-label="Commodity">
-            {(['wheat', 'tungsten'] as const).map((c) => (
+            {(['wheat', 'tungsten'] as const).filter((c) => !user.scope || user.scope.includes(c)).map((c) => (
               <button key={c} aria-pressed={commodity === c} onClick={() => setCommodity(c)}>
                 {c[0].toUpperCase() + c.slice(1)}
               </button>
             ))}
           </div>
           <span className="spacer" />
-          <label className="devrole">
-            Signed in as (dev switch, replaced by Keycloak)
-            <select value={user.id} onChange={(e) => setUserId(e.target.value)}>
-              {IDENTITIES.map((i) => (
-                <option key={i.id} value={i.id}>{i.name} ({ROLE_LABEL[i.role]})</option>
-              ))}
-            </select>
-          </label>
+          {mode === 'dev' ? (
+            <label className="devrole">
+              Signed in as (dev switch)
+              <select value={user.id} onChange={(e) => setUserId(e.target.value)}>
+                {IDENTITIES.map((i) => (
+                  <option key={i.id} value={i.id}>{i.name} ({ROLE_LABEL[i.role]}{i.scope ? `, ${i.scope.join(', ')} only` : ''})</option>
+                ))}
+              </select>
+            </label>
+          ) : (
+            <div className="devrole">
+              <span><strong>{user.name}</strong> · {user.roles.map((r) => ROLE_LABEL[r]).join(', ')}{user.scope ? ` · ${user.scope.join(', ')} only` : ''}</span>
+              <button className="btn" onClick={signOut}>Sign out</button>
+            </div>
+          )}
         </header>
         <Outlet />
       </div>

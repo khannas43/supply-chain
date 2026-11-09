@@ -21,6 +21,8 @@ const d = await import(pathToFileURL(bundle).href)
 const nul = (v) => (v === undefined ? null : v)
 const t = {}
 
+t.person = d.IDENTITIES.map((i) => ({ id: i.id, name: i.name, roles: [i.role], source: 'demo', last_seen: null }))
+
 t.country = d.countries.map((c) => ({ code: c.code, name: c.name }))
 t.country_alias = d.countries.flatMap((c) => c.aliases.map((a) => ({ alias: a, country_code: c.code })))
 t.commodity_form = d.forms.map((f) => ({ commodity: f.commodity, form: f.form, note: f.note }))

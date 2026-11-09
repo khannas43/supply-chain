@@ -80,6 +80,7 @@ export interface Identity {
   id: string
   name: string
   role: import('../auth/roles').Role
+  scope?: Commodity[] // commodities this identity may see; absent means all
 }
 
 export type PathClass = 'confirmed' | 'potential' | 'unknown'

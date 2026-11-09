@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { useAuth } from '../auth/AuthContext'
 import type { Commodity, Evidence, Mode } from '../data/types'
 
 export interface EvidenceView {
@@ -20,7 +21,12 @@ interface AppState {
 const Ctx = createContext<AppState | null>(null)
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [commodity, setCommodity] = useState<Commodity>('wheat')
+  const { user } = useAuth()
+  const [commodity, setCommodity] = useState<Commodity>(user.scope?.[0] ?? 'wheat')
+  // a user limited to one commodity never lands on another
+  useEffect(() => {
+    if (user.scope && !user.scope.includes(commodity)) setCommodity(user.scope[0] ?? commodity)
+  }, [user, commodity])
   const [evidence, setEvidence] = useState<EvidenceView | null>(null)
   return (
     <Ctx.Provider

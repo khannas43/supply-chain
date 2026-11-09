@@ -5,7 +5,8 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .. import audit, clock
-from ..auth import Actor, current_actor, require_role
+from .. import scope
+from ..auth import Actor, current_actor, maybe_actor, require_role
 from ..deps import get_session
 from ..models import Action, ActionStatusHistory, Alert, Assessment, AuditEvent, ResponseOption
 from ..schemas import ActionOut, AuditOut, Commodity, ReassignIn, StatusEntryOut, StatusIn
@@ -61,9 +62,12 @@ def list_actions(
     overdue_only: bool = Query(False, alias="overdueOnly"),
     as_of: date | None = Query(None, alias="asOf"),
     session: Session = Depends(get_session),
+    actor: Actor | None = Depends(maybe_actor),
 ) -> list[ActionOut]:
     today = _today(as_of)
     query = select(Action).order_by(Action.target_date, Action.id)
+    if (visible := scope.clause(actor, Action.commodity)) is not None:
+        query = query.where(visible)
     for column, value in ((Action.commodity, commodity), (Action.status, status), (Action.owner_id, owner_id)):
         if value is not None:
             query = query.where(column == value)
@@ -80,8 +84,15 @@ def _get(session: Session, action_id: str) -> Action:
 
 
 @router.get("/{action_id}", response_model=ActionOut)
-def get_action(action_id: str, as_of: date | None = Query(None, alias="asOf"), session: Session = Depends(get_session)) -> ActionOut:
-    return build_actions(session, [_get(session, action_id)], _today(as_of), with_audit=True)[0]
+def get_action(
+    action_id: str,
+    as_of: date | None = Query(None, alias="asOf"),
+    session: Session = Depends(get_session),
+    actor: Actor | None = Depends(maybe_actor),
+) -> ActionOut:
+    action = _get(session, action_id)
+    scope.require(actor, action.commodity, f"Action {action_id} not found")
+    return build_actions(session, [action], _today(as_of), with_audit=True)[0]
 
 
 @router.post("/{action_id}/status", response_model=ActionOut)
@@ -94,8 +105,9 @@ def set_status(action_id: str, body: StatusIn, actor: Actor = Depends(current_ac
     action = session.get(Action, action_id, with_for_update=True)
     if action is None:
         raise HTTPException(404, f"Action {action_id} not found")
-    manager = actor.role == "manager"
-    if actor.role == "demo_operator" or not (manager or actor.role == "admin" or actor.id == action.owner_id):
+    scope.require(actor, action.commodity, f"Action {action_id} not found")
+    manager = actor.has("manager")
+    if actor.has("demo_operator") and len(actor.roles) == 1 or not (manager or actor.has("admin") or actor.id == action.owner_id):
         raise HTTPException(403, "Only the owner, a Procurement Manager or an Admin can update this action")
     if not manager and body.status not in ("in_progress", "review"):
         raise HTTPException(403, "Only a Procurement Manager can set an action to open or done")
@@ -117,6 +129,7 @@ def reassign(action_id: str, body: ReassignIn, actor: Actor = Depends(require_ro
     action = session.get(Action, action_id, with_for_update=True)
     if action is None:
         raise HTTPException(404, f"Action {action_id} not found")
+    scope.require(actor, action.commodity, f"Action {action_id} not found")
     if body.owner_id == action.owner_id:
         raise HTTPException(409, f"{action.owner_name} already owns this action")
     action.owner_id, action.owner_name = body.owner_id, body.owner_name

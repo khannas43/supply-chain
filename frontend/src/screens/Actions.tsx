@@ -2,9 +2,8 @@ import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { api } from '../api/client'
 import { useApi } from '../api/hooks'
-import type { ActionData } from '../api/types'
+import type { ActionData, PersonData } from '../api/types'
 import { useAuth } from '../auth/AuthContext'
-import { IDENTITIES } from '../auth/users'
 import { useApp } from '../components/AppContext'
 import { PageHead, formatTime } from '../components/ui'
 import type { ActionStatus, Alert } from '../data/types'
@@ -19,7 +18,9 @@ function Detail({ id, onChanged, onClose }: { id: string; onChanged: () => void;
   const alertRemote = useApi<Alert>(detail.data ? `/alerts/${detail.data.alertId}` : null)
   const [note, setNote] = useState('')
   const [next, setNext] = useState<ActionStatus>('in_progress')
-  const [newOwner, setNewOwner] = useState('u-manager')
+  const people = useApi<PersonData[]>('/people')
+  const assignable = (people.data ?? []).filter((p) => !(p.roles.length === 1 && p.roles[0] === 'demo_operator'))
+  const [newOwner, setNewOwner] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
@@ -85,9 +86,9 @@ function Detail({ id, onChanged, onClose }: { id: string; onChanged: () => void;
                 <label htmlFor="ro">Reassign owner</label>
                 <div className="row">
                   <select id="ro" value={newOwner} onChange={(e) => setNewOwner(e.target.value)}>
-                    {IDENTITIES.filter((i) => i.role !== 'demo_operator').map((i) => <option key={i.id} value={i.id}>{i.name}</option>)}
+                    <option value="">Choose a person</option>{assignable.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
                   </select>
-                  <button className="btn" disabled={newOwner === a.ownerId || busy} onClick={() => act(() => api.post(`/actions/${a.id}/reassign`, { ownerId: newOwner, ownerName: IDENTITIES.find((i) => i.id === newOwner)!.name, note: note.trim() }))}>Reassign</button>
+                  <button className="btn" disabled={!newOwner || newOwner === a.ownerId || busy} onClick={() => act(() => api.post(`/actions/${a.id}/reassign`, { ownerId: newOwner, ownerName: assignable.find((p) => p.id === newOwner)!.name, note: note.trim() }))}>Reassign</button>
                 </div>
                 {a.status === 'done' && <div style={{ marginTop: 8 }}><button className="btn" disabled={busy} onClick={() => act(() => api.post(`/actions/${a.id}/status`, { status: 'in_progress', note: note.trim() || 'Reopened' }))}>Reopen action</button></div>}
               </div>
@@ -116,6 +117,7 @@ export function Actions() {
   const [status, setStatus] = useState<'all' | ActionStatus>('all')
   const [owner, setOwner] = useState('all')
   const [overdueOnly, setOverdueOnly] = useState(false)
+  const directory = useApi<PersonData[]>('/people')
 
   const query = [`commodity=${commodity}`, status !== 'all' && `status=${status}`, owner !== 'all' && `ownerId=${owner}`, overdueOnly && 'overdueOnly=true'].filter(Boolean).join('&')
   const list = useApi<ActionData[]>(`/actions?${query}`)
@@ -136,7 +138,7 @@ export function Actions() {
           </select></div>
         <div className="field"><label htmlFor="a-ow">Owner</label>
           <select id="a-ow" value={owner} onChange={(e) => setOwner(e.target.value)}>
-            <option value="all">All</option>{IDENTITIES.map((i) => <option key={i.id} value={i.id}>{i.name}</option>)}
+            <option value="all">All</option>{(directory.data ?? []).map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
           </select></div>
         <label className="row" style={{ alignSelf: 'flex-end' }}><input type="checkbox" checked={overdueOnly} onChange={(e) => setOverdueOnly(e.target.checked)} /> Overdue only</label>
       </div>

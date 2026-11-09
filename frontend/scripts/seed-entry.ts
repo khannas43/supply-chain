@@ -6,3 +6,4 @@ export { seedActions, seedAudit } from '../src/data/seedActions'
 export {
   seedSources, seedRuns, seedQuarantine, seedDead, seedRules, seedConversions, countries, forms,
 } from '../src/data/pipeline'
+export { IDENTITIES } from '../src/auth/users'

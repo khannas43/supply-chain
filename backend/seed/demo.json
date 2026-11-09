@@ -1,4 +1,87 @@
 {
+  "person": [
+    {
+      "id": "u-viewer",
+      "name": "Executive Viewer",
+      "roles": [
+        "viewer"
+      ],
+      "source": "demo",
+      "last_seen": null
+    },
+    {
+      "id": "u-analyst-a",
+      "name": "Risk Analyst A",
+      "roles": [
+        "analyst"
+      ],
+      "source": "demo",
+      "last_seen": null
+    },
+    {
+      "id": "u-analyst-b",
+      "name": "Risk Analyst B",
+      "roles": [
+        "analyst"
+      ],
+      "source": "demo",
+      "last_seen": null
+    },
+    {
+      "id": "u-manager",
+      "name": "Procurement Manager",
+      "roles": [
+        "manager"
+      ],
+      "source": "demo",
+      "last_seen": null
+    },
+    {
+      "id": "u-steward",
+      "name": "Data Steward",
+      "roles": [
+        "steward"
+      ],
+      "source": "demo",
+      "last_seen": null
+    },
+    {
+      "id": "u-admin",
+      "name": "Platform Admin",
+      "roles": [
+        "admin"
+      ],
+      "source": "demo",
+      "last_seen": null
+    },
+    {
+      "id": "u-demo",
+      "name": "Demo Operator",
+      "roles": [
+        "demo_operator"
+      ],
+      "source": "demo",
+      "last_seen": null
+    },
+    {
+      "id": "u-analyst-wheat",
+      "name": "Wheat Analyst",
+      "roles": [
+        "analyst"
+      ],
+      "source": "demo",
+      "last_seen": null
+    },
+    {
+      "id": "u-analyst-tungsten",
+      "name": "Tungsten Analyst",
+      "roles": [
+        "analyst"
+      ],
+      "source": "demo",
+      "last_seen": null
+    }
+  ],
   "country": [
     {
       "code": "CTA",

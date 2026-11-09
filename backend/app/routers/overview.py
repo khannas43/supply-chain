@@ -5,6 +5,8 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .. import clock, sources as source_health
+from .. import scope
+from ..auth import Actor, maybe_actor
 from ..deps import get_session
 from ..models import Action, Alert, Assessment, Source, SourceCommodity
 from ..schemas import ActionCountsOut, Commodity, OverviewOut, SourceOut, TrendPoint
@@ -44,8 +46,10 @@ def overview(
     commodity: Commodity,
     as_of: datetime | None = Query(None, alias="asOf"),
     session: Session = Depends(get_session),
+    actor: Actor | None = Depends(maybe_actor),
 ) -> OverviewOut:
     """Everything the overview screen needs except the alert list itself."""
+    scope.require(actor, commodity, "That commodity is outside your access")
     now = as_of or clock.now()
     active = list(session.scalars(select(Alert).where(Alert.commodity == commodity, Alert.disposition != "dismissed")))
     by_severity: dict[str, int] = {}

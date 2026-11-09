@@ -3,7 +3,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .. import audit
-from ..auth import Actor, require_role
+from ..auth import Actor, read_role, require_role
 from ..deps import get_session
 from ..envelope import TOPIC_REPLAY, ReplayEnvelope
 from ..models import DeadLetter, Evidence, IngestionRun, Outbox, QuarantineItem, Source, SourceCommodity
@@ -44,6 +44,7 @@ def list_runs(
     source_id: str | None = Query(None, alias="sourceId"),
     limit: int = Query(50, ge=1, le=200),
     session: Session = Depends(get_session),
+    _actor: Actor | None = Depends(read_role("analyst", "steward", "admin", "demo_operator")),
 ) -> list[RunOut]:
     query = select(IngestionRun).order_by(IngestionRun.started_at.desc(), IngestionRun.id.desc()).limit(limit)
     if source_id:
@@ -55,6 +56,7 @@ def list_runs(
 def list_quarantine(
     status: str | None = Query(None, pattern="^(quarantined|replay_requested|resolved)$"),
     session: Session = Depends(get_session),
+    _actor: Actor | None = Depends(read_role("analyst", "steward", "admin", "demo_operator")),
 ) -> list[QuarantineOut]:
     names = _names(session)
     query = select(QuarantineItem).order_by(QuarantineItem.received_at.desc(), QuarantineItem.id.desc())
@@ -104,7 +106,7 @@ def request_replay(
 
 
 @router.get("/dead-letter", response_model=list[DeadOut])
-def list_dead_letter(session: Session = Depends(get_session)) -> list[DeadOut]:
+def list_dead_letter(session: Session = Depends(get_session), _actor: Actor | None = Depends(read_role("analyst", "steward", "admin", "demo_operator"))) -> list[DeadOut]:
     names = _names(session)
     rows = session.scalars(select(DeadLetter).order_by(DeadLetter.received_at.desc()))
     return [
@@ -115,7 +117,7 @@ def list_dead_letter(session: Session = Depends(get_session)) -> list[DeadOut]:
 
 
 @router.get("/pipeline/queue", response_model=QueueOut)
-def queue(session: Session = Depends(get_session)) -> QueueOut:
+def queue(session: Session = Depends(get_session), _actor: Actor | None = Depends(read_role("analyst", "steward", "admin", "demo_operator"))) -> QueueOut:
     """Messages waiting for the worker, and messages it gave up on. Kafka and NiFi are not connected yet."""
     counts = dict(session.execute(select(Outbox.status, func.count()).group_by(Outbox.status)).all())
     oldest = session.scalar(select(func.min(Outbox.available_at)).where(Outbox.status == "pending"))

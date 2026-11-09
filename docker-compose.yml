@@ -30,6 +30,9 @@ services:
       KEYCLOAK_REALM: ${KEYCLOAK_REALM:-supplychain}
       KEYCLOAK_ISSUER: ${KEYCLOAK_ISSUER:-http://localhost:8180/realms/supplychain}
       EVIDENCE_DIR: /data/evidence
+      AUTH_MODE: ${AUTH_MODE:-dev}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-supplychain-web}
+      KEYCLOAK_AUDIENCE: ${KEYCLOAK_AUDIENCE:-supplychain-api}
     volumes:
       - evidence:/data/evidence
     extra_hosts:
@@ -44,6 +47,26 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
+
+  # Optional: a Keycloak of our own, for when the existing one is not used. Start it with
+  #   docker compose --profile keycloak up -d keycloak
+  # then run keycloak/setup.py. It imports the `supplychain` realm on first start.
+  keycloak:
+    profiles: ["keycloak"]
+    image: quay.io/keycloak/keycloak:26.0
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-}
+      # the address browsers use; the API reaches Keycloak at http://keycloak:8080 inside the network
+      KC_HOSTNAME: ${KEYCLOAK_PUBLIC_URL:-http://localhost:8180}
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+    volumes:
+      - ./keycloak/supplychain-realm.json:/opt/keycloak/data/import/supplychain-realm.json:ro
+      - keycloak_data:/opt/keycloak/data
+    ports:
+      - "127.0.0.1:8180:8080"
     restart: unless-stopped
 
   # Consumes the outbox: parses, validates and processes collected payloads, applies the published
@@ -74,3 +97,4 @@ services:
 volumes:
   pgdata:
   evidence:
+  keycloak_data:

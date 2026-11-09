@@ -1,0 +1,12 @@
+{
+  "name": "supply-chain-e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "roles": "node roles.mjs",
+    "login": "node login.mjs"
+  },
+  "dependencies": {
+    "playwright-core": "^1.48.0"
+  }
+}

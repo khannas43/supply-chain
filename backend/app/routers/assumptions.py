@@ -5,7 +5,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .. import assess, audit, clock
-from ..auth import Actor, require_role
+from .. import scope
+from ..auth import Actor, read_role, require_role
 from ..deps import get_session
 from ..ids import next_id
 from ..models import Alert, Assessment, Assumption
@@ -24,9 +25,12 @@ def list_assumptions(
     alert_id: str | None = Query(None, alias="alertId"),
     status: str | None = Query(None, pattern="^(proposed|approved|rejected|superseded)$"),
     session: Session = Depends(get_session),
+    actor: Actor | None = Depends(read_role("analyst", "steward", "admin")),
 ) -> list[AssumptionOut]:
     """The assumptions library, newest first."""
     query = select(Assumption).order_by(Assumption.proposed_at.desc(), Assumption.id.desc())
+    if (visible := scope.clause(actor, Alert.commodity)) is not None:
+        query = query.where(Assumption.alert_id.in_(select(Alert.id).where(visible)))
     if alert_id:
         query = query.where(Assumption.alert_id == alert_id)
     if status:
@@ -49,6 +53,7 @@ def propose_assumption(
     alert = session.get(Alert, alert_id)
     if alert is None:
         raise HTTPException(404, f"Alert {alert_id} not found")
+    scope.require(actor, alert.commodity, f"Alert {alert_id} not found")
     if assess.load(session, alert_id) is None:
         raise HTTPException(409, "This alert has no assessment yet, so there is nothing to apply an assumption to")
 
@@ -80,6 +85,7 @@ def decide_assumption(
     a = session.get(Assumption, assumption_id, with_for_update=True)
     if a is None:
         raise HTTPException(404, f"Assumption {assumption_id} not found")
+    scope.require(actor, session.get(Alert, a.alert_id).commodity, f"Assumption {assumption_id} not found")
     if a.status != "proposed":
         raise HTTPException(409, f"This assumption is {a.status}; only a proposed assumption can be decided")
     if a.proposed_by_id == actor.id:

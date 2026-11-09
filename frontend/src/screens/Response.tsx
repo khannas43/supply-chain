@@ -2,9 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../api/client'
 import { useApi } from '../api/hooks'
-import type { ActionData, OptionRow, OptionsData } from '../api/types'
+import type { ActionData, OptionRow, OptionsData, PersonData } from '../api/types'
 import { useAuth } from '../auth/AuthContext'
-import { IDENTITIES } from '../auth/users'
 import { AlertPicker, useAssessedAlert } from '../components/AlertPicker'
 import { PageHead } from '../components/ui'
 import type { ResponseOption } from '../data/types'
@@ -17,7 +16,9 @@ function Body({ d, reload }: { d: OptionsData; reload: () => void }) {
   const { can, user } = useAuth()
   const nav = useNavigate()
   const [selecting, setSelecting] = useState<ResponseOption | null>(null)
-  const [owner, setOwner] = useState('u-manager')
+  const people = useApi<PersonData[]>('/people')
+  const assignable = (people.data ?? []).filter((p) => !(p.roles.length === 1 && p.roles[0] === 'demo_operator'))
+  const [owner, setOwner] = useState('')
   const [target, setTarget] = useState('')
   const [why, setWhy] = useState('')
   const [busy, setBusy] = useState(false)
@@ -35,7 +36,8 @@ function Body({ d, reload }: { d: OptionsData; reload: () => void }) {
 
   const confirm = async () => {
     if (!selecting || !target || !why.trim()) return
-    const person = IDENTITIES.find((i) => i.id === owner)!
+    const person = assignable.find((p) => p.id === owner)
+    if (!person) return
     setBusy(true)
     setError(null)
     try {
@@ -75,7 +77,7 @@ function Body({ d, reload }: { d: OptionsData; reload: () => void }) {
         <td>
           <div className="row">
             {can('option.shortlist') && <button className="btn" onClick={() => shortlist(r)}>{r.shortlisted ? 'Remove' : 'Shortlist'}</button>}
-            {can('decision.create') && <button className="btn primary" onClick={() => { setSelecting(o); setOwner('u-manager'); setError(null) }}>Select</button>}
+            {can('decision.create') && <button className="btn primary" onClick={() => { setSelecting(o); setOwner(assignable.find((p) => p.id === user.id)?.id ?? assignable[0]?.id ?? ''); setError(null) }}>Select</button>}
           </div>
         </td>
       </tr>
@@ -125,14 +127,14 @@ function Body({ d, reload }: { d: OptionsData; reload: () => void }) {
           <div className="grid two">
             <div className="field"><label htmlFor="own">Owner</label>
               <select id="own" value={owner} onChange={(e) => setOwner(e.target.value)}>
-                {IDENTITIES.filter((i) => i.role !== 'demo_operator').map((i) => <option key={i.id} value={i.id}>{i.name}</option>)}
+                {assignable.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
               </select></div>
             <div className="field"><label htmlFor="tgt">Target date</label>
               <input id="tgt" type="date" min={today()} value={target} onChange={(e) => setTarget(e.target.value)} /></div>
           </div>
           <div className="field" style={{ marginTop: 10 }}><label htmlFor="why">Rationale (required)</label>
             <textarea id="why" value={why} onChange={(e) => setWhy(e.target.value)} /></div>
-          <div style={{ marginTop: 10 }}><button className="btn primary" disabled={!target || !why.trim() || busy} onClick={confirm}>{busy ? 'Saving…' : `Record decision as ${user.name}`}</button></div>
+          <div style={{ marginTop: 10 }}><button className="btn primary" disabled={!target || !why.trim() || !owner || busy} onClick={confirm}>{busy ? 'Saving…' : `Record decision as ${user.name}`}</button></div>
         </section>
       )}
       {!can('decision.create') && <p className="muted small">Only a Procurement Manager can select a response. Analysts and managers can shortlist.</p>}

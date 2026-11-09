@@ -534,3 +534,9 @@ class AdvanceIn(In):
 
 class InjectIn(In):
     kind: Literal["rate_limit", "timeout", "recover", "duplicate", "late", "malformed", "missing_field"]
+
+
+class PersonDirectoryOut(Out):
+    id: str
+    name: str
+    roles: list[str]

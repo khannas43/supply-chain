@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from .. import audit, clock
 from .. import imports as csvimport
-from ..auth import Actor, require_role
+from ..auth import Actor, read_role, require_role
 from ..deps import get_session
 from ..ids import next_id
 from ..models import ImportRecord, IngestionRun, Node, QuarantineItem, Source, SupplyEdge
@@ -32,12 +32,12 @@ def _previous(session: Session, dataset: str, checksum: str) -> ImportRecord | N
 
 
 @router.get("/datasets", response_model=list[DatasetOut])
-def datasets() -> list[DatasetOut]:
+def datasets(_actor: Actor | None = Depends(read_role("analyst", "steward", "admin"))) -> list[DatasetOut]:
     return [DatasetOut(id=d.id, label=d.label, required=list(d.required), sample=d.sample, applied=d.applied) for d in csvimport.DATASETS.values()]
 
 
 @router.get("", response_model=list[ImportOut])
-def history(session: Session = Depends(get_session)) -> list[ImportOut]:
+def history(session: Session = Depends(get_session), _actor: Actor | None = Depends(read_role("analyst", "steward", "admin"))) -> list[ImportOut]:
     rows = session.scalars(select(ImportRecord).order_by(ImportRecord.committed_at.desc(), ImportRecord.id.desc()))
     return [ImportOut.model_validate(r) for r in rows]
 

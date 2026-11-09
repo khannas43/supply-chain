@@ -10,4 +10,6 @@ export const IDENTITIES: Identity[] = [
   { id: 'u-steward', name: 'Data Steward', role: 'steward' },
   { id: 'u-admin', name: 'Platform Admin', role: 'admin' },
   { id: 'u-demo', name: 'Demo Operator', role: 'demo_operator' },
+  { id: 'u-analyst-wheat', name: 'Wheat Analyst', role: 'analyst', scope: ['wheat'] },
+  { id: 'u-analyst-tungsten', name: 'Tungsten Analyst', role: 'analyst', scope: ['tungsten'] },
 ]

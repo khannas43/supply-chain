@@ -9,7 +9,7 @@ export function Guard({ screen, children }: { screen: ScreenId; children: ReactN
   return (
     <div className="page">
       <PageHead title="Access denied">
-        Your role ({ROLE_LABEL[user.role]}) does not have access to this screen. Access is also enforced by the API.
+        Your role ({user.roles.map((r) => ROLE_LABEL[r]).join(', ')}) does not have access to this screen. Access is also enforced by the API.
       </PageHead>
     </div>
   )

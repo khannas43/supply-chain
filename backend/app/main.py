@@ -1,10 +1,11 @@
 import httpx
-from fastapi import APIRouter, FastAPI
+from fastapi import APIRouter, Depends, FastAPI
 from sqlalchemy import text
 
 from .config import get_settings
 from .db import get_engine
-from .routers import actions, alerts, assumptions, dataimports, network, options, overview, pipeline, reference, rules, simulation
+from .auth import guard
+from .routers import actions, alerts, assumptions, authconfig, dataimports, network, options, overview, people, pipeline, reference, rules, simulation
 
 router = APIRouter(prefix="/api")
 
@@ -47,6 +48,7 @@ app = FastAPI(
     version="0.0.1",
     docs_url="/api/docs",
     openapi_url="/api/openapi.json",
+    dependencies=[Depends(guard)],
 )
 app.include_router(router)
 app.include_router(alerts.router)
@@ -60,3 +62,5 @@ app.include_router(rules.router)
 app.include_router(dataimports.router)
 app.include_router(reference.router)
 app.include_router(simulation.router)
+app.include_router(authconfig.router)
+app.include_router(people.router)

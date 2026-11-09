@@ -4,7 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from .. import audit, simulator
-from ..auth import Actor, require_role
+from ..auth import Actor, read_role, require_role
 from ..deps import get_session
 from ..models import SimLog, SimRun
 from ..schemas import AdvanceIn, InjectIn, ScenarioOut, SimEventOut, SimLogOut, SimStateOut, StartIn
@@ -35,7 +35,7 @@ def _running(session: Session) -> SimRun:
 
 
 @router.get("/scenarios", response_model=list[ScenarioOut])
-def scenarios() -> list[ScenarioOut]:
+def scenarios(_actor: Actor | None = Depends(read_role("admin", "demo_operator"))) -> list[ScenarioOut]:
     return [
         ScenarioOut(id=s.id, name=s.name, commodity=s.commodity, seed=s.seed, events=[SimEventOut(at=e.at, text=e.text) for e in s.events])
         for s in simulator.SCENARIOS.values()
@@ -43,7 +43,7 @@ def scenarios() -> list[ScenarioOut]:
 
 
 @router.get("/run", response_model=SimStateOut)
-def current_run(session: Session = Depends(get_session)) -> SimStateOut:
+def current_run(session: Session = Depends(get_session), _actor: Actor | None = Depends(read_role("admin", "demo_operator"))) -> SimStateOut:
     return _state(session)
 
 
