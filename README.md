@@ -159,7 +159,7 @@ The tests use their own small fixture (`backend/tests/fixtures/`), so changing t
 
 ## Reports
 
-The **Reports** menu holds four read-only reports: risk exposure, supplier concentration, actions and decisions, and data life cycle. The last one runs 16 integrity checks across the path from source to decision (evidence present and matching its checksum, rule version recorded, every action tied to an assessment snapshot, and so on) and should always show zero violations. Browser checks: `e2e/reports.mjs`.
+The **Reports** menu holds four read-only reports: risk exposure, supplier concentration, actions and decisions, and data life cycle. The last one runs 15 integrity checks across the path from source to decision (evidence present and matching its checksum, rule version recorded, every action tied to an assessment snapshot, and so on) and should always show zero violations. Browser checks: `e2e/reports.mjs`.
 
 ## Backend tests
 

@@ -149,12 +149,26 @@ function KeycloakAuth({ config, children }: { config: { authority: string; clien
   if (oidcUser === undefined) return <Centered><div role="status">Signing in…</div></Centered>
   if (!session || !value) {
     return (
-      <Centered>
-        <h1>Supply Chain Risk</h1>
-        <p className="muted">Sign in to see where the supply chain is exposed, review risk events and record responses.</p>
-        {error && <div className="notice" role="alert">Sign-in did not complete: {error}</div>}
-        <button className="btn primary" onClick={() => void manager.signinRedirect({ state: { returnTo: window.location.pathname + window.location.search } })}>Sign in</button>
-      </Centered>
+      <div className="signin">
+        <div className="signin-hero">
+          <div className="signin-mark" aria-hidden="true" />
+          <h1>Supply Chain Risk</h1>
+          <p>Know where wheat and tungsten supply is exposed, and decide what to do about it.</p>
+          <ol className="signin-steps">
+            <li><strong>Map</strong><span>Suppliers, routes and stock across tiers</span></li>
+            <li><strong>Detect</strong><span>Policy, logistics and price signals as they arrive</span></li>
+            <li><strong>Assess</strong><span>Supported impact, with the assumptions shown</span></li>
+            <li><strong>Act</strong><span>Compare responses and track decisions</span></li>
+          </ol>
+        </div>
+        <div className="signin-panel">
+          <h2>Welcome back</h2>
+          <p className="muted">Sign in with your work account to continue.</p>
+          {error && <div className="notice" role="alert">Sign-in did not complete: {error}</div>}
+          <button className="btn primary signin-btn" onClick={() => void manager.signinRedirect({ state: { returnTo: window.location.pathname + window.location.search } })}>Sign in</button>
+          <p className="muted small">Access depends on your role. Sample data in this environment is simulated or replayed and labelled as such.</p>
+        </div>
+      </div>
     )
   }
   if (session.roles.length === 0) {

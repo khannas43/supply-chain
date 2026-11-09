@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useApi } from '../api/hooks'
 import { useApp } from '../components/AppContext'
+import { Chart, axisStyle } from '../components/Chart'
 import { Loaded } from '../components/Remote'
 import { ModeBadge, PageHead, STATE_BADGE, SeverityBadge, formatTime } from '../components/ui'
 import type { Confidence, Mode, Severity } from '../data/types'
@@ -8,15 +9,6 @@ import type { Confidence, Mode, Severity } from '../data/types'
 const SEV: Severity[] = ['critical', 'high', 'medium', 'low']
 const cap = (s: string) => s[0].toUpperCase() + s.slice(1)
 const label = (s: string) => cap(s.replace(/_/g, ' '))
-
-function Bar({ value, max, warn }: { value: number; max: number; warn?: boolean }) {
-  return (
-    <span className={`bar${warn ? ' warn' : ''}`}>
-      <i style={{ width: `${max ? Math.max(2, (100 * value) / max) : 0}%`, maxWidth: 160 }} />
-      {value}
-    </span>
-  )
-}
 
 function Tiles({ items }: { items: { title: string; value: number | string; note?: string }[] }) {
   return (
@@ -62,32 +54,54 @@ export function RiskExposureReport() {
           ]} />
           <div className="grid two">
             <section className="card">
-              <header><h2>Alerts by severity</h2></header>
-              <div className="table-wrap"><table>
-                <thead><tr><th>Commodity</th>{SEV.map((s) => <th key={s}>{cap(s)}</th>)}</tr></thead>
-                <tbody>{d.bySeverity.map((row) => (
-                  <tr key={row.commodity}><td>{cap(row.commodity)}</td>{SEV.map((s) => <td key={s}>{row[s]}</td>)}</tr>
-                ))}</tbody>
-              </table></div>
+              <header><h2>Alerts by severity</h2><span className="muted small">per commodity</span></header>
+              <Chart height={230} label={`Alerts by severity: ${d.bySeverity.map((r) => `${r.commodity} ${SEV.map((s) => `${r[s]} ${s}`).join(', ')}`).join('; ')}`} build={(t) => ({
+                grid: { left: 70, right: 16, top: 36, bottom: 8 },
+                legend: { top: 0, textStyle: { color: t.muted }, itemWidth: 10, itemHeight: 10 },
+                tooltip: { trigger: 'axis', axisPointer: { type: 'none' } },
+                xAxis: { type: 'value', minInterval: 1, splitLine: { lineStyle: { color: t.grid } }, axisLabel: { color: t.muted } },
+                yAxis: { type: 'category', data: d.bySeverity.map((r) => cap(r.commodity)), ...axisStyle(t) },
+                series: SEV.map((sv) => ({
+                  name: cap(sv), type: 'bar', stack: 'sev', barMaxWidth: 34, data: d.bySeverity.map((r) => r[sv]),
+                  itemStyle: { color: t.sev[sv], borderColor: t.surface, borderWidth: 2, borderRadius: 3 },
+                  label: { show: true, color: '#fff', formatter: (p: { value?: unknown }) => (p.value ? String(p.value) : '') },
+                })),
+              })} />
             </section>
             <section className="card">
-              <header><h2>Assessment progress</h2></header>
-              <div className="table-wrap"><table>
-                <thead><tr><th>Status</th><th>Alerts</th></tr></thead>
-                <tbody>{d.byAssessmentStatus.map((s) => (
-                  <tr key={s.status}><td>{label(s.status)}</td><td><Bar value={s.count} max={d.totals.activeAlerts} /></td></tr>
-                ))}</tbody>
-              </table></div>
+              <header><h2>Assessment progress</h2><span className="muted small">{d.totals.activeAlerts} active alerts</span></header>
+              <Chart height={230} label={`Assessment progress: ${d.byAssessmentStatus.map((s) => `${s.count} ${label(s.status)}`).join(', ')}`} build={(t) => ({
+                tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+                legend: { bottom: 0, textStyle: { color: t.muted }, itemWidth: 10, itemHeight: 10 },
+                series: [{
+                  type: 'pie', radius: ['52%', '76%'], center: ['50%', '44%'], avoidLabelOverlap: true,
+                  itemStyle: { borderColor: t.surface, borderWidth: 2, borderRadius: 4 },
+                  label: { show: true, position: 'center', formatter: `${d.totals.assessed}/${d.totals.activeAlerts}\nassessed`, color: t.text, fontSize: 16, lineHeight: 20 },
+                  emphasis: { label: { show: true } },
+                  data: d.byAssessmentStatus.map((x) => ({
+                    name: label(x.status), value: x.count,
+                    itemStyle: { color: ({ complete: t.ok, awaiting_validation: t.series[0], partial: t.warn, unassessed: t.sev.low } as Record<string, string>)[x.status] },
+                  })),
+                }],
+              })} />
             </section>
           </div>
           <section className="card">
-            <header><h2>By location</h2></header>
-            <div className="table-wrap"><table>
-              <thead><tr><th>Location</th><th>Commodity</th><th>Alerts</th><th>Nodes matched</th></tr></thead>
-              <tbody>{d.byLocation.map((l) => (
-                <tr key={l.commodity + l.location}><td>{l.location}</td><td>{cap(l.commodity)}</td><td>{l.alerts}</td><td>{l.exposedNodes}</td></tr>
-              ))}</tbody>
-            </table></div>
+            <header><h2>Where the alerts are</h2><span className="muted small">alerts per place; hover for the nodes each one matches</span></header>
+            <Chart height={Math.max(180, 30 * Math.min(d.byLocation.length, 10) + 40)} label={`Alerts by location: ${d.byLocation.slice(0, 10).map((l) => `${cap(l.commodity)} ${l.location} ${l.alerts}`).join(', ')}`} build={(t) => {
+              const rows = d.byLocation.slice(0, 10).reverse()
+              return {
+                grid: { left: 190, right: 24, top: 8, bottom: 8 },
+                tooltip: { trigger: 'axis', axisPointer: { type: 'none' }, formatter: (ps: unknown) => {
+                  const l = rows[(ps as { dataIndex: number }[])[0].dataIndex]
+                  return `<strong>${cap(l.commodity)} · ${l.location}</strong><br/>${l.alerts} alert${l.alerts === 1 ? '' : 's'}<br/>${l.exposedNodes} nodes matched`
+                } },
+                xAxis: { type: 'value', minInterval: 1, splitLine: { lineStyle: { color: t.grid } }, axisLabel: { color: t.muted } },
+                yAxis: { type: 'category', data: rows.map((l) => `${cap(l.commodity)} · ${l.location}`), ...axisStyle(t) },
+                series: [{ type: 'bar', barMaxWidth: 16, data: rows.map((l) => ({ value: l.alerts, itemStyle: { color: l.commodity === 'wheat' ? t.series[0] : t.series[3], borderRadius: [0, 4, 4, 0] } })),
+                  label: { show: true, position: 'right', color: t.muted } }],
+              }
+            }} />
           </section>
           <section className="card">
             <header><h2>Most serious alerts</h2><span className="muted small">top 10 by severity, then newest</span></header>
@@ -139,29 +153,48 @@ export function ConcentrationReport() {
           ]} />
           <div className="grid two">
             <section className="card">
-              <header><h2>Nodes by country</h2><span className="muted small">top 12</span></header>
-              <div className="table-wrap"><table>
-                <thead><tr><th>Country</th><th>Nodes</th><th>Share</th></tr></thead>
-                <tbody>{d.byCountry.map((c) => (
-                  <tr key={c.country}>
-                    <td>{c.country}<div className="muted small">{Object.entries(c.kinds).map(([k, n]) => `${n} ${k}`).join(', ')}</div></td>
-                    <td>{c.nodes}</td>
-                    <td><Bar value={c.share} max={Math.max(...d.byCountry.map((x) => x.share))} warn={c.share >= 25} />%</td>
-                  </tr>
-                ))}</tbody>
-              </table></div>
+              <header><h2>Nodes by country</h2><span className="muted small">top 12, share of all nodes; amber is 25% or more</span></header>
+              <Chart height={Math.max(220, 26 * d.byCountry.length + 40)} label={`Nodes by country: ${d.byCountry.map((c) => `${c.country} ${c.share}%`).join(', ')}`} build={(t) => {
+                const rows = [...d.byCountry].reverse()
+                return {
+                  grid: { left: 100, right: 48, top: 8, bottom: 8 },
+                  tooltip: { trigger: 'axis', axisPointer: { type: 'none' }, formatter: (ps: unknown) => {
+                    const p = (ps as { dataIndex: number }[])[0]; const c = rows[p.dataIndex]
+                    return `<strong>${c.country}</strong><br/>${c.nodes} nodes (${c.share}%)<br/>${Object.entries(c.kinds).map(([k, n]) => `${n} ${k}`).join(', ')}`
+                  } },
+                  xAxis: { type: 'value', axisLabel: { show: false }, splitLine: { show: false } },
+                  yAxis: { type: 'category', data: rows.map((c) => c.country), ...axisStyle(t) },
+                  series: [{ type: 'bar', barMaxWidth: 14, data: rows.map((c) => ({ value: c.nodes, itemStyle: { color: c.share >= 25 ? t.warn : t.series[0], borderRadius: [0, 4, 4, 0] } })),
+                    label: { show: true, position: 'right', color: t.muted, formatter: (p: { dataIndex: number }) => `${rows[p.dataIndex].share}%` } }],
+                }
+              }} />
             </section>
-            <section className="card">
-              <header><h2>Network make-up</h2></header>
-              <div className="table-wrap"><table>
-                <thead><tr><th>Kind</th><th>Nodes</th></tr></thead>
-                <tbody>{d.byKind.map((k) => <tr key={k.kind}><td>{label(k.kind)}</td><td>{k.count}</td></tr>)}</tbody>
-              </table></div>
-              <div className="table-wrap"><table>
-                <thead><tr><th>Link confidence</th><th>Links</th></tr></thead>
-                <tbody>{d.linkConfidence.map((k) => <tr key={k.confidence}><td>{cap(k.confidence)}</td><td>{k.count}</td></tr>)}</tbody>
-              </table></div>
-            </section>
+            <div style={{ display: 'grid', gap: 16, alignContent: 'start' }}>
+              <section className="card">
+                <header><h2>Network make-up</h2></header>
+                <Chart height={200} label={`Nodes by kind: ${d.byKind.map((k) => `${k.count} ${k.kind}`).join(', ')}`} build={(t) => ({
+                  tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+                  legend: { right: 0, orient: 'vertical', top: 'middle', textStyle: { color: t.muted }, itemWidth: 10, itemHeight: 10 },
+                  series: [{ type: 'pie', radius: ['50%', '75%'], center: ['35%', '50%'], itemStyle: { borderColor: t.surface, borderWidth: 2, borderRadius: 4 }, label: { show: false },
+                    data: d.byKind.map((k, i) => ({ name: label(k.kind), value: k.count, itemStyle: { color: t.series[i % t.series.length] } })) }],
+                })} />
+              </section>
+              <section className="card">
+                <header><h2>Link confidence</h2><span className="muted small">how well each supplier link is evidenced</span></header>
+                <Chart height={130} label={`Link confidence: ${d.linkConfidence.map((k) => `${k.count} ${k.confidence}`).join(', ')}`} build={(t) => {
+                  const order = ['high', 'medium', 'low']
+                  const col: Record<string, string> = { high: t.ok, medium: t.warn, low: t.bad }
+                  return {
+                    grid: { left: 8, right: 8, top: 24, bottom: 4 },
+                    legend: { top: 0, textStyle: { color: t.muted }, itemWidth: 10, itemHeight: 10 },
+                    tooltip: { trigger: 'item' },
+                    xAxis: { type: 'value', show: false, max: d.totals.links }, yAxis: { type: 'category', show: false, data: ['links'] },
+                    series: order.map((o) => ({ name: cap(o), type: 'bar', stack: 'c', barWidth: 28, data: [d.linkConfidence.find((k) => k.confidence === o)?.count ?? 0],
+                      itemStyle: { color: col[o], borderColor: t.surface, borderWidth: 2, borderRadius: 3 }, label: { show: true, color: '#fff' } })),
+                  }
+                }} />
+              </section>
+            </div>
           </div>
           <section className="card">
             <header><h2>Single-source nodes</h2><span className="muted small">losing the one supplier leaves no alternative on record</span></header>
@@ -209,20 +242,34 @@ export function ActionsReport() {
           ]} />
           <div className="grid two">
             <section className="card">
-              <header><h2>By status</h2></header>
-              <div className="table-wrap"><table>
-                <thead><tr><th>Status</th><th>Actions</th></tr></thead>
-                <tbody>{d.byStatus.map((s) => <tr key={s.status}><td>{label(s.status)}</td><td><Bar value={s.count} max={d.totals.actions} /></td></tr>)}</tbody>
-              </table></div>
+              <header><h2>Where actions stand</h2><span className="muted small">{d.totals.actions} actions</span></header>
+              <Chart height={240} label={`Actions by status: ${d.byStatus.map((s) => `${s.count} ${label(s.status)}`).join(', ')}`} build={(t) => ({
+                tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+                legend: { bottom: 0, textStyle: { color: t.muted }, itemWidth: 10, itemHeight: 10 },
+                series: [{ type: 'pie', radius: ['52%', '76%'], center: ['50%', '44%'], itemStyle: { borderColor: t.surface, borderWidth: 2, borderRadius: 4 },
+                  label: { show: true, position: 'center', formatter: `${d.totals.done}/${d.totals.actions}\ndone`, color: t.text, fontSize: 16, lineHeight: 20 },
+                  data: d.byStatus.map((x) => ({ name: label(x.status), value: x.count,
+                    itemStyle: { color: ({ open: t.sev.low, in_progress: t.series[0], review: t.warn, done: t.ok } as Record<string, string>)[x.status] } })) }],
+              })} />
             </section>
             <section className="card">
-              <header><h2>By owner</h2></header>
-              <div className="table-wrap"><table>
-                <thead><tr><th>Owner</th><th>Open</th><th>Overdue</th><th>Total</th></tr></thead>
-                <tbody>{d.byOwner.map((o) => (
-                  <tr key={o.owner}><td>{o.owner}</td><td>{o.open}</td><td>{o.overdue ? <span className="bad-text">{o.overdue}</span> : 0}</td><td>{o.total}</td></tr>
-                ))}</tbody>
-              </table></div>
+              <header><h2>Workload by owner</h2><span className="muted small">overdue, on track and done</span></header>
+              <Chart height={240} label={`Actions by owner: ${d.byOwner.map((o) => `${o.owner} ${o.open} open, ${o.overdue} overdue`).join('; ')}`} build={(t) => {
+                const rows = [...d.byOwner].reverse()
+                return {
+                  grid: { left: 130, right: 16, top: 30, bottom: 8 },
+                  legend: { top: 0, textStyle: { color: t.muted }, itemWidth: 10, itemHeight: 10 },
+                  tooltip: { trigger: 'axis', axisPointer: { type: 'none' } },
+                  xAxis: { type: 'value', minInterval: 1, splitLine: { lineStyle: { color: t.grid } }, axisLabel: { color: t.muted } },
+                  yAxis: { type: 'category', data: rows.map((o) => o.owner), ...axisStyle(t) },
+                  series: [
+                    { name: 'Overdue', color: t.bad, data: rows.map((o) => o.overdue) },
+                    { name: 'On track', color: t.series[0], data: rows.map((o) => o.open - o.overdue) },
+                    { name: 'Done', color: t.ok, data: rows.map((o) => o.total - o.open) },
+                  ].map((x) => ({ name: x.name, type: 'bar' as const, stack: 'o', barMaxWidth: 20, data: x.data,
+                    itemStyle: { color: x.color, borderColor: t.surface, borderWidth: 2, borderRadius: 3 } })),
+                }
+              }} />
             </section>
           </div>
           <section className="card">
@@ -286,19 +333,27 @@ export function LifecycleReport() {
             ]} />
             <div className="grid two">
               <section className="card">
-                <header><h2>Source to decision</h2></header>
-                <div className="table-wrap"><table>
-                  <thead><tr><th>Step</th><th>Count</th></tr></thead>
-                  <tbody>{d.funnel.map((f) => <tr key={f.step}><td>{f.step}</td><td><Bar value={f.count} max={top} /></td></tr>)}</tbody>
-                </table></div>
-                <p className="muted small" style={{ padding: '0 12px' }}>Counts fall because not every payload raises an alert, and not every alert needs an assessment yet.</p>
+                <header><h2>Source to decision</h2><span className="muted small">counts fall: not every payload raises an alert</span></header>
+                <Chart height={260} label={`Source to decision: ${d.funnel.map((f) => `${f.step} ${f.count}`).join(', ')}`} build={(t) => {
+                  const rows = [...d.funnel].reverse()
+                  return {
+                    grid: { left: 150, right: 40, top: 8, bottom: 8 },
+                    tooltip: { trigger: 'axis', axisPointer: { type: 'none' } },
+                    xAxis: { type: 'value', max: top, axisLabel: { show: false }, splitLine: { show: false } },
+                    yAxis: { type: 'category', data: rows.map((f) => f.step), ...axisStyle(t) },
+                    series: [{ type: 'bar', barMaxWidth: 22, data: rows.map((f) => f.count), itemStyle: { color: t.series[0], borderRadius: [0, 4, 4, 0] },
+                      label: { show: true, position: 'right', color: t.muted } }],
+                  }
+                }} />
               </section>
               <section className="card">
                 <header><h2>What happened to each observation</h2></header>
-                <div className="table-wrap"><table>
-                  <thead><tr><th>Outcome</th><th>Observations</th></tr></thead>
-                  <tbody>{d.observationOutcomes.map((o) => <tr key={o.outcome}><td>{label(o.outcome)}</td><td>{o.count}</td></tr>)}</tbody>
-                </table></div>
+                <Chart height={190} label={`Observation outcomes: ${d.observationOutcomes.map((o) => `${o.count} ${label(o.outcome)}`).join(', ')}`} build={(t) => ({
+                  tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+                  legend: { right: 0, orient: 'vertical', top: 'middle', textStyle: { color: t.muted }, itemWidth: 10, itemHeight: 10 },
+                  series: [{ type: 'pie', radius: ['48%', '74%'], center: ['32%', '50%'], itemStyle: { borderColor: t.surface, borderWidth: 2, borderRadius: 4 }, label: { show: false },
+                    data: d.observationOutcomes.map((o, i) => ({ name: label(o.outcome), value: o.count, itemStyle: { color: t.series[i % t.series.length] } })) }],
+                })} />
                 <div className="table-wrap"><table>
                   <thead><tr><th>Ingestion runs</th><th>Records</th></tr></thead>
                   <tbody>
@@ -311,7 +366,20 @@ export function LifecycleReport() {
               </section>
             </div>
             <section className="card">
-              <header><h2>Source freshness</h2></header>
+              <header><h2>Source freshness</h2><span className="muted small">hours since usable data against each source's allowed age</span></header>
+              <Chart height={Math.max(150, 46 * d.sources.length + 30)} label={`Source freshness: ${d.sources.map((x) => `${x.name} ${x.hoursSinceUsable ?? 'never'} h of ${x.policyHours} h`).join('; ')}`} build={(t) => {
+                const rows = [...d.sources].reverse()
+                return {
+                  grid: { left: 170, right: 24, top: 24, bottom: 24 },
+                  tooltip: { trigger: 'axis', axisPointer: { type: 'none' } },
+                  xAxis: { type: 'value', name: '% of allowed age', nameLocation: 'middle', nameGap: 22, nameTextStyle: { color: t.muted }, splitLine: { lineStyle: { color: t.grid } }, axisLabel: { color: t.muted } },
+                  yAxis: { type: 'category', data: rows.map((x) => x.name), ...axisStyle(t) },
+                  series: [{ type: 'bar', barMaxWidth: 16,
+                    data: rows.map((x) => ({ value: x.hoursSinceUsable == null ? 0 : Math.round((100 * x.hoursSinceUsable) / x.policyHours),
+                      itemStyle: { color: x.hoursSinceUsable == null || x.hoursSinceUsable > x.policyHours ? t.warn : t.series[0], borderRadius: [0, 4, 4, 0] } })),
+                    markLine: { silent: true, symbol: 'none', lineStyle: { color: t.bad, type: 'dashed' }, label: { color: t.muted, formatter: 'allowed age', position: 'end' }, data: [{ xAxis: 100 }] } }],
+                }
+              }} />
               <div className="table-wrap"><table>
                 <thead><tr><th>Source</th><th>Mode</th><th>Last usable data</th><th>Policy</th><th>State</th></tr></thead>
                 <tbody>{d.sources.map((s) => (

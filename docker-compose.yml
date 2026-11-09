@@ -61,6 +61,7 @@ services:
       KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
     volumes:
       - ./keycloak/supplychain-realm.json:/opt/keycloak/data/import/supplychain-realm.json:ro
+      - ./keycloak/themes/supplychain:/opt/keycloak/themes/supplychain:ro
       - keycloak_data:/opt/keycloak/data
     ports:
       - "127.0.0.1:8180:8080"

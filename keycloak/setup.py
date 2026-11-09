@@ -92,6 +92,12 @@ def main():
         print(f"Created realm '{realm}' with {len(realm_def['roles']['realm'])} roles, {len(realm_def['clients'])} clients and {len(realm_def['users'])} users.")
     elif status == 200:
         print(f"Realm '{realm}' already exists; its settings were left as they are.")
+        # the sign-in theme is the one setting kept in step, so an older realm picks up the branded page
+        status, current = call("GET", f"{base}/admin/realms/{realm}", token)
+        if status == 200 and realm_def.get("loginTheme") and current.get("loginTheme") != realm_def["loginTheme"]:
+            current["loginTheme"] = realm_def["loginTheme"]
+            status, _ = call("PUT", f"{base}/admin/realms/{realm}", token, current)
+            print(f"  login theme set to '{realm_def['loginTheme']}'" if status in (200, 204) else f"  ! could not set the login theme ({status})")
     else:
         sys.exit(f"Could not check the realm ({status})")
 
