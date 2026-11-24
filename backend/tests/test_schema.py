@@ -58,9 +58,9 @@ def test_seed_reset_reloads(seeded, fixture_file):
 
 def test_reset_also_clears_what_the_application_created(seeded, fixture_file):
     with seeded.begin() as c:
-        c.execute(text("INSERT INTO sim_run (id, scenario_id, seed, status, active_slot, started_at, started_by) VALUES ('r', 'SC-W-1', 1, 'running', 1, now(), 'me')"))
+        c.execute(text("INSERT INTO sim_run (id, scenario_id, seed, status, active_slot, started_at, started_by) VALUES ('r', 'SC-T-2', 1, 'running', 1, now(), 'me')"))
         c.execute(text("INSERT INTO import_record (id, dataset, version, rows, rejected, checksum, committed_by, committed_at) VALUES ('IMP-1', 'price', 1, 1, 0, 'abc', 'x', now())"))
-        c.execute(text("INSERT INTO option_shortlist (option_id, shortlisted_by_id, shortlisted_by_name, shortlisted_at) VALUES ('O-W-1', 'u', 'U', now())"))
+        c.execute(text("INSERT INTO option_shortlist (option_id, shortlisted_by_id, shortlisted_by_name, shortlisted_at) VALUES ('O-T-5', 'u', 'U', now())"))
     seed.load(seeded, path=fixture_file, reset=True)
     with seeded.connect() as c:
         assert [count(c, t) for t in ("sim_run", "import_record", "option_shortlist")] == [0, 0, 0]
@@ -69,7 +69,7 @@ def test_reset_also_clears_what_the_application_created(seeded, fixture_file):
 def test_assumption_cannot_be_decided_by_its_proposer(seeded):
     with pytest.raises(IntegrityError, match="maker_checker"):
         with seeded.begin() as c:
-            c.execute(text("UPDATE assumption SET decided_by_id = proposed_by_id WHERE id = 'AS-W-1'"))
+            c.execute(text("UPDATE assumption SET decided_by_id = proposed_by_id WHERE id = 'AS-T-2'"))
 
 
 def test_only_one_active_assumption_per_alert(seeded):
@@ -77,15 +77,15 @@ def test_only_one_active_assumption_per_alert(seeded):
         with seeded.begin() as c:
             c.execute(text("""
                 INSERT INTO assumption (id, alert_id, affected_share_pct, basis, proposed_by_id, proposed_by_name, proposed_at, status)
-                VALUES ('AS-W-2', 'AL-W-001', 50, 'second', 'u-analyst-b', 'Risk Analyst B', now(), 'proposed')"""))
+                VALUES ('AS-T-3', 'AL-T-003', 50, 'second', 'u-analyst-b', 'Risk Analyst B', now(), 'proposed')"""))
 
 
 def test_superseded_assumption_does_not_block_a_new_one(seeded):
     with seeded.begin() as c:
-        c.execute(text("UPDATE assumption SET status = 'superseded' WHERE id = 'AS-W-1'"))
+        c.execute(text("UPDATE assumption SET status = 'superseded' WHERE id = 'AS-T-2'"))
         c.execute(text("""
             INSERT INTO assumption (id, alert_id, affected_share_pct, basis, proposed_by_id, proposed_by_name, proposed_at, status)
-            VALUES ('AS-W-2', 'AL-W-001', 50, 'replacement', 'u-analyst-b', 'Risk Analyst B', now(), 'proposed')"""))
+            VALUES ('AS-T-3', 'AL-T-003', 50, 'replacement', 'u-analyst-b', 'Risk Analyst B', now(), 'proposed')"""))
         assert count(c, "assumption") == 3
 
 
@@ -106,26 +106,26 @@ def test_action_must_point_at_an_existing_assessment_snapshot(seeded):
             c.execute(text("""
                 INSERT INTO action (id, alert_id, commodity, option_id, owner_id, owner_name, target_date, rationale,
                                     status, created_at, created_by, assessment_version, assumption_status)
-                VALUES ('AC-X', 'AL-W-001', 'wheat', 'O-W-1', 'u', 'U', '2026-12-01', 'r', 'open', now(), 'me', 99, 'none')"""))
+                VALUES ('AC-X', 'AL-T-003', 'tungsten', 'O-T-5', 'u', 'U', '2026-12-01', 'r', 'open', now(), 'me', 99, 'none')"""))
 
 
 def test_alert_must_reference_an_existing_rule_version(seeded):
     with pytest.raises(IntegrityError):
         with seeded.begin() as c:
-            c.execute(text("UPDATE alert SET rule_v = '9.9' WHERE id = 'AL-W-001'"))
+            c.execute(text("UPDATE alert SET rule_v = '9.9' WHERE id = 'AL-T-003'"))
 
 
 def test_one_published_version_per_rule(seeded):
     with pytest.raises(IntegrityError, match="uq_rule_one_published"):
         with seeded.begin() as c:
-            c.execute(text("UPDATE rule_version SET status = 'published' WHERE rule_id = 'R-W-EXP' AND v = '1.1'"))
+            c.execute(text("UPDATE rule_version SET status = 'published' WHERE rule_id = 'R-T-EXP' AND v = '0.9'"))
 
 
 def test_edges_reject_self_loops_and_duplicates(seeded):
     with pytest.raises(IntegrityError, match="not_self"):
         with seeded.begin() as c:
             c.execute(text("INSERT INTO supply_edge (id, from_node, to_node, material, source, confidence, effective_from) "
-                           "VALUES ('x', 'w-milly', 'w-milly', 'm', 's', 'low', '2026-01-01')"))
+                           "VALUES ('x', 't-milly', 't-milly', 'm', 's', 'low', '2026-01-01')"))
     with pytest.raises(IntegrityError, match="supply_edge_identity"):
         with seeded.begin() as c:
             c.execute(text("INSERT INTO supply_edge (id, from_node, to_node, material, source, confidence, effective_from) "
@@ -142,7 +142,7 @@ def test_same_import_file_cannot_be_committed_twice(seeded):
 
 
 def test_traversal_with_cycle_guard_terminates(seeded):
-    """The wheat network has a cycle (Mill Y <-> Trader Q). A depth-bounded recursive query with a path guard must stop."""
+    """The sample network has a cycle (Mill Y <-> Trader Q). A depth-bounded recursive query with a path guard must stop."""
     query = text("""
         WITH RECURSIVE walk(node_id, depth, path) AS (
             SELECT CAST(:focus AS text), 0, ARRAY[CAST(:focus AS text)]
@@ -153,5 +153,5 @@ def test_traversal_with_cycle_guard_terminates(seeded):
         )
         SELECT DISTINCT node_id FROM walk ORDER BY node_id""")
     with seeded.connect() as c:
-        reached = [r[0] for r in c.execute(query, {"focus": "w-milly"})]
-    assert reached == ["w-milly", "w-plantz", "w-prodp", "w-traderq"]
+        reached = [r[0] for r in c.execute(query, {"focus": "t-milly"})]
+    assert reached == ["t-milly", "t-plantz", "t-prodp", "t-traderq"]

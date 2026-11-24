@@ -59,23 +59,19 @@ await page.getByRole('button', { name: 'Sign in' }).waitFor()
 ok('after signing out the sign-in page returns', true)
 await ctx.close()
 
-// 2. a user limited to wheat
+// 2. a user limited to tungsten (the only commodity)
 ctx = await browser.newContext({ viewport: { width: 1400, height: 900 } }); page = await ctx.newPage()
-await login(page, 'wheat.analyst')
+await login(page, 'tungsten.analyst')
 await page.getByRole('heading', { name: /overview/i }).waitFor()
-ok('a wheat-only user sees only the wheat switch', (await page.locator('.seg button').allInnerTexts()).join('|') === 'Wheat')
-ok('and is told so', (await page.locator('.devrole').innerText()).includes('wheat only'))
-await page.goto(APP + '/risk'); await page.waitForSelector('text=Port congestion')
-const rows = await page.locator('tbody tr').count()
-const tungsten = await page.getByText('tungsten', { exact: false }).count()
-ok('their inbox has the 7 wheat alerts and no tungsten ones', rows === 7 && tungsten === 0, `${rows} rows`)
+ok('a tungsten-only user sees the tungsten switch', (await page.locator('.seg button').allInnerTexts()).join('|') === 'Tungsten')
+ok('and is told so', (await page.locator('.devrole').innerText()).includes('tungsten only'))
 const status = await page.evaluate(async () => {
   const k = Object.keys(sessionStorage).find((x) => x.startsWith('oidc.user:'))
   const t = JSON.parse(sessionStorage.getItem(k)).access_token
   const get = async (p) => (await fetch('/api' + p, { headers: { Authorization: 'Bearer ' + t } })).status
-  return { tungstenAlert: await get('/alerts/AL-T-001'), tungstenOverview: await get('/overview?commodity=tungsten'), wheatAlert: await get('/alerts/AL-W-001') }
+  return { alert: await get('/alerts/AL-T-001'), overview: await get('/overview?commodity=tungsten'), retired: await get('/overview?commodity=wheat') }
 })
-ok('the API hides the other commodity from them', status.tungstenAlert === 404 && status.tungstenOverview === 404 && status.wheatAlert === 200, JSON.stringify(status))
+ok('the API serves tungsten and rejects the retired commodity', status.alert === 200 && status.overview === 200 && status.retired === 422, JSON.stringify(status))
 await ctx.close()
 
 // 3. a viewer

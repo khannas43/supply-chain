@@ -1,6 +1,6 @@
 # Supply Chain Risk MVP
 
-Local application that maps a supply chain, detects commodity risk events, assesses business impact and records a response, for wheat and tungsten. Everything runs locally in Docker.
+Local application that maps a supply chain, detects commodity risk events, assesses business impact and records a response, for tungsten. Everything runs locally in Docker.
 
 Status: nine screens on the API; ingestion path (collect, worker, rules, alerts) working with the simulator; Docker stack with database, schema, demo data, API and worker. The API serves alerts, network traversal and assessments ; all nine screens use it. Writes need an identity (development headers for now).
 
@@ -99,7 +99,7 @@ Interactive docs at http://127.0.0.1:8100/api/docs. Field names are camelCase, m
 | `GET /api/network/nodes` | Network nodes; filter `commodity` |
 | `GET /api/network/traverse` | Upstream and/or downstream suppliers from `focus`, bounded by `depth` (1 to 5) and `limit`, with `direction`, `material` filter, `truncated` flag and `cycleEdgeIds` |
 
-Traversal runs as a recursive query in PostgreSQL. Calculations are in `backend/app/calc.py` (Decimal, with the wheat worked example as a test).
+Traversal runs as a recursive query in PostgreSQL. Calculations are in `backend/app/calc.py` (Decimal, with a worked example as a test).
 
 ## How data flows
 
@@ -126,20 +126,20 @@ Watch the worker with `docker compose logs -f worker`.
 
 **The demo set** (`backend/seed/demo.json`) is real geography with fictional companies and synthetic events: every country is real, every company, plant, price, volume and event is invented, and every event is labelled simulated or replay. Nothing in it describes a real policy, shipment or supplier.
 
-| | Wheat | Tungsten |
-| --- | --- | --- |
-| Supplier network | 37 nodes in 13 countries: origins (Russia, Ukraine, Kazakhstan, Romania, Australia, Canada, France, Germany, United States, Argentina), exporters and terminals, four Tier 1 blenders and millers, five plants, four products | 38 nodes in 15 countries: mines (China, Russia, Vietnam, South Korea, Portugal, Austria, Canada, Australia, Bolivia, Rwanda), concentrators and traders, APT refiners, four carbide-powder makers, four plants, four products |
-| Links | 51, with confidence, source and dates; uncertain links, and a loop between two blenders | 51, with the same, and a loop between two traders |
-| Alerts | 7, from export restrictions and quotas to port delays; new, confirmed, monitored and dismissed | 6, from export controls to price spikes |
-| Assessments | Three assessed alerts with one to three versions each; assumptions approved, superseded and rejected | Two assessed alerts, one waiting for an approver |
-| Response options | 12 across the assessed alerts: qualified and unqualified, quotes valid, expiring and expired, inventory | 9 |
-| Actions | 7, open, in progress, in review (one overdue) and done; one flagged because the assessment moved on | 5, the same mix |
+| | Tungsten |
+| --- | --- |
+| Supplier network | 38 nodes in 15 countries: mines (China, Russia, Vietnam, South Korea, Portugal, Austria, Canada, Australia, Bolivia, Rwanda), concentrators and traders, APT refiners, four carbide-powder makers, four plants, four products |
+| Links | 51, with confidence, source and dates; uncertain links, and a loop between two traders |
+| Alerts | 9, from export controls and quotas to price spikes and port delays; new, confirmed, monitored and dismissed |
+| Assessments | Three assessed alerts with one to three versions each; assumptions approved, superseded, rejected and one waiting for an approver |
+| Response options | 12 across the assessed alerts: qualified and unqualified, quotes valid, expiring and expired, inventory |
+| Actions | 6, open, in progress, in review (one overdue) and done; one flagged because the assessment moved on |
 
-It also holds the trail behind every alert: the observation, the ingestion and the original payload (open it from the evidence drawer), plus observations that were *not* alerts (merged, late, below threshold, no rule), quarantined records you can correct and replay, dead-letter entries, an import history, 56 pipeline runs and a 69-event audit trail. One source is stale on purpose.
+It also holds the trail behind every alert: the observation, the ingestion and the original payload (open it from the evidence drawer), plus observations that were *not* alerts (merged, late, below threshold, no rule), quarantined records you can correct and replay, dead-letter entries, an import history, 49 pipeline runs and a 40-event audit trail. One source is stale on purpose.
 
 **It never goes stale.** Dates are written relative to a reference moment and moved to "now" when loaded, so sources are as fresh or stale as designed, quotes expire when intended and actions are overdue when intended, whenever you load it. Re-load any time with `docker compose exec api python -m app.seed --reset`.
 
-**Scenarios** for the simulator are data too (`backend/seed/scenarios.json`): *Black Sea wheat disruption* and *Tungsten export controls*.
+**Scenarios** for the simulator are data too (`backend/seed/scenarios.json`): *Tungsten export controls* and *Tungsten route and port disruption*.
 
 **Edit it.** The demo set is written in readable Python (`backend/seed/build_demo.py`). Change it, rebuild, and the tests check it against the real engine (payloads pass the validators, exposure matches the traversal, calculations are what was designed):
 
@@ -161,6 +161,10 @@ The tests use their own small fixture (`backend/tests/fixtures/`), so changing t
 
 The **Reports** menu holds four read-only reports: risk exposure, supplier concentration, actions and decisions, and data life cycle. The last one runs 15 integrity checks across the path from source to decision (evidence present and matching its checksum, rule version recorded, every action tied to an assessment snapshot, and so on) and should always show zero violations. Browser checks: `e2e/reports.mjs`.
 
+## Credibl data
+
+`CREDIBL_MODE` in `.env` sets how the worker collects Credibl data: `off` (default), `mock` or `http`. `mock` replays `backend/seed/credibl_mock.json` and labels everything **Simulated**; `http` calls the real API (`CREDIBL_BASE_URL`, plus an API key or OAuth client credentials) and labels it live. Values arrive through the same path as every other source (evidence, worker, validation, quarantine) and show on **Source health, External data** with their as-of date, last refresh, upstream source, licence class, attribution, staleness and completeness. A value without its provenance is quarantined, not accepted. The payload shape and endpoint paths are assumptions until Credibl sends its specification; they live in `backend/app/credibl.py` and `_credibl` in `backend/app/processing.py`. One collection by hand: `CREDIBL_MODE=mock python -m app.credibl poll`. After changing the code, rebuild (`docker compose up -d --build`); the new migration (`0006`) adds the provenance columns.
+
 ## Backend tests
 
 The tests create a throwaway database on the stack's PostgreSQL server, so the stack must be running.
@@ -177,7 +181,7 @@ Two modes, set by `AUTH_MODE` in `.env`:
 - **`dev`** (default): the top bar has an identity switch (`/simulator?as=u-demo` opens the app as that identity). The API trusts identity headers in this mode, so it is for local development only and must never face a network.
 - **`keycloak`**: the browser signs in with Authorization Code and PKCE. The API accepts only a valid access token on every request except health checks and the login settings: RS256 signature checked against the realm's keys, issuer and audience matched, not expired. Identity headers are ignored. A user with no role in the application gets "No access yet".
 
-**Roles and scope.** The six roles are realm roles in Keycloak (`viewer`, `analyst`, `manager`, `steward`, `admin`, `demo_operator`); a user may hold several. An optional `commodity_scope` user attribute (`wheat` or `tungsten`) limits what that user sees; out-of-scope items answer 404. Roles are enforced on every write endpoint and on the reads behind the source health, rules and data, and simulator screens.
+**Roles and scope.** The six roles are realm roles in Keycloak (`viewer`, `analyst`, `manager`, `steward`, `admin`, `demo_operator`); a user may hold several. An optional `commodity_scope` user attribute (`tungsten`; a scope naming anything else sees nothing) limits what that user sees; out-of-scope items answer 404. Roles are enforced on every write endpoint and on the reads behind the source health, rules and data, and simulator screens.
 
 **Keycloak is part of the stack.** The seed users below get `DEMO_USER_PASSWORD` the first time; after that, change passwords in the Keycloak console and they are never overwritten (`docker compose run --rm keycloak-setup` is safe to repeat). To use the identity switch instead of signing in (local development only):
 
@@ -187,13 +191,12 @@ AUTH_MODE=dev docker compose up -d api        # back to normal: docker compose u
 
 | User | Roles | Sees |
 | --- | --- | --- |
-| `executive.viewer` | viewer | both commodities |
+| `executive.viewer` | viewer | tungsten |
 | `risk.analyst.a`, `risk.analyst.b` | analyst | both |
 | `procurement.manager` | manager | both |
 | `data.steward` | steward | both |
 | `platform.admin` | admin | both |
 | `demo.operator` | demo_operator | both |
-| `wheat.analyst` | analyst | wheat only |
 | `tungsten.analyst` | analyst | tungsten only |
 
 **Using another Keycloak instead** is possible: run `keycloak/setup.py` against it with its admin login (it creates the `supplychain` realm if missing and sets seed passwords), then set `KEYCLOAK_INTERNAL_URL` (how the API reaches it) and `KEYCLOAK_ISSUER` (the address browsers use) in `.env`. Realm settings live in `keycloak/supplychain-realm.json`; no passwords are stored in the repository.

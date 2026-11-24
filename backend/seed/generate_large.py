@@ -5,7 +5,7 @@
     docker compose exec api python -m app.seed --reset --file seed/demo-large.json
 
 --nodes is per commodity. The same arguments always give the same file. The generated entities use their own
-ids (wl-, tl-, AL-x-1001 and up) and never touch the hand-built demo set. Real country names, invented
+ids (tl-, AL-x-1001 and up) and never touch the hand-built demo set. Real country names, invented
 companies and events, as in the demo set.
 """
 
@@ -20,8 +20,7 @@ from pathlib import Path
 HERE = Path(__file__).parent
 LAYERS = [("o", "origin", "Tier 4", 0.34), ("c", "supplier", "Tier 3", 0.30), ("r", "supplier", "Tier 2", 0.14),
           ("p", "supplier", "Tier 1", 0.10), ("f", "plant", None, 0.08), ("g", "product", None, 0.04)]
-MATERIAL = {"wheat": ["wheat, milling grade", "wheat, milling grade", "flour input", "flour input", "flour"],
-            "tungsten": ["tungsten ore", "tungsten concentrate", "APT (ammonium paratungstate)", "carbide powder", "carbide insert"]}
+MATERIAL = {"tungsten": ["tungsten ore", "tungsten concentrate", "APT (ammonium paratungstate)", "carbide powder", "carbide insert"]}
 SEV = {1: "low", 2: "medium", 3: "high", 4: "critical"}
 LABEL = {"export_restriction": "Export restriction announced", "export_licence": "Export licence tightening"}
 
@@ -38,7 +37,7 @@ def generate(base: dict, nodes_per_commodity: int, n_alerts: int, seed: int) -> 
 
     nodes, edges, by_layer = [], [], {}
     out_adj = defaultdict(list)
-    for commodity in ("wheat", "tungsten"):
+    for commodity in ("tungsten",):
         prefix = commodity[0] + "l"
         layer_ids = []
         for code, kind, tier, share in LAYERS:
@@ -68,7 +67,7 @@ def generate(base: dict, nodes_per_commodity: int, n_alerts: int, seed: int) -> 
         if a == b or (a, b) in seen:
             continue
         seen.add((a, b))
-        commodity = "wheat" if a.startswith("wl") else "tungsten"
+        commodity = "tungsten"
         conf = rng.choices(["high", "medium", "low"], [5, 4, 1])[0]
         rows.append(dict(id=f"el{len(rows) + 1}", from_node=a, to_node=b, material=MATERIAL[commodity][min(k, 4)], source="Generated supplier file",
                          confidence=conf, effective_from=day(-rng.randint(200, 1500)), effective_to=None, uncertain=conf == "low", note=None))
@@ -97,14 +96,13 @@ def generate(base: dict, nodes_per_commodity: int, n_alerts: int, seed: int) -> 
 
     n = defaultdict(int)
     nxt = lambda prefix, width: (n.__setitem__(prefix, n[prefix] + 1) or f"{prefix}{n[prefix]:0{width}d}")
-    start = {"ING-": 10000, "OB-": 100000, "EV-": 0, "O-W-": 1000, "O-T-": 1000, "AS-W-": 1000, "AS-T-": 1000, "AC-W-": 1000, "AC-T-": 1000}
+    start = {"ING-": 10000, "OB-": 100000, "EV-": 0, "O-T-": 1000, "AS-T-": 1000, "AC-T-": 1000}
     for k, v in start.items():
         n[k] = v
     for i in range(1, n_alerts + 1):
-        commodity = rng.choice(["wheat", "tungsten"])
-        kind = rng.choice(["policy", "policy", "logistics"]) if commodity == "wheat" else rng.choice(["policy", "policy", "price"])
-        rule = {("policy", "wheat"): "wheat-export-policy", ("policy", "tungsten"): "tungsten-export-policy",
-                ("logistics", "wheat"): "wheat-logistics", ("price", "tungsten"): "tungsten-price"}[(kind, commodity)]
+        commodity = "tungsten"
+        kind = rng.choice(["policy", "policy", "logistics", "price"])
+        rule = {"policy": "tungsten-export-policy", "logistics": "tungsten-logistics", "price": "tungsten-price"}[kind]
         thr = {t["key"]: t["value"] for t in rules[rule]["thresholds"]}
         country = "Global" if kind == "price" else rng.choice(sorted({country_of[i] for i in by_layer[commodity][0]}))
         pct = rng.randint(int(thr.get("conf", 50)), 95)
@@ -125,7 +123,7 @@ def generate(base: dict, nodes_per_commodity: int, n_alerts: int, seed: int) -> 
             gate = f"delay {value:g} days >= threshold {thr['delay']} days"
         else:
             gate = f"30-day change {value}% >= threshold {thr['chg']}%"
-        event = {"policy": "export_restriction" if commodity == "wheat" else "export_licence", "logistics": "port_delay", "price": "price_change_30d_pct"}[kind]
+        event = {"policy": "export_licence", "logistics": "port_delay", "price": "price_change_30d_pct"}[kind]
         title = {"policy": f"{LABEL[event] if kind == 'policy' else ''}, {country}", "logistics": f"Port congestion, {country}", "price": f"Price spike: {value}% over 30 days"}[kind]
         aid = f"AL-{commodity[0].upper()}-{1000 + i}"
         nodes_hit = exposed(commodity, country)
@@ -147,7 +145,7 @@ def generate(base: dict, nodes_per_commodity: int, n_alerts: int, seed: int) -> 
                 opts.append(oid)
                 out["response_option"].append(dict(
                     id=oid, alert_id=aid, type="inventory" if j == 0 else "sourcing", name=f"Generated option {oid}", qualification=rng.choice(["qualified", "qualified", "unknown"]),
-                    spec_fit=rng.choice(["meets", "meets", "partial"]), capacity="stated, not verified", unit_price=None if j == 0 else round(rng.uniform(250, 350) if commodity == "wheat" else rng.uniform(42000, 56000)),
+                    spec_fit=rng.choice(["meets", "meets", "partial"]), capacity="stated, not verified", unit_price=None if j == 0 else round(rng.uniform(42000, 56000)),
                     quantity_available=300 if j == 0 else None, lead_time_days=rng.randint(2, 70), quote_valid_until=None if j == 0 else day(rng.randint(-5, 60)), note=""))
             asm = nxt(f"AS-{c}-", 4)
             approved = rng.random() < 0.6
@@ -155,12 +153,12 @@ def generate(base: dict, nodes_per_commodity: int, n_alerts: int, seed: int) -> 
                                           proposed_by_name="Risk Analyst A", proposed_at=published, status="approved" if approved else "proposed",
                                           decided_by_id="u-analyst-b" if approved else None, decided_by_name="Risk Analyst B" if approved else None,
                                           decided_at=published if approved else None, decision_note=None))
-            inputs = dict(asOf=day(-1), usableStock=rng.randint(500, 4000) if commodity == "wheat" else rng.randint(5, 20), stockUnit="t" if commodity == "wheat" else "t WO3 eq.",
-                          demandPerDay=rng.randint(40, 150) if commodity == "wheat" else round(rng.uniform(0.1, 0.3), 2), baselinePrice=270 if commodity == "wheat" else 41500,
+            inputs = dict(asOf=day(-1), usableStock=rng.randint(5, 20), stockUnit="t WO3 eq.",
+                          demandPerDay=round(rng.uniform(0.1, 0.3), 2), baselinePrice=41500,
                           currency="USD", priceUnit="per t", notes=["Generated"])
             for v in ([1, 2] if approved else [1]):
                 out["assessment"].append(dict(alert_id=aid, version=v, created_at=published, note="Generated", calc_version="impact-calc 0.3", assumption_id=asm if v == 2 else None,
-                                              exposed_value=rng.randint(500, 6000) if commodity == "wheat" else rng.randint(5, 30), exposed_unit=inputs["stockUnit"],
+                                              exposed_value=rng.randint(5, 30), exposed_unit=inputs["stockUnit"],
                                               exposed_horizon="60 days", reference_option_id=opts[1], inputs=inputs, paths=[], missing=["Freight not included"]))
             if approved and rng.random() < 0.7:
                 act = nxt(f"AC-{c}-", 4)

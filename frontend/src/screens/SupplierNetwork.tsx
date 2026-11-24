@@ -10,7 +10,7 @@ import type { Alert, NetNode } from '../data/types'
 
 type Direction = 'upstream' | 'downstream' | 'both'
 
-const defaultFocus = { wheat: 'w-rott', tungsten: 't-goslar' } as const
+const defaultFocus = { tungsten: 't-goslar' } as const
 
 export function SupplierNetwork() {
   const { commodity } = useApp()

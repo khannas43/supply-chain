@@ -223,3 +223,28 @@ export interface SimState {
 export type FailureKind = 'rate_limit' | 'timeout' | 'recover' | 'duplicate' | 'late' | 'malformed' | 'missing_field'
 
 export interface PersonData { id: string; name: string; roles: string[] }
+
+// ---- External data (Credibl) ----
+export type Staleness = 'fresh' | 'stale' | 'unknown'
+export type Completeness = 'complete' | 'partial' | 'estimated' | 'absent'
+
+export interface Provenance {
+  asOf: string
+  lastRefreshed: string | null
+  originSource: string | null
+  licenceClass: string | null
+  attribution: string | null
+  staleness: Staleness | null
+  completeness: Completeness | null
+}
+
+export interface ExternalValue extends Provenance {
+  id: string
+  indicator: string
+  country: string
+  value: number | null
+  headline: string
+  confidencePct: number
+  mode: import('../data/types').Mode
+  evidence: import('../data/types').Evidence
+}

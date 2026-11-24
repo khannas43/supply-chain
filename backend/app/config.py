@@ -19,6 +19,17 @@ class Settings(BaseSettings):
     worker_poll_seconds: float = 1.0
     worker_max_attempts: int = 3
 
+    # Credibl: "off" (default), "mock" (replays seed/credibl_mock.json, labelled simulated) or "http" (the real API).
+    # The endpoint paths and payload shape are assumptions until Credibl sends its specification.
+    credibl_mode: str = "off"
+    credibl_base_url: str = ""
+    credibl_token_url: str = ""
+    credibl_client_id: str = ""
+    credibl_client_secret: str = ""
+    credibl_api_key: str = ""
+    credibl_poll_minutes: int = 60
+    credibl_timeout_seconds: float = 30.0
+
     database_url: str = "postgresql+psycopg://supplychain:change-me@db:5432/supplychain"
 
     # Keycloak runs outside this stack (existing `citizen` instance, reached through a port-forward).

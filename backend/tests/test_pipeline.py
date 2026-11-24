@@ -8,7 +8,7 @@ from app import worker
 
 
 # Import samples for the small fixture network (the application ships samples for the demo network).
-SAMPLES = {'supplier_network': 'from_id,to_id,material,source,effective_from,confidence\nw-supx,w-milly,"wheat, milling grade",Curated file v2,2026-01-01,medium\nw-milly,w-plantz,flour input,Curated file v2,2026-01-01,high\nw-supw,w-traderq,"wheat, milling grade",Curated file v2,2026-13-40,low\nw-nowhere,w-milly,wheat flour,Curated file v2,2026-01-01,low', 'inventory': 'plant_id,material,usable_qty,unit,as_of\nw-plantz,wheat flour input,120,t,2026-11-07\nt-plantk,tungsten carbide powder,9,t,2026-11-06\nw-plantz,wheat flour input,n/a,t,2026-11-07'}
+SAMPLES = {'supplier_network': 'from_id,to_id,material,source,effective_from,confidence\nt-supx,t-milly,"tungsten concentrate",Curated file v2,2026-01-01,medium\nt-milly,t-plantz,tungsten carbide powder,Curated file v2,2026-01-01,high\nt-supw,t-traderq,"tungsten concentrate",Curated file v2,2026-13-40,low\nt-nowhere,t-milly,tungsten concentrate,Curated file v2,2026-01-01,low', 'inventory': 'plant_id,material,usable_qty,unit,as_of\nt-plantz,tungsten carbide powder,120,t,2026-11-07\nt-plantk,tungsten carbide powder,9,t,2026-11-06\nt-plantz,tungsten carbide powder,n/a,t,2026-11-07'}
 
 
 def who(role, id_=None, name=None):
@@ -104,26 +104,26 @@ def rule(client, rule_id):
 
 def test_rule_list(client):
     rules = client.get("/api/rules").json()
-    assert {r["id"] for r in rules} == {"R-W-EXP", "R-W-LOG", "R-T-EXP", "R-T-PRC"}
-    assert [(v["v"], v["status"]) for v in rule(client, "R-W-EXP")["versions"]] == [("1.1", "superseded"), ("1.2", "published")]
-    assert [r["id"] for r in client.get("/api/rules?commodity=tungsten").json()] == ["R-T-EXP", "R-T-PRC"]
+    assert {r["id"] for r in rules} == {"R-T-EXP", "R-T-LOG", "R-T-PRC"}
+    assert [(v["v"], v["status"]) for v in rule(client, "R-T-EXP")["versions"]] == [("0.9", "superseded"), ("1.0", "published")]
+    assert [r["id"] for r in client.get("/api/rules?commodity=tungsten").json()] == ["R-T-EXP", "R-T-LOG", "R-T-PRC"]
 
 
 def test_draft_starts_a_new_version_and_never_edits_the_published_one(client, seeded):
-    r = client.post("/api/rules/R-W-EXP/draft", json={"thresholds": [{"key": "conf", "value": 55}]}, headers=ANALYST)
+    r = client.post("/api/rules/R-T-EXP/draft", json={"thresholds": [{"key": "conf", "value": 55}]}, headers=ANALYST)
     assert r.status_code == 200
     rl = r.json()
-    assert [(v["v"], v["status"]) for v in rl["versions"]][-2:] == [("1.2", "published"), ("1.3", "draft")]
-    assert thresholds(rl, "1.3") == {"conf": 55, "sev": 3, "stale": 48}
-    assert thresholds(rl, "1.2")["conf"] == 50  # the published version is untouched
-    again = client.post("/api/rules/R-W-EXP/draft", json={"thresholds": [{"key": "stale", "value": 36}]}, headers=ADMIN).json()
-    assert [v["v"] for v in again["versions"]][-1] == "1.3" and len(again["versions"]) == 3  # edited in place
-    assert thresholds(again, "1.3") == {"conf": 55, "sev": 3, "stale": 36}
-    assert [e[2] for e in audit_events(seeded, "rule.draft")] == ["version 1.3", "version 1.3"]
+    assert [(v["v"], v["status"]) for v in rl["versions"]][-2:] == [("1.0", "published"), ("1.1", "draft")]
+    assert thresholds(rl, "1.1") == {"conf": 55, "sev": 4, "stale": 48}
+    assert thresholds(rl, "1.0")["conf"] == 60  # the published version is untouched
+    again = client.post("/api/rules/R-T-EXP/draft", json={"thresholds": [{"key": "stale", "value": 36}]}, headers=ADMIN).json()
+    assert [v["v"] for v in again["versions"]][-1] == "1.1" and len(again["versions"]) == 3  # edited in place
+    assert thresholds(again, "1.1") == {"conf": 55, "sev": 4, "stale": 36}
+    assert [e[2] for e in audit_events(seeded, "rule.draft")] == ["version 1.1", "version 1.1"]
 
 
 def test_draft_validation_and_permissions(client):
-    url = "/api/rules/R-W-EXP/draft"
+    url = "/api/rules/R-T-EXP/draft"
     ok = {"thresholds": [{"key": "conf", "value": 55}]}
     assert client.post(url, json=ok).status_code == 401
     for h in (STEWARD, MANAGER, VIEWER, DEMO):
@@ -136,22 +136,22 @@ def test_draft_validation_and_permissions(client):
 
 
 def test_publish_supersedes_the_previous_version(client, seeded):
-    client.post("/api/rules/R-W-EXP/draft", json={"thresholds": [{"key": "conf", "value": 55}]}, headers=ANALYST)
-    r = client.post("/api/rules/R-W-EXP/versions/1.3/publish", headers=ADMIN)
+    client.post("/api/rules/R-T-EXP/draft", json={"thresholds": [{"key": "conf", "value": 55}]}, headers=ANALYST)
+    r = client.post("/api/rules/R-T-EXP/versions/1.1/publish", headers=ADMIN)
     assert r.status_code == 200
-    assert [(v["v"], v["status"]) for v in r.json()["versions"]] == [("1.1", "superseded"), ("1.2", "superseded"), ("1.3", "published")]
+    assert [(v["v"], v["status"]) for v in r.json()["versions"]] == [("0.9", "superseded"), ("1.0", "superseded"), ("1.1", "published")]
     assert r.json()["versions"][-1]["publishedBy"] == "Admin"
-    assert audit_events(seeded, "rule.published") == [("Admin", "R-W-EXP", "version 1.3")]
-    assert count(seeded, "rule_version", "WHERE rule_id = 'R-W-EXP' AND status = 'published'") == 1
+    assert audit_events(seeded, "rule.published") == [("Admin", "R-T-EXP", "version 1.1")]
+    assert count(seeded, "rule_version", "WHERE rule_id = 'R-T-EXP' AND status = 'published'") == 1
 
 
 def test_publish_rules(client):
-    assert client.post("/api/rules/R-W-EXP/versions/1.2/publish", headers=ANALYST).status_code == 409  # not a draft
-    assert client.post("/api/rules/R-W-EXP/versions/9.9/publish", headers=ANALYST).status_code == 404
-    assert client.post("/api/rules/R-W-EXP/versions/1.2/publish").status_code == 401
-    client.post("/api/rules/R-W-EXP/draft", json={"thresholds": [{"key": "conf", "value": 55}]}, headers=ANALYST)
+    assert client.post("/api/rules/R-T-EXP/versions/1.0/publish", headers=ANALYST).status_code == 409  # not a draft
+    assert client.post("/api/rules/R-T-EXP/versions/9.9/publish", headers=ANALYST).status_code == 404
+    assert client.post("/api/rules/R-T-EXP/versions/1.0/publish").status_code == 401
+    client.post("/api/rules/R-T-EXP/draft", json={"thresholds": [{"key": "conf", "value": 55}]}, headers=ANALYST)
     for h in (STEWARD, MANAGER, VIEWER):
-        assert client.post("/api/rules/R-W-EXP/versions/1.3/publish", headers=h).status_code == 403
+        assert client.post("/api/rules/R-T-EXP/versions/1.1/publish", headers=h).status_code == 403
 
 
 # ---- S08: assumptions library, reference data ----
@@ -159,20 +159,20 @@ def test_publish_rules(client):
 
 def test_assumptions_library(client):
     all_ = client.get("/api/assumptions").json()
-    assert {a["id"] for a in all_} == {"AS-W-1", "AS-T-1"}
+    assert {a["id"] for a in all_} == {"AS-T-2", "AS-T-1"}
     assert [a["id"] for a in client.get("/api/assumptions?status=approved").json()] == ["AS-T-1"]
-    assert [a["id"] for a in client.get("/api/assumptions?alertId=AL-W-001").json()] == ["AS-W-1"]
+    assert [a["id"] for a in client.get("/api/assumptions?alertId=AL-T-003").json()] == ["AS-T-2"]
     assert client.get("/api/assumptions?status=weird").status_code == 422
 
 
 def test_reference_data_and_adding_a_conversion(client, seeded):
     ref = client.get("/api/reference").json()
     assert len(ref["countries"]) == 4 and "CTRY_A" in next(c for c in ref["countries"] if c["code"] == "CTA")["aliases"]
-    assert len(ref["forms"]) == 5 and len(ref["conversions"]) == 3
+    assert len(ref["forms"]) == 3 and len(ref["conversions"]) == 2
     body = {"from": "USD", "to": "EUR", "factor": "0.91", "effectiveFrom": "2026-12-01", "source": "Rate table v4"}
     r = client.post("/api/reference/conversions", json=body, headers=STEWARD)
     assert r.status_code == 201 and r.json()["id"] == "CV-4" and r.json()["from"] == "USD" and r.json()["factor"] == 0.91
-    assert len(client.get("/api/reference").json()["conversions"]) == 4
+    assert len(client.get("/api/reference").json()["conversions"]) == 3
     assert client.post("/api/reference/conversions", json=body, headers=ADMIN).status_code == 409  # same units and date
     assert audit_events(seeded, "reference.conversion_added")[0][1] == "CV-4"
 
@@ -217,12 +217,12 @@ def test_validate_reports_without_saving(client, seeded):
 def test_validate_checks(client):
     head = "from_id,to_id,material,source,effective_from,confidence\n"
     v = lambda rows: client.post("/api/imports/validate", json=csv_body("supplier_network", head + rows), headers=STEWARD).json()
-    assert v("w-supx,w-supx,m,s,2026-01-01,low\n")["rejected"][0]["reason"] == "A supplier cannot supply itself"
-    assert v("w-supx,w-milly,m,s,2026-01-01,certain\n")["rejected"][0]["field"] == "confidence"
-    assert v("w-supx,w-milly,,s,2026-01-01,low\n")["rejected"][0]["reason"] == "Missing required field: material"
-    dup = v("w-supx,w-milly,m,s,2026-01-01,low\nw-supx,w-milly,m,s,2026-01-01,low\n")
+    assert v("t-supx,t-supx,m,s,2026-01-01,low\n")["rejected"][0]["reason"] == "A supplier cannot supply itself"
+    assert v("t-supx,t-milly,m,s,2026-01-01,certain\n")["rejected"][0]["field"] == "confidence"
+    assert v("t-supx,t-milly,,s,2026-01-01,low\n")["rejected"][0]["reason"] == "Missing required field: material"
+    dup = v("t-supx,t-milly,m,s,2026-01-01,low\nt-supx,t-milly,m,s,2026-01-01,low\n")
     assert dup["valid"] == 1 and dup["duplicates"] == 1
-    existing = v('w-supx,w-milly,"wheat, milling grade",Curated supplier file v1,2025-01-01,medium\n')
+    existing = v('t-supx,t-milly,"tungsten concentrate",Curated supplier file v1,2025-01-01,medium\n')
     assert existing["valid"] == 0 and existing["duplicates"] == 1  # already in the network
     assert client.post("/api/imports/validate", json=csv_body("supplier_network", "a,b\n1,2\n"), headers=STEWARD).json()["headerErrors"] == ["Missing column: from_id", "Missing column: to_id", "Missing column: material", "Missing column: source", "Missing column: effective_from", "Missing column: confidence"]
     assert client.post("/api/imports/validate", json=csv_body("nope", "x"), headers=STEWARD).status_code == 422
@@ -245,7 +245,7 @@ def test_commit_applies_valid_rows_and_quarantines_the_rest(client, seeded):
     assert audit_events(seeded, "import.committed") == [("Steward", "IMP-001", "supplier_network v1: 2 accepted, 2 quarantined")]
     assert client.get("/api/imports").json()[0]["id"] == "IMP-001"
     # the new links are real: Supplier W now reaches Mill Y directly
-    assert client.get("/api/network/traverse?focus=w-milly&direction=downstream&depth=1").status_code == 200
+    assert client.get("/api/network/traverse?focus=t-milly&direction=downstream&depth=1").status_code == 200
 
 
 def test_importing_the_same_file_twice_changes_nothing(client, seeded):
@@ -273,20 +273,20 @@ def test_commit_permissions_and_refusals(client):
     assert client.post("/api/imports/validate", json=body, headers=VIEWER).status_code == 403
     assert client.post("/api/imports", json=csv_body("supplier_network", "a,b\n1,2\n"), headers=STEWARD).status_code == 422
     head = "from_id,to_id,material,source,effective_from,confidence\n"
-    assert client.post("/api/imports", json=csv_body("supplier_network", head + "ghost,w-milly,m,s,2026-01-01,low\n"), headers=STEWARD).status_code == 422  # nothing valid
+    assert client.post("/api/imports", json=csv_body("supplier_network", head + "ghost,t-milly,m,s,2026-01-01,low\n"), headers=STEWARD).status_code == 422  # nothing valid
     assert client.post("/api/imports", json=csv_body("nope", "x"), headers=STEWARD).status_code == 422
 
 
 # ---- S09: simulator ----
 
 
-def start(client, scenario="SC-W-1", headers=DEMO):
+def start(client, scenario="SC-T-2", headers=DEMO):
     return client.post("/api/simulator/runs", json={"scenarioId": scenario}, headers=headers)
 
 
 def test_scenarios_and_idle_state(client):
     scenarios = client.get("/api/simulator/scenarios").json()
-    assert {s["id"] for s in scenarios} == {"SC-W-1", "SC-T-1"} and scenarios[0]["events"][0]["at"] == 0
+    assert {s["id"] for s in scenarios} == {"SC-T-2", "SC-T-1"} and scenarios[0]["events"][0]["at"] == 0
     assert client.get("/api/simulator/run").json()["status"] == "idle"
 
 
@@ -306,7 +306,7 @@ def test_start_a_run(client, seeded):
 
 
 def test_run_permissions_and_validation(client):
-    assert client.post("/api/simulator/runs", json={"scenarioId": "SC-W-1"}).status_code == 401
+    assert client.post("/api/simulator/runs", json={"scenarioId": "SC-T-2"}).status_code == 401
     for h in (ANALYST, MANAGER, STEWARD, VIEWER):
         assert start(client, headers=h).status_code == 403
     assert start(client, "SC-X").status_code == 422

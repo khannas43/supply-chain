@@ -1,63 +1,6 @@
 {
   "scenarios": [
     {
-      "id": "SC-W-1",
-      "name": "Black Sea wheat disruption",
-      "commodity": "wheat",
-      "seed": 4711,
-      "events": [
-        {
-          "at": 0,
-          "kind": "policy",
-          "text": "Policy announcement: wheat export restriction, Russia (simulated)",
-          "fields": {
-            "commodity": "wheat",
-            "country": "Russia",
-            "policyType": "export_restriction",
-            "confidencePct": 65,
-            "headline": "Export restriction announced on wheat, Russia"
-          }
-        },
-        {
-          "at": 6,
-          "kind": "logistics",
-          "text": "Logistics report: port congestion at Odesa (simulated)",
-          "fields": {
-            "commodity": "wheat",
-            "country": "Ukraine",
-            "eventType": "port_delay",
-            "delayDays": 5,
-            "confidencePct": 45,
-            "headline": "Port congestion at Odesa delays grain shipments"
-          }
-        },
-        {
-          "at": 30,
-          "kind": "policy",
-          "text": "Policy clarification published; scope unchanged (simulated)",
-          "fields": {
-            "commodity": "wheat",
-            "country": "Russia",
-            "policyType": "clarification",
-            "confidencePct": 70,
-            "headline": "Clarification published; scope of the restriction unchanged"
-          }
-        },
-        {
-          "at": 48,
-          "kind": "policy",
-          "text": "Policy announcement: wheat export quota, Kazakhstan (simulated)",
-          "fields": {
-            "commodity": "wheat",
-            "country": "Kazakhstan",
-            "policyType": "export_quota",
-            "confidencePct": 55,
-            "headline": "Export quota notice for wheat, Kazakhstan"
-          }
-        }
-      ]
-    },
-    {
       "id": "SC-T-1",
       "name": "Tungsten export controls",
       "commodity": "tungsten",
@@ -109,6 +52,52 @@
             "policyType": "export_quota",
             "confidencePct": 71,
             "headline": "Export quota notice for tungsten, Vietnam"
+          }
+        }
+      ]
+    },
+    {
+      "id": "SC-T-2",
+      "name": "Tungsten route and port disruption",
+      "commodity": "tungsten",
+      "seed": 2207,
+      "events": [
+        {
+          "at": 0,
+          "kind": "logistics",
+          "text": "Logistics report: berth congestion at Rotterdam (simulated)",
+          "fields": {
+            "commodity": "tungsten",
+            "country": "Netherlands",
+            "eventType": "port_delay",
+            "delayDays": 5,
+            "confidencePct": 50,
+            "headline": "Berth congestion at Rotterdam delays tungsten concentrate discharge"
+          }
+        },
+        {
+          "at": 8,
+          "kind": "logistics",
+          "text": "Logistics report: terminal strike at Hamburg (simulated)",
+          "fields": {
+            "commodity": "tungsten",
+            "country": "Germany",
+            "eventType": "port_delay",
+            "delayDays": 4,
+            "confidencePct": 60,
+            "headline": "Terminal strike at Hamburg slows tungsten cargo handling"
+          }
+        },
+        {
+          "at": 30,
+          "kind": "policy",
+          "text": "Policy announcement: tungsten concentrate export restriction, Russia (simulated)",
+          "fields": {
+            "commodity": "tungsten",
+            "country": "Russia",
+            "policyType": "export_restriction",
+            "confidencePct": 62,
+            "headline": "Export restriction announced on tungsten concentrate, Russia"
           }
         }
       ]

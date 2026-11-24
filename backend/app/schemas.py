@@ -10,7 +10,7 @@ from pydantic.alias_generators import to_camel
 # Quantities are Decimal in the server and plain JSON numbers on the wire.
 Num = Annotated[Decimal, PlainSerializer(lambda v: float(v), return_type=float, when_used="json")]
 
-Commodity = Literal["wheat", "tungsten"]
+Commodity = Literal["tungsten"]
 Mode = Literal["live", "replay", "simulated"]
 Severity = Literal["low", "medium", "high", "critical"]
 Level = Literal["low", "medium", "high"]
@@ -30,6 +30,26 @@ class EvidenceOut(Out):
     sha256: str
     published_at: datetime
     ingested_at: datetime
+
+
+class ExternalValueOut(Out):
+    """One value from an external provider with everything needed to judge it."""
+
+    id: str
+    indicator: str
+    country: str
+    value: Num | None
+    headline: str
+    confidence_pct: int
+    as_of: datetime
+    last_refreshed: datetime | None
+    origin_source: str | None
+    licence_class: str | None
+    attribution: str | None
+    staleness: str | None
+    completeness: str | None
+    mode: Mode
+    evidence: EvidenceOut
 
 
 class ExposedOut(Out):

@@ -26,7 +26,7 @@ from .config import get_settings
 from .deps import get_session
 
 ROLES = frozenset({"viewer", "analyst", "manager", "steward", "admin", "demo_operator"})
-COMMODITIES = frozenset({"wheat", "tungsten"})
+COMMODITIES = frozenset({"tungsten"})
 PUBLIC_PREFIXES = ("/api/health", "/api/docs", "/api/openapi.json", "/api/auth/config")
 
 

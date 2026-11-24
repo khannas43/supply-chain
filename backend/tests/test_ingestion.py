@@ -19,14 +19,14 @@ RUN = "T / run-1"
 
 
 def policy(**over):
-    r = dict(recordId="P-1", commodity="wheat", country="Country A", policyType="export_restriction", headline="Export restriction",
+    r = dict(recordId="P-1", commodity="tungsten", country="Country A", policyType="export_restriction", headline="Export restriction",
              confidencePct=60, announcedAt="2026-11-07T08:00:00Z")
     r.update(over)
     return {k: v for k, v in r.items() if v is not None}
 
 
 def logistics(**over):
-    r = dict(recordId="L-1", commodity="wheat", country="Country B", eventType="port_delay", delayDays=4, headline="Port delay",
+    r = dict(recordId="L-1", commodity="tungsten", country="Country B", eventType="port_delay", delayDays=4, headline="Port delay",
              confidencePct=40, reportedAt="2026-11-07T14:00:00Z")
     r.update(over)
     return {k: v for k, v in r.items() if v is not None}
@@ -58,7 +58,7 @@ def q(engine, sql, **params):
 
 
 def alerts(engine):
-    return q(engine, "SELECT id, severity, confidence, location, assessment_status, rule_v, scenario_run FROM alert WHERE id NOT IN ('AL-W-001','AL-W-002','AL-T-001','AL-T-002') ORDER BY id")
+    return q(engine, "SELECT id, severity, confidence, location, assessment_status, rule_v, scenario_run FROM alert WHERE id NOT IN ('AL-T-003','AL-T-004','AL-T-001','AL-T-002') ORDER BY id")
 
 
 def outcomes(engine):
@@ -130,18 +130,18 @@ def test_database_refuses_duplicate_ingestions_and_messages(seeded):
 def test_a_policy_event_becomes_an_alert_with_exposure_and_a_trail(client, seeded):
     c = deliver(seeded, "src-policy", wrap(policy()))
     [(alert_id, severity, confidence, location, status, rule_v, run)] = alerts(seeded)
-    assert (alert_id, severity, confidence, location, status, rule_v, run) == ("AL-W-003", "high", "medium", "Country A", "partial", "1.2", RUN)
+    assert (alert_id, severity, confidence, location, status, rule_v, run) == ("AL-T-005", "critical", "medium", "Country A", "partial", "1.0", RUN)
     a = client.get(f"/api/alerts/{alert_id}").json()
-    assert a["title"] == "Export restriction announced, Country A" and a["ruleVersion"] == "wheat-export-policy v1.2"
-    assert a["ruleInputs"][-1] == "confidence 60% >= floor 50%" and a["mode"] == "simulated"
-    assert a["exposedNodeIds"][0] == "w-supx" and {"w-milly", "w-plantz", "w-prodp"} <= set(a["exposedNodeIds"])
+    assert a["title"] == "Export licence tightening, Country A" and a["ruleVersion"] == "tungsten-export-policy v1.0"
+    assert a["ruleInputs"][-1] == "confidence 60% >= floor 60%" and a["mode"] == "simulated"
+    assert a["exposedNodeIds"][0] == "t-supx" and {"t-milly", "t-plantz", "t-prodp"} <= set(a["exposedNodeIds"])
     assert a["exposed"] is None and "does not confirm an interruption" in a["summary"]
     assert a["evidence"]["id"] == "EV-ING-00001" and a["evidence"]["objectKey"] == c.object_key
     assert q(seeded, "SELECT status, records, mapping_version FROM ingestion") == [("processed", 1, "sim-policy v1")]
-    assert q(seeded, "SELECT outcome, alert_id, mapping_version FROM observation") == [("alert_raised", "AL-W-003", "sim-policy v1")]
+    assert q(seeded, "SELECT outcome, alert_id, mapping_version FROM observation") == [("alert_raised", "AL-T-005", "sim-policy v1")]
     assert q(seeded, "SELECT status, accepted, quarantined FROM ingestion_run ORDER BY id DESC LIMIT 1") == [("ok", 1, 0)]
     assert q(seeded, "SELECT status FROM outbox") == [("done",)]
-    assert q(seeded, "SELECT actor, ref, detail FROM audit_event WHERE event = 'alert.raised'") == [("Ingestion worker", "AL-W-003", "wheat-export-policy v1.2 from OB-000001")]
+    assert q(seeded, "SELECT actor, ref, detail FROM audit_event WHERE event = 'alert.raised'") == [("Ingestion worker", "AL-T-005", "tungsten-export-policy v1.0 from OB-000001")]
     assert q(seeded, "SELECT last_error IS NULL AND last_usable > '2026-11-09' FROM source WHERE id = 'src-policy'") == [(True,)]
 
 
@@ -153,7 +153,7 @@ def test_the_original_payload_can_be_opened_by_roles_that_may_see_raw_evidence(c
     assert client.get("/api/evidence/EV-ING-00001/raw", headers=VIEWER).status_code == 403
     assert client.get("/api/evidence/EV-ING-00001/raw").status_code == 401
     assert client.get("/api/evidence/nope/raw", headers=ANALYST).status_code == 404
-    assert "not in storage" in client.get("/api/evidence/EV-AL-W-001/raw", headers=ANALYST).json()["detail"]  # seeded evidence has no file
+    assert "not in storage" in client.get("/api/evidence/EV-AL-T-003/raw", headers=ANALYST).json()["detail"]  # seeded evidence has no file
 
 
 def test_tampered_evidence_is_refused(client, seeded):
@@ -191,10 +191,10 @@ def test_events_that_do_not_meet_a_rule_raise_nothing(seeded):
 
 def test_only_the_published_rule_version_applies(client, seeded):
     ANALYST_B = {"X-Actor-Id": "u-analyst-b", "X-Actor-Name": "Risk Analyst B", "X-Actor-Role": "analyst"}
-    client.post("/api/rules/R-W-EXP/draft", json={"thresholds": [{"key": "conf", "value": 90}]}, headers=ANALYST)
+    client.post("/api/rules/R-T-EXP/draft", json={"thresholds": [{"key": "conf", "value": 90}]}, headers=ANALYST)
     deliver(seeded, "src-policy", wrap(policy(recordId="a")), run="r1")
-    assert [a[5] for a in alerts(seeded)] == ["1.2"]  # the draft's 90% floor did not apply
-    client.post("/api/rules/R-W-EXP/versions/1.3/publish", headers=ANALYST_B)
+    assert [a[5] for a in alerts(seeded)] == ["1.0"]  # the draft's 90% floor did not apply
+    client.post("/api/rules/R-T-EXP/versions/1.1/publish", headers=ANALYST_B)
     deliver(seeded, "src-policy", wrap(policy(recordId="b")), run="r2")
     assert outcomes(seeded) == ["alert_raised", "below_threshold"]  # now it does
     assert len(alerts(seeded)) == 1
@@ -204,14 +204,14 @@ def test_repeats_join_the_existing_alert_within_a_run(seeded):
     deliver(seeded, "src-policy", wrap(policy(recordId="a")), run="r1")
     deliver(seeded, "src-policy", wrap(policy(recordId="b", announcedAt="2026-11-08T08:00:00Z")), run="r1")
     assert len(alerts(seeded)) == 1 and outcomes(seeded) == ["alert_raised", "merged"]
-    assert q(seeded, "SELECT DISTINCT alert_id FROM observation") == [("AL-W-003",)]
+    assert q(seeded, "SELECT DISTINCT alert_id FROM observation") == [("AL-T-005",)]
 
 
 def test_runs_and_dismissed_alerts_do_not_merge(client, seeded):
     deliver(seeded, "src-policy", wrap(policy(recordId="a")), run="r1")
     deliver(seeded, "src-policy", wrap(policy(recordId="b")), run="r2")  # another scenario run is a separate world
     assert len(alerts(seeded)) == 2
-    client.post("/api/alerts/AL-W-003/disposition", json={"disposition": "dismissed", "rationale": "noise"}, headers=ANALYST)
+    client.post("/api/alerts/AL-T-005/disposition", json={"disposition": "dismissed", "rationale": "noise"}, headers=ANALYST)
     deliver(seeded, "src-policy", wrap(policy(recordId="c", announcedAt="2026-11-07T20:00:00Z")), run="r1")
     assert len(alerts(seeded)) == 3  # the dismissed alert no longer absorbs new events
 
@@ -388,18 +388,18 @@ def sim(client, path, body=None):
     return r.json()
 
 
-def test_a_wheat_run_produces_the_expected_alerts(client, seeded):
-    sim(client, "/api/simulator/runs", {"scenarioId": "SC-W-1"})
+def test_a_policy_and_logistics_run_produces_the_expected_alerts(client, seeded):
+    sim(client, "/api/simulator/runs", {"scenarioId": "SC-T-2"})
     worker.drain(seeded)
-    assert [(a[0], a[1], a[3]) for a in alerts(seeded)] == [("AL-W-003", "high", "Country A")]
+    assert [(a[0], a[1], a[3]) for a in alerts(seeded)] == [("AL-T-005", "critical", "Country A")]
     sim(client, "/api/simulator/run/advance", {"hours": 6})
     worker.drain(seeded)
     assert [(a[1], a[3]) for a in alerts(seeded)][-1] == ("medium", "Country B")
     sim(client, "/api/simulator/run/advance", {"hours": 24})
     worker.drain(seeded)
     assert len(alerts(seeded)) == 2 and outcomes(seeded) == ["alert_raised", "alert_raised", "no_rule_match"]
-    a = client.get("/api/alerts/AL-W-003").json()
-    assert a["scenarioRun"] == "SC-W-1 / run-4711-001" and a["mode"] == "simulated"
+    a = client.get("/api/alerts/AL-T-005").json()
+    assert a["scenarioRun"] == "SC-T-2 / run-4711-001" and a["mode"] == "simulated"
     assert client.get("/api/evidence/EV-ING-00001/raw", headers=ANALYST).json()["records"][0]["country"] == "Country A"
 
 
@@ -413,7 +413,7 @@ def test_a_tungsten_run_merges_the_quota_notice_into_the_licence_alert(client, s
 
 
 def test_injected_failures_follow_the_real_pipeline(client, seeded):
-    sim(client, "/api/simulator/runs", {"scenarioId": "SC-W-1"})
+    sim(client, "/api/simulator/runs", {"scenarioId": "SC-T-2"})
     worker.drain(seeded)
     for kind in ("duplicate", "late", "malformed", "missing_field"):
         sim(client, "/api/simulator/run/inject", {"kind": kind})
