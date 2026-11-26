@@ -10,7 +10,7 @@ import { EvidenceDrawer } from './EvidenceDrawer'
 export function Shell() {
   const { mode, user, setUserId, signOut, canView } = useAuth()
   const { commodity, setCommodity } = useApp()
-  const visible = SCREENS.filter((s) => canView(s.id))
+  const visible = SCREENS.filter((s) => !s.hidden && !s.noMenu && canView(s.id))
   const [reportsOpen, setReportsOpen] = useState(true)
 
   return (

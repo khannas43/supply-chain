@@ -31,8 +31,10 @@ const AXIS = (t: Theme) => ({ axisLine: { lineStyle: { color: t.grid } }, axisTi
 export const axisStyle = AXIS
 
 // A chart that sizes itself, rebuilds when data or colour scheme changes, and carries a text description.
-export function Chart({ build, height = 240, label }: { build: (t: Theme) => echarts.EChartsOption; height?: number; label: string }) {
+export function Chart({ build, height = 240, label, onClick }: { build: (t: Theme) => echarts.EChartsOption; height?: number; label: string; onClick?: (params: { data?: unknown }) => void }) {
   const ref = useRef<HTMLDivElement>(null)
+  const click = useRef(onClick)
+  click.current = onClick
   const [scheme, setScheme] = useState(0)
 
   useEffect(() => {
@@ -46,6 +48,7 @@ export function Chart({ build, height = 240, label }: { build: (t: Theme) => ech
     if (!ref.current) return
     const chart = echarts.init(ref.current)
     const t = readTheme()
+    chart.on('click', (p) => click.current?.(p as { data?: unknown }))
     chart.setOption({ textStyle: { color: t.text }, aria: { enabled: true }, animationDuration: 400, ...build(t) })
     const ro = new ResizeObserver(() => chart.resize())
     ro.observe(ref.current)

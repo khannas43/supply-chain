@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 import { AuthProvider } from './auth/AuthContext'
 import { AppProvider } from './components/AppContext'
+import { SelectionProvider } from './prototype/selection'
 import './styles.css'
 
 createRoot(document.getElementById('root')!).render(
@@ -11,7 +12,9 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <AuthProvider>
         <AppProvider>
-          <App />
+          <SelectionProvider>
+            <App />
+          </SelectionProvider>
         </AppProvider>
       </AuthProvider>
     </BrowserRouter>

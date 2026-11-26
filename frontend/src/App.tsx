@@ -12,9 +12,31 @@ import { Actions } from './screens/Actions'
 import { Sources } from './screens/Sources'
 import { RulesData } from './screens/RulesData'
 import { Simulator } from './screens/Simulator'
+import { SupplierDashboard } from './screens/SupplierDashboard'
+import { Market } from './screens/Market'
+import { SupplierProfile } from './screens/SupplierProfile'
+import { Configuration } from './screens/Configuration'
+import { DataQuotes } from './screens/DataQuotes'
+import { StressTest } from './screens/StressTest'
+import { Decision } from './screens/Decision'
+import { SupplierMaster } from './screens/SupplierMaster'
+import { DataReview } from './screens/DataReview'
+import { Requirement } from './screens/Requirement'
+import { Comparison } from './screens/Comparison'
 import { ActionsReport, ConcentrationReport, LifecycleReport, RiskExposureReport } from './screens/Reports'
 
 const BUILT: Record<string, JSX.Element> = {
+  MS11: <Market />,
+  MS12: <SupplierDashboard />,
+  MS01: <Requirement />,
+  MS02: <DataQuotes />,
+  MS04: <SupplierProfile />,
+  MS05: <StressTest />,
+  MS06: <Decision />,
+  MS08: <Configuration />,
+  MS09: <DataReview />,
+  MS10: <SupplierMaster />,
+  MS03: <Comparison />,
   S01: <Overview />,
   S02: <RiskInbox />,
   S03: <SupplierNetwork />,
@@ -34,15 +56,15 @@ export default function App() {
   return (
     <Routes>
       <Route element={<Shell />}>
-        <Route index element={<Navigate to="/overview" replace />} />
-        {SCREENS.map((s) => (
+        <Route index element={<Navigate to="/market" replace />} />
+        {SCREENS.filter((s) => !s.hidden).map((s) => (
           <Route
             key={s.id}
             path={s.path}
             element={<Guard screen={s.id}>{BUILT[s.id] ?? <Placeholder screen={s} />}</Guard>}
           />
         ))}
-        <Route path="*" element={<Navigate to="/overview" replace />} />
+        <Route path="*" element={<Navigate to="/market" replace />} />
       </Route>
     </Routes>
   )
