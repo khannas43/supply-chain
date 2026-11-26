@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { api } from '../api/client'
 import { useApi } from '../api/hooks'
-import type { DeadData, QuarantineData, QueueData, RunData, SourceHealth } from '../api/types'
+import type { DeadData, ExternalValue, QuarantineData, QueueData, RunData, SourceHealth } from '../api/types'
 import { useAuth } from '../auth/AuthContext'
 import { useApp } from '../components/AppContext'
-import { ModeBadge, PageHead, STATE_BADGE, Tabs, formatTime } from '../components/ui'
+import { CompletenessBadge, ModeBadge, PageHead, STATE_BADGE, StalenessBadge, Tabs, formatTime } from '../components/ui'
 
-type Tab = 'sources' | 'runs' | 'quarantine' | 'dead' | 'queue'
+type Tab = 'sources' | 'external' | 'runs' | 'quarantine' | 'dead' | 'queue'
 
 export function Sources() {
   const [tab, setTab] = useState<Tab>('sources')
@@ -18,13 +18,14 @@ export function Sources() {
   const runs = useApi<RunData[]>('/runs', poll)
   const quarantine = useApi<QuarantineData[]>('/quarantine', poll)
   const dead = useApi<DeadData[]>('/dead-letter', poll)
+  const external = useApi<ExternalValue[]>(tab === 'external' ? '/external-data' : null, poll)
   const queue = useApi<QueueData>(tab === 'queue' ? '/pipeline/queue' : null, poll)
   const [fix, setFix] = useState<Record<string, string>>({})
   const [error, setError] = useState<string | null>(null)
 
   const name = (id: string) => sources.data?.find((s) => s.id === id)?.name ?? id
   const open = (quarantine.data ?? []).filter((q) => q.status === 'quarantined').length
-  const failure = sources.error ?? runs.error ?? quarantine.error ?? dead.error ?? queue.error
+  const failure = sources.error ?? external.error ?? runs.error ?? quarantine.error ?? dead.error ?? queue.error
 
   const act = async (work: () => Promise<unknown>, after: () => void) => {
     setError(null)
@@ -46,6 +47,7 @@ export function Sources() {
       )}
       <Tabs<Tab> value={tab} onChange={setTab} tabs={[
         { id: 'sources', label: 'Sources' },
+        { id: 'external', label: 'External data' },
         { id: 'runs', label: 'Runs' },
         { id: 'quarantine', label: `Quarantine (${open})` },
         { id: 'dead', label: `Dead letter (${dead.data?.length ?? 0})` },
@@ -70,6 +72,30 @@ export function Sources() {
               ))}</tbody>
             </table></div>
           )}
+        </section>
+      )}
+
+      {tab === 'external' && (
+        <section className="card" style={{ padding: 0 }}>
+          {external.data === null ? <div className="empty" role="status">Loading…</div> : external.data.length === 0 ? (
+            <div className="empty">No external data yet. Set CREDIBL_MODE=mock in .env to load sample Credibl data, or http once Credibl gives access.</div>
+          ) : (
+            <div className="table-wrap"><table>
+              <thead><tr><th>Indicator</th><th>Value</th><th>As of</th><th>Freshness</th><th>Completeness</th><th>Upstream source</th><th>Evidence</th></tr></thead>
+              <tbody>{external.data.map((v) => (
+                <tr key={v.id}>
+                  <td><strong>{v.indicator.replace(/_/g, ' ')}</strong><div className="muted small">{v.country}</div></td>
+                  <td>{v.value ?? '—'}<div className="muted small">{v.confidencePct}% confidence</div></td>
+                  <td>{formatTime(v.asOf)}</td>
+                  <td><StalenessBadge value={v.staleness} /></td>
+                  <td><CompletenessBadge value={v.completeness} /></td>
+                  <td>{v.originSource ?? '—'}<div className="muted small">{v.attribution}</div></td>
+                  <td><button className="btn" onClick={() => openEvidence({ title: `${v.indicator.replace(/_/g, ' ')}, ${v.country}: ${v.headline}`, mode: v.mode, evidence: v.evidence, provenance: v })}>View</button></td>
+                </tr>
+              ))}</tbody>
+            </table></div>
+          )}
+          <p className="muted small" style={{ padding: '0 16px' }}>Every value shows where it came from, what date it describes, when the provider last refreshed it, and the terms it was licensed under. Values collected from the sample data are labelled Simulated.</p>
         </section>
       )}
 

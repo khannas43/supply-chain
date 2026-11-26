@@ -37,9 +37,8 @@ class Spec:
 
 
 SPECS = (
-    Spec("wheat-export-policy", "policy", "wheat", frozenset({"export_restriction", "export_ban", "export_quota"}), "confidence", "Export restriction announced, {country}"),
     Spec("tungsten-export-policy", "policy", "tungsten", frozenset({"export_licence", "export_quota", "export_restriction"}), "confidence", "Export licence tightening, {country}"),
-    Spec("wheat-logistics", "logistics", "wheat", frozenset({"port_delay"}), "delay", "Port congestion, {country}"),
+    Spec("tungsten-logistics", "logistics", "tungsten", frozenset({"port_delay"}), "delay", "Port congestion, {country}"),
     Spec("tungsten-price", "price", "tungsten", frozenset({"price_change_30d_pct"}), "change", "Price spike: {value}% over 30 days"),
 )
 

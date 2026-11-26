@@ -69,3 +69,19 @@ export const STATE_BADGE = {
   failing: ['b-bad', 'Failing'],
   paused: ['b-neutral', 'Paused'],
 } as const
+
+export const STALENESS_BADGE: Record<string, [string, string]> = {
+  fresh: ['b-ok', 'Fresh'], stale: ['b-warn', 'Stale'], unknown: ['b-warn', 'Freshness unknown'],
+}
+export const COMPLETENESS_BADGE: Record<string, [string, string]> = {
+  complete: ['b-ok', 'Complete'], partial: ['b-warn', 'Partial'], estimated: ['b-warn', 'Estimated'], absent: ['b-bad', 'No data'],
+}
+export const LICENCE_LABEL: Record<string, string> = {
+  public_domain: 'Public domain', public_notice: 'Public notice', public_filings: 'Public filings', attribution_required: 'Attribution required',
+}
+
+export const StalenessBadge = ({ value }: { value: string | null }) =>
+  value ? <span className={`badge ${STALENESS_BADGE[value]?.[0] ?? 'b-warn'}`} title="Staleness, as reported by the provider">{STALENESS_BADGE[value]?.[1] ?? value}</span> : null
+
+export const CompletenessBadge = ({ value }: { value: string | null }) =>
+  value ? <span className={`badge ${COMPLETENESS_BADGE[value]?.[0] ?? 'b-warn'}`} title="How complete the underlying data is">{COMPLETENESS_BADGE[value]?.[1] ?? value}</span> : null

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { api } from '../api/client'
 import { useAuth } from '../auth/AuthContext'
 import { useApp } from './AppContext'
-import { ModeBadge, formatTime } from './ui'
+import { CompletenessBadge, LICENCE_LABEL, ModeBadge, StalenessBadge, formatTime } from './ui'
 
 function Original({ id }: { id: string }) {
   const [state, setState] = useState<{ body: string; sha256: string | null } | { error: string } | null>(null)
@@ -69,6 +69,20 @@ export function EvidenceDrawer() {
           <dt>Object key</dt><dd className="mono">{raw ? ev.objectKey : 'Restricted for your role'}</dd>
           <dt>SHA-256</dt><dd className="mono">{raw ? ev.sha256 : 'Restricted for your role'}</dd>
         </dl>
+        {evidence.provenance && (
+          <>
+            <h3 style={{ margin: '8px 0 0' }}>Provenance</h3>
+            <dl className="kv">
+              <dt>Upstream source</dt><dd>{evidence.provenance.originSource ?? '—'}</dd>
+              <dt>As of</dt><dd>{formatTime(evidence.provenance.asOf)}</dd>
+              <dt>Last refreshed</dt><dd>{evidence.provenance.lastRefreshed ? formatTime(evidence.provenance.lastRefreshed) : '—'}</dd>
+              <dt>Freshness</dt><dd><StalenessBadge value={evidence.provenance.staleness} /></dd>
+              <dt>Completeness</dt><dd><CompletenessBadge value={evidence.provenance.completeness} /></dd>
+              <dt>Licence</dt><dd>{evidence.provenance.licenceClass ? (LICENCE_LABEL[evidence.provenance.licenceClass] ?? evidence.provenance.licenceClass) : '—'}</dd>
+              <dt>Attribution</dt><dd>{evidence.provenance.attribution ?? '—'}</dd>
+            </dl>
+          </>
+        )}
         {raw && ev.id && <Original key={ev.id} id={ev.id} />}
         {!raw && <div className="notice info">Your role sees evidence summaries only. Raw payload access needs Analyst, Manager, Steward or Admin.</div>}
         <div className="notice info">Simulated and replayed records stay labelled at every stage and cannot be promoted to live.</div>

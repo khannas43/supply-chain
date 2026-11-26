@@ -12,11 +12,22 @@ export const ROLE_LABEL: Record<Role, string> = {
   demo_operator: 'Demo Operator',
 }
 
-export type ScreenId = 'S01' | 'S02' | 'S03' | 'S04' | 'S05' | 'S06' | 'S07' | 'S08' | 'S09' | 'RP1' | 'RP2' | 'RP3' | 'RP4'
+export type ScreenId = 'MS01' | 'MS02' | 'MS03' | 'MS04' | 'MS05' | 'MS06' | 'MS08' | 'MS09' | 'MS10' | 'MS11' | 'MS12' | 'S01' | 'S02' | 'S03' | 'S04' | 'S05' | 'S06' | 'S07' | 'S08' | 'S09' | 'RP1' | 'RP2' | 'RP3' | 'RP4'
 
 const ALL: Role[] = ['viewer', 'analyst', 'manager', 'steward', 'admin', 'demo_operator']
 
 export const SCREEN_VIEW: Record<ScreenId, Role[]> = {
+  MS01: ALL,
+  MS02: ['analyst', 'steward', 'admin', 'demo_operator'],
+  MS04: ALL,
+  MS05: ALL,
+  MS06: ['analyst', 'manager', 'steward', 'admin', 'demo_operator'],
+  MS08: ['analyst', 'steward', 'admin', 'demo_operator'],
+  MS09: ['analyst', 'steward', 'admin', 'demo_operator'],
+  MS10: ['analyst', 'steward', 'admin', 'demo_operator'],
+  MS03: ALL,
+  MS11: ALL,
+  MS12: ALL,
   S01: ALL,
   S02: ALL,
   S03: ALL,
@@ -48,6 +59,9 @@ export type Capability =
   | 'reference.edit'
   | 'simulator.run'
   | 'evidence.raw'
+  | 'config.edit'
+  | 'master.edit'
+  | 'review.resolve'
 
 export const CAPABILITY: Record<Capability, Role[]> = {
   'alert.disposition': ['analyst'],
@@ -65,4 +79,7 @@ export const CAPABILITY: Record<Capability, Role[]> = {
   'reference.edit': ['steward', 'admin'],
   'simulator.run': ['admin', 'demo_operator'],
   'evidence.raw': ['analyst', 'manager', 'steward', 'admin'],
+  'config.edit': ['analyst', 'steward', 'admin', 'demo_operator'],
+  'master.edit': ['analyst', 'steward', 'admin', 'demo_operator'],
+  'review.resolve': ['analyst', 'steward', 'admin', 'demo_operator'],
 }

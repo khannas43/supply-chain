@@ -10,7 +10,7 @@ import { EvidenceDrawer } from './EvidenceDrawer'
 export function Shell() {
   const { mode, user, setUserId, signOut, canView } = useAuth()
   const { commodity, setCommodity } = useApp()
-  const visible = SCREENS.filter((s) => canView(s.id))
+  const visible = SCREENS.filter((s) => !s.hidden && !s.noMenu && canView(s.id))
   const [reportsOpen, setReportsOpen] = useState(true)
 
   return (
@@ -46,7 +46,7 @@ export function Shell() {
       <div className="main">
         <header className="topbar">
           <div className="seg" role="group" aria-label="Commodity">
-            {(['wheat', 'tungsten'] as const).filter((c) => !user.scope || user.scope.includes(c)).map((c) => (
+            {(['tungsten'] as const).filter((c) => !user.scope || user.scope.includes(c)).map((c) => (
               <button key={c} aria-pressed={commodity === c} onClick={() => setCommodity(c)}>
                 {c[0].toUpperCase() + c.slice(1)}
               </button>

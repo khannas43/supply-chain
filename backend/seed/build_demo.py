@@ -55,7 +55,6 @@ IDENTITIES = [  # mirrors frontend/src/auth/users.ts and keycloak/supplychain-re
     ("u-steward", "Data Steward", "steward"),
     ("u-admin", "Platform Admin", "admin"),
     ("u-demo", "Demo Operator", "demo_operator"),
-    ("u-analyst-wheat", "Wheat Analyst", "analyst"),
     ("u-analyst-tungsten", "Tungsten Analyst", "analyst"),
 ]
 NAME = {i: n for i, n, _ in IDENTITIES}
@@ -63,14 +62,12 @@ for i, n, r in IDENTITIES:
     T["person"].append(dict(id=i, name=n, roles=[r], source="demo", last_seen=None))
 
 COUNTRIES = [
-    ("RUS", "Russia", ["RU", "Russian Federation"]), ("UKR", "Ukraine", ["UA"]), ("KAZ", "Kazakhstan", ["KZ"]),
-    ("ROU", "Romania", ["RO"]), ("AUS", "Australia", ["AU"]), ("CAN", "Canada", ["CA"]), ("FRA", "France", ["FR"]),
+    ("RUS", "Russia", ["RU", "Russian Federation"]), ("AUS", "Australia", ["AU"]), ("CAN", "Canada", ["CA"]),
     ("DEU", "Germany", ["DE", "Deutschland"]), ("USA", "United States", ["US", "USA", "United States of America"]),
-    ("ARG", "Argentina", ["AR"]), ("NLD", "Netherlands", ["NL", "Holland"]), ("TUR", "Türkiye", ["TR", "Turkey", "Turkiye"]),
-    ("ITA", "Italy", ["IT"]), ("CHN", "China", ["CN", "PRC", "People's Republic of China"]), ("VNM", "Vietnam", ["VN", "Viet Nam"]),
-    ("KOR", "South Korea", ["KR", "Republic of Korea"]), ("PRT", "Portugal", ["PT"]), ("AUT", "Austria", ["AT"]),
-    ("BOL", "Bolivia", ["BO"]), ("RWA", "Rwanda", ["RW"]), ("GBR", "United Kingdom", ["GB", "UK", "Great Britain"]),
-    ("SWE", "Sweden", ["SE"]),
+    ("NLD", "Netherlands", ["NL", "Holland"]), ("CHN", "China", ["CN", "PRC", "People's Republic of China"]),
+    ("VNM", "Vietnam", ["VN", "Viet Nam"]), ("KOR", "South Korea", ["KR", "Republic of Korea"]), ("PRT", "Portugal", ["PT"]),
+    ("AUT", "Austria", ["AT"]), ("BOL", "Bolivia", ["BO"]), ("RWA", "Rwanda", ["RW"]),
+    ("GBR", "United Kingdom", ["GB", "UK", "Great Britain"]), ("SWE", "Sweden", ["SE"]),
 ]
 for code, name, aliases in COUNTRIES:
     T["country"].append(dict(code=code, name=name))
@@ -79,9 +76,6 @@ for code, name, aliases in COUNTRIES:
         T["country_alias"].append(dict(alias=a, country_code=code))
 
 FORMS = [
-    ("wheat", "Milling grade", "Bread-making wheat to contract protein and moisture specification"),
-    ("wheat", "Durum", "For semolina and pasta; not interchangeable with milling grade"),
-    ("wheat", "Feed grade", "Not accepted for food plants"),
     ("tungsten", "Concentrate (65% WO3)", "Basis for WO3-equivalent conversion"),
     ("tungsten", "APT", "Ammonium paratungstate, the main intermediate"),
     ("tungsten", "Tungsten oxide", "Blue or yellow oxide, feed for carbide powder"),
@@ -93,7 +87,6 @@ for c, f, n in FORMS:
 
 CONVERSIONS = [
     ("t", "kg", 1000, -2000, "SI"), ("short ton", "t", 0.907185, -2000, "Approved unit table v2"),
-    ("bushel (wheat, 60 lb)", "t", 0.0272155, -2000, "Approved unit table v2"),
     ("mtu WO3", "kg WO3", 10, -2000, "Industry convention: 1 mtu = 10 kg WO3"),
     ("USD", "EUR", 0.93, -40, "Approved rate table v3 (synthetic)"), ("USD", "EUR", 0.91, -3, "Approved rate table v4 (synthetic)"),
     ("EUR", "GBP", 0.86, -40, "Approved rate table v3 (synthetic)"),
@@ -106,10 +99,10 @@ for i, (a, b, f, d, s) in enumerate(CONVERSIONS, 1):
 # ------------------------------------------------------------------------------------------------
 
 SOURCES = [  # id, name, mode, commodities, last_attempt, last_usable, policy_hours
-    ("src-policy", "Policy feed (simulator)", "simulated", ["wheat", "tungsten"], ts(hours=-1), ts(hours=-14), 48),
-    ("src-logistics", "Logistics feed (simulator)", "simulated", ["wheat"], ts(hours=-1), ts(hours=-31), 12),  # stale on purpose
+    ("src-policy", "Policy feed (simulator)", "simulated", ["tungsten"], ts(hours=-1), ts(hours=-14), 48),
+    ("src-logistics", "Logistics feed (simulator)", "simulated", ["tungsten"], ts(hours=-1), ts(hours=-31), 12),  # stale on purpose
     ("src-price", "Price series (replay)", "replay", ["tungsten"], ts(hours=-1), ts(hours=-9), 24),
-    ("src-import", "Manual file imports", "simulated", ["wheat", "tungsten"], ts(days=-3), ts(days=-3), 168),
+    ("src-import", "Manual file imports", "simulated", ["tungsten"], ts(days=-3), ts(days=-3), 168),
 ]
 SOURCE_NAME = {s[0]: s[1] for s in SOURCES}
 for sid, name, mode, coms, att, use, pol in SOURCES:
@@ -131,11 +124,7 @@ def th(**kw):
 
 
 RULES = [
-    ("R-W-EXP", "wheat-export-policy", "wheat", [
-        ("1.0", "superseded", th(conf=60, sev=2, stale=24), -60, "Risk Analyst A", -60, "Risk Analyst A"),
-        ("1.1", "superseded", th(conf=55, sev=3, stale=24), -35, "Risk Analyst A", -35, "Risk Analyst B"),
-        ("1.2", "published", th(conf=50, sev=3, stale=48), -12, "Risk Analyst A", -12, "Risk Analyst B")]),
-    ("R-W-LOG", "wheat-logistics", "wheat", [
+    ("R-T-LOG", "tungsten-logistics", "tungsten", [
         ("1.0", "published", th(delay=3, sev=2, stale=12), -45, "Risk Analyst A", -45, "Risk Analyst A"),
         ("1.1", "draft", th(delay=4, sev=2, stale=12), -2, "Risk Analyst A", None, None)]),
     ("R-T-EXP", "tungsten-export-policy", "tungsten", [
@@ -163,43 +152,6 @@ NODES: dict[str, dict] = {}
 def node(id_, com, name, kind, country, site=None, tier=None):
     NODES[id_] = dict(id=id_, commodity=com, name=name, kind=kind, tier=tier, country=country, site=site)
 
-
-# wheat: origins (Tier 4), exporters and terminals (Tier 3), blenders and millers (Tier 1), plants, products
-for i, n, c, s in [
-    ("w-kuban", "Kuban Grain Cooperative", "Russia", "Krasnodar Krai"), ("w-volga", "Volga Steppe Farms", "Russia", "Saratov Oblast"),
-    ("w-poltava", "Poltava Harvest Group", "Ukraine", "Poltava Oblast"), ("w-odagro", "Odesa Agro Holdings", "Ukraine", "Odesa Oblast"),
-    ("w-akmola", "Akmola Wheat Producers", "Kazakhstan", "Akmola Region"), ("w-dobro", "Dobrogea Agri Trade", "Romania", "Constanța County"),
-    ("w-wimmera", "Wimmera Growers Alliance", "Australia", "Victoria"), ("w-eyre", "Eyre Peninsula Grain Co-op", "Australia", "South Australia"),
-    ("w-prairie", "Prairie Gold Cooperative", "Canada", "Saskatchewan"), ("w-beauce", "Beauce Céréales Union", "France", "Centre-Val de Loire"),
-    ("w-borde", "Magdeburger Börde Landhandel", "Germany", "Saxony-Anhalt"), ("w-plains", "Great Plains Elevator Network", "United States", "Kansas"),
-    ("w-pampa", "Pampa Cereales SA", "Argentina", "Buenos Aires Province"),
-]:
-    node(i, "wheat", n, "origin", c, s, "Tier 4")
-for i, n, c, s in [
-    ("w-novoross", "Novoross Grain Terminal", "Russia", "Novorossiysk"), ("w-azov", "Azov Export Services", "Russia", "Rostov-on-Don"),
-    ("w-odterm", "Black Sea Maritime Grain", "Ukraine", "Odesa"), ("w-constanta", "Constanta Cereal Terminal", "Romania", "Constanța"),
-    ("w-astana", "Astana Trade Link", "Kazakhstan", "Astana"), ("w-adelaide", "Southern Cross Grain Exports", "Australia", "Port Adelaide"),
-    ("w-thunder", "Great Lakes Commodities", "Canada", "Thunder Bay"), ("w-rouen", "Rouen Port Grain", "France", "Rouen"),
-    ("w-hamburg", "Hamburg Getreide Handel", "Germany", "Hamburg"), ("w-houston", "Gulf Coast Exporters", "United States", "Houston"),
-    ("w-rosario", "Rosario Export Terminal", "Argentina", "Rosario"),
-]:
-    node(i, "wheat", n, "supplier", c, s, "Tier 3")
-for i, n, c, s in [
-    ("w-rott", "Rotterdam Flour Blenders", "Netherlands", "Rotterdam"), ("w-istanbul", "Istanbul Unlu Milling", "Türkiye", "Istanbul"),
-    ("w-hmv", "Hamburg Mühlen Verbund", "Germany", "Hamburg"), ("w-marseille", "Marseille Semoulerie", "France", "Marseille"),
-]:
-    node(i, "wheat", n, "supplier", c, s, "Tier 1")
-for i, n, c, s in [
-    ("w-p-duisburg", "Plant Duisburg (bakery flour)", "Germany", "Duisburg"), ("w-p-lyon", "Plant Lyon (pasta)", "France", "Lyon"),
-    ("w-p-milan", "Plant Milan (pasta)", "Italy", "Milan"), ("w-p-izmir", "Plant Izmir (biscuits)", "Türkiye", "Izmir"),
-    ("w-p-rott", "Plant Rotterdam (bakery premix)", "Netherlands", "Rotterdam"),
-]:
-    node(i, "wheat", n, "plant", c, s)
-for i, n, c in [
-    ("w-prod-flour", "Bread flour (retail)", "Germany"), ("w-prod-pasta", "Durum pasta", "Italy"),
-    ("w-prod-biscuit", "Biscuit dough", "Türkiye"), ("w-prod-premix", "Bakery premix", "Netherlands"),
-]:
-    node(i, "wheat", n, "product", c)
 
 # tungsten: mines (Tier 4), concentrators and traders (Tier 3), refiners (Tier 2), powder makers (Tier 1), plants, products
 for i, n, c, s in [
@@ -250,38 +202,6 @@ def edge(a, b, material, conf, years_ago=2.0, note=None, uncertain=False, source
     EDGES.append(dict(id=f"e{len(EDGES) + 1}", from_node=a, to_node=b, material=material, source=source, confidence=conf,
                       effective_from=day(-int(365 * years_ago)), effective_to=None, uncertain=uncertain, note=note))
 
-
-WM, WD = "wheat, milling grade", "durum wheat"
-# wheat: origin -> exporter or terminal
-for a, b, m, c in [
-    ("w-kuban", "w-novoross", WM, H), ("w-kuban", "w-azov", WM, M), ("w-volga", "w-azov", WM, M), ("w-poltava", "w-odterm", WM, H),
-    ("w-odagro", "w-odterm", WM, H), ("w-akmola", "w-astana", WM, M), ("w-dobro", "w-constanta", WM, H), ("w-wimmera", "w-adelaide", WM, H),
-    ("w-eyre", "w-adelaide", WM, H), ("w-prairie", "w-thunder", WD, H), ("w-beauce", "w-rouen", WM, H), ("w-borde", "w-hamburg", WM, H),
-    ("w-plains", "w-houston", WM, M), ("w-pampa", "w-rosario", WM, M),
-]:
-    edge(a, b, m, c)
-edge("w-astana", "w-novoross", WM, L, 1.0, "Transit by Russian rail; routing not confirmed by the supplier", True)
-# exporter or terminal -> Tier 1
-for a, b, m, c in [
-    ("w-novoross", "w-istanbul", WM, H), ("w-novoross", "w-rott", WM, M), ("w-azov", "w-istanbul", WM, M), ("w-odterm", "w-istanbul", WM, M),
-    ("w-odterm", "w-rott", WM, M), ("w-constanta", "w-hmv", WM, M), ("w-adelaide", "w-istanbul", WM, M), ("w-thunder", "w-rott", WD, H),
-    ("w-thunder", "w-marseille", WD, H), ("w-rouen", "w-rott", WM, H), ("w-rouen", "w-marseille", WM, H), ("w-rouen", "w-hmv", WM, H),
-    ("w-hamburg", "w-hmv", WM, H), ("w-hamburg", "w-rott", WM, M), ("w-houston", "w-rott", WM, M), ("w-rosario", "w-istanbul", WM, M),
-]:
-    edge(a, b, m, c)
-edge("w-constanta", "w-istanbul", WM, L, 0.5, "Spot cargoes only; no contract on file", True)
-edge("w-adelaide", "w-rott", WM, L, 1.0, "Occasional cargoes; share not recorded", True)
-edge("w-rott", "w-hamburg", "wheat, surplus transfer", L, 1.0, "Stock transfers between blenders; creates a loop with the Hamburg link")
-# Tier 1 -> plants -> products
-for a, b, m, c in [
-    ("w-istanbul", "w-p-izmir", "flour input", H), ("w-istanbul", "w-p-milan", "flour input", M), ("w-rott", "w-p-rott", "flour input", H),
-    ("w-rott", "w-p-duisburg", "flour input", M), ("w-rott", "w-p-lyon", "flour input", M), ("w-hmv", "w-p-duisburg", "flour input", H),
-    ("w-hmv", "w-p-milan", "flour input", M), ("w-marseille", "w-p-lyon", "durum semolina", H), ("w-marseille", "w-p-milan", "durum semolina", H),
-    ("w-p-duisburg", "w-prod-flour", "flour", H), ("w-p-duisburg", "w-prod-premix", "flour", M), ("w-p-lyon", "w-prod-pasta", "durum semolina", H),
-    ("w-p-milan", "w-prod-pasta", "durum semolina", H), ("w-p-izmir", "w-prod-biscuit", "flour", H), ("w-p-izmir", "w-prod-flour", "flour", M),
-    ("w-p-rott", "w-prod-premix", "flour", H), ("w-p-rott", "w-prod-flour", "flour", M),
-]:
-    edge(a, b, m, c, 3.0 if c == H else 2.0, source="Curated BOM v1" if a.startswith("w-p-") else SRC)
 
 TC, TA, TO, TP = "tungsten concentrate", "APT (ammonium paratungstate)", "tungsten oxide", "carbide powder"
 for a, b, m, c in [
@@ -389,8 +309,8 @@ def exposure_paths(commodity: str, country: str, limit: int = 2) -> list[dict]:
 # ------------------------------------------------------------------------------------------------
 
 SEV = {1: "low", 2: "medium", 3: "high", 4: "critical"}
-RULE_FOR = {("policy", "wheat"): "wheat-export-policy", ("policy", "tungsten"): "tungsten-export-policy",
-            ("logistics", "wheat"): "wheat-logistics", ("price", "tungsten"): "tungsten-price"}
+RULE_FOR = {("policy", "tungsten"): "tungsten-export-policy", ("logistics", "tungsten"): "tungsten-logistics",
+            ("price", "tungsten"): "tungsten-price"}
 SOURCE_FOR = {"policy": "src-policy", "logistics": "src-logistics", "price": "src-price"}
 TIME_FIELD = {"policy": "announcedAt", "logistics": "reportedAt", "price": "observedAt"}
 MAPPING = {"policy": "sim-policy v1", "logistics": "sim-logistics v1", "price": "sim-price v1"}
@@ -486,14 +406,6 @@ def alert(id_, kind, commodity, country, event_type, headline, conf, days_ago, m
     return c
 
 
-# wheat
-alert("AL-W-001", "policy", "wheat", "Russia", "export_restriction", "Export restriction announced on wheat, Russia", 65, 6, "simulated", "confirmed", status="complete")
-alert("AL-W-002", "policy", "wheat", "Kazakhstan", "export_quota", "Export quota notice for wheat, Kazakhstan", 55, 3, "simulated", "new")
-alert("AL-W-003", "logistics", "wheat", "Ukraine", "port_delay", "Port congestion at Odesa delays grain shipments", 45, 4, "simulated", "monitor", value=5)
-alert("AL-W-004", "logistics", "wheat", "Russia", "port_delay", "Berth queue at Novorossiysk delays wheat loading", 60, 2, "simulated", "new", value=4)
-alert("AL-W-005", "logistics", "wheat", "Argentina", "port_delay", "River draft restrictions slow barge traffic to Rosario", 35, 8, "simulated", "dismissed", value=3)
-alert("AL-W-006", "policy", "wheat", "Argentina", "export_restriction", "Export restriction announced on wheat, Argentina", 70, 20, "replay", "confirmed", status="complete")
-alert("AL-W-007", "logistics", "wheat", "Romania", "port_delay", "Congestion at Constanța delays wheat departures", 50, 1, "simulated", "new", value=6)
 # tungsten
 alert("AL-T-001", "policy", "tungsten", "China", "export_licence", "Export licence rules for tungsten products tightened, China", 88, 7, "simulated", "confirmed", status="complete")
 alert("AL-T-002", "policy", "tungsten", "Russia", "export_restriction", "Export restriction announced on tungsten concentrate, Russia", 62, 5, "simulated", "new", status="awaiting_validation")
@@ -501,13 +413,14 @@ alert("AL-T-003", "policy", "tungsten", "Vietnam", "export_quota", "Export quota
 alert("AL-T-004", "price", "tungsten", "Global", "price_change_30d_pct", "Tungsten concentrate price up 18.5% over 30 days", 75, 3, "replay", "monitor", value=18.5, status="unassessed")
 alert("AL-T-005", "price", "tungsten", "Global", "price_change_30d_pct", "Tungsten APT price up 24% over 30 days", 80, 1, "simulated", "new", value=24, status="unassessed")
 alert("AL-T-006", "policy", "tungsten", "Rwanda", "export_licence", "Export licence suspension for wolframite, Rwanda", 64, 30, "replay", "dismissed")
+alert("AL-T-007", "logistics", "tungsten", "Netherlands", "port_delay", "Berth congestion at Rotterdam delays tungsten concentrate discharge", 50, 4, "simulated", "monitor", value=5)
+alert("AL-T-008", "logistics", "tungsten", "Germany", "port_delay", "Terminal strike at Hamburg slows tungsten cargo handling", 60, 2, "simulated", "new", value=4)
+alert("AL-T-009", "logistics", "tungsten", "Vietnam", "port_delay", "Queue at Haiphong delays APT shipments", 35, 8, "simulated", "dismissed", value=3)
 
 # observations that did not become alerts (what the rules decided, and why)
 for kind, com, country, et, head, conf, d, mode, value, outcome, aid in [
-    ("policy", "wheat", "Russia", "export_restriction", "Restriction on wheat exports reiterated, Russia", 68, 5, "simulated", None, "merged", "AL-W-001"),
-    ("policy", "wheat", "Russia", "clarification", "Clarification published; scope of the restriction unchanged", 70, 4, "simulated", None, "no_rule_match", None),
-    ("policy", "wheat", "Argentina", "export_restriction", "Draft export restriction under discussion, Argentina", 42, 9, "simulated", None, "below_threshold", None),
-    ("logistics", "wheat", "Argentina", "port_delay", "Short delay at Rosario terminal", 40, 6, "simulated", 2, "below_threshold", None),
+    ("policy", "tungsten", "Russia", "clarification", "Clarification published; scope of the Russian restriction unchanged", 70, 4, "simulated", None, "no_rule_match", None),
+    ("logistics", "tungsten", "Netherlands", "port_delay", "Short delay at Rotterdam terminal", 40, 6, "simulated", 2, "below_threshold", None),
     ("policy", "tungsten", "China", "export_licence", "Earlier notice on licence tightening, China", 86, 8, "simulated", None, "late", None),
     ("policy", "tungsten", "China", "export_quota", "Export licence quota notice, China", 80, 6, "simulated", None, "merged", "AL-T-001"),
     ("price", "tungsten", "Global", "price_change_30d_pct", "Tungsten concentrate price up 9% over 30 days", 70, 12, "replay", 9, "below_threshold", None),
@@ -563,43 +476,9 @@ def inputs(as_of_days, stock, unit, demand, price, price_unit, notes):
                 priceUnit=price_unit, notes=notes)
 
 
-W_NOTES = ["Usable stock only; reserved stock excluded", "Constant demand, no other receipts assumed"]
 T_NOTES = ["Usable stock only; reserved stock excluded", "Constant demand, no other receipts assumed", "Quantities in WO3 equivalent"]
-W_MISSING = ["Freight and other additional costs (not included in the cost figure)", "Share of each mill's volume sourced from the affected country (allocation unknown)"]
 T_MISSING = ["Inbound receipts schedule not supplied (time-phased balance not possible)", "Freight, duties and licence fees not included in the cost figure"]
 INITIAL = "Initial partial assessment: exposure and cover only"
-
-# --- AL-W-001: Russia wheat export restriction (three versions, two successive assumptions) ---
-o = {}
-o["ref"] = option("AL-W-001", "sourcing", "French milling wheat via Rouen (Rouen Port Grain)", "qualified", "meets", "12,000 t / month (stated, not verified)", 318, 30, 25, "Qualified milling grade. Commercial terms not agreed.")
-o["ca"] = option("AL-W-001", "sourcing", "Canadian milling wheat via Thunder Bay (Great Lakes Commodities)", "qualified", "meets", "8,000 t / month (stated, not verified)", 342, 38, 40, "Qualified; longest lead time.")
-o["au"] = option("AL-W-001", "sourcing", "Australian milling wheat via Port Adelaide (Southern Cross Grain Exports)", "qualified", "meets", "10,000 t / month (stated, not verified)", 329, 45, 12, "Quote lapses soon; needs a decision this fortnight.")
-o["ro"] = option("AL-W-001", "sourcing", "Romanian wheat via Constanța (Constanta Cereal Terminal)", "unknown", "partial", "6,000 t / month (stated, not verified)", 301, 18, 20, "Qualification not on file; protein specification only partly met.")
-o["stock"] = option("AL-W-001", "inventory", "Transfer buffer stock from Plant Rotterdam", "qualified", "meets", "600 t available", None, 2, None, "Internal transfer. Handling cost not included.", qty=600)
-o["rail"] = option("AL-W-001", "logistics", "Expedited rail from Beauce to Rouen", "qualified", "meets", "Route-limited", 309, 21, -6, "Quote has expired. Needs a fresh quote.")
-assumption("AS-W-1", "AL-W-001", 80, "Restriction covers all exports from the Black Sea ports for the full horizon (analyst estimate, synthetic).", "u-analyst-a", -5.5, "superseded", "u-analyst-b", -5, "Accepted for the first assessment.")
-assumption("AS-W-2", "AL-W-001", 70, "Clarification limits the restriction to bulk cargoes; 70% of contracted volume affected (synthetic).", "u-analyst-a", -3.5, "approved", "u-analyst-b", -3, "Agreed after the clarification.")
-wi = inputs(-6, 2900, "t", 120, 285, "per t", W_NOTES)
-assessment("AL-W-001", 1, -6, INITIAL, None, (5400, "t", "60 days"), wi, o["ref"], W_MISSING)
-assessment("AL-W-001", 2, -5, "Assumption AS-W-1 approved (80% affected share)", "AS-W-1", (5400, "t", "60 days"), wi, o["ref"], W_MISSING)
-assessment("AL-W-001", 3, -3, "Assumption AS-W-2 approved (70% affected share)", "AS-W-2", (5400, "t", "60 days"), wi, o["ref"], W_MISSING)
-
-# --- AL-W-006: Argentina restriction, an older replayed case with a completed response ---
-a1 = option("AL-W-006", "sourcing", "US hard red winter via Houston (Gulf Coast Exporters)", "qualified", "meets", "9,000 t / month (stated, not verified)", 291, 20, 9, "Used for the earlier response.")
-a2 = option("AL-W-006", "inventory", "Draw down Lyon pasta-plant buffer", "qualified", "meets", "400 t available", None, 1, None, "Internal transfer.", qty=400)
-a3 = option("AL-W-006", "sourcing", "French soft wheat via Rouen (Rouen Port Grain)", "qualified", "partial", "5,000 t / month (stated, not verified)", 284, 16, 15, "Soft wheat; specification only partly met for pasta.")
-assumption("AS-W-3", "AL-W-006", 60, "Restriction applies to roughly 60% of contracted Argentine volume (synthetic).", "u-analyst-a", -19, "approved", "u-analyst-b", -18, "Reasonable for the case.")
-wi = inputs(-20, 1500, "t", 60, 270, "per t", W_NOTES)
-assessment("AL-W-006", 1, -20, INITIAL, None, (1800, "t", "45 days"), wi, a1, W_MISSING)
-assessment("AL-W-006", 2, -18, "Assumption AS-W-3 approved (60% affected share)", "AS-W-3", (1800, "t", "45 days"), wi, a1, W_MISSING)
-
-# --- AL-W-003: Ukraine port delay, assumption rejected ---
-u1 = option("AL-W-003", "sourcing", "Romanian wheat via Constanța (qualified lot)", "qualified", "meets", "6,000 t / month (stated, not verified)", 296, 14, 18, "Qualified lot from the Dobrogea region.")
-u2 = option("AL-W-003", "inventory", "Transfer stock from Plant Milan", "qualified", "meets", "300 t available", None, 3, None, "Internal transfer.", qty=300)
-u3 = option("AL-W-003", "logistics", "Switch loading to a second Black Sea berth", "qualified", "meets", "Berth-limited", 289, 9, 4, "Depends on terminal availability; quote expires soon.")
-assumption("AS-W-4", "AL-W-003", 30, "Short delay; part of the volume re-routed (synthetic).", "u-analyst-a", -3.5, "rejected", "u-analyst-b", -3, "Delay is short and Odesa holds stock buffers; no disruption assumption needed.")
-wi = inputs(-4, 2400, "t", 90, 285, "per t", W_NOTES)
-assessment("AL-W-003", 1, -4, INITIAL, None, (2100, "t", "30 days"), wi, u1, W_MISSING)
 
 # --- AL-T-001: China tungsten export licence tightening (three versions) ---
 t1 = option("AL-T-001", "sourcing", "Vietnamese APT via Vietnam APT Refinery", "qualified", "meets", "6 t / quarter (stated, not verified)", 49800, 75, 30, "Qualified for carbide-grade powder.")
@@ -623,7 +502,15 @@ assumption("AS-T-3", "AL-T-002", 40, "Russian concentrate is a minor input; 40% 
 wi = inputs(-5, 11, "t WO3 eq.", 0.16, 41500, "per t WO3 eq.", T_NOTES)
 assessment("AL-T-002", 1, -5, INITIAL, None, (8, "t WO3 eq.", "120 days"), wi, r1, T_MISSING)
 
-for oid, who_, d in [(o["ref"], "u-analyst-a", -3), (t2, "u-manager", -2)]:
+# --- AL-T-007: Rotterdam port delay, assumption rejected ---
+u1 = option("AL-T-007", "sourcing", "Spot concentrate via Hamburg Rohstoffhandel", "qualified", "meets", "2 t (spot)", 54500, 20, 12, "Qualified; quote expires soon.")
+u2 = option("AL-T-007", "inventory", "Transfer stock from Plant Graz", "qualified", "meets", "1 t available", None, 3, None, "Internal transfer.", qty=1)
+u3 = option("AL-T-007", "logistics", "Divert the next cargo to Hamburg", "qualified", "meets", "Berth-limited", 50200, 9, 4, "Depends on terminal availability.")
+assumption("AS-T-4", "AL-T-007", 30, "Short delay; part of the volume re-routed (synthetic).", "u-analyst-a", -3.5, "rejected", "u-analyst-b", -3, "Delay is short and the plants hold stock buffers; no disruption assumption needed.")
+ui = inputs(-4, 9, "t WO3 eq.", 0.14, 41500, "per t WO3 eq.", T_NOTES)
+assessment("AL-T-007", 1, -4, INITIAL, None, (3, "t WO3 eq.", "30 days"), ui, u1, T_MISSING)
+
+for oid, who_, d in [(t1, "u-analyst-a", -3), (t2, "u-manager", -2)]:
     T["option_shortlist"].append(dict(option_id=oid, shortlisted_by_id=who_, shortlisted_by_name=NAME[who_], shortlisted_at=ts(d)))
 
 # ------------------------------------------------------------------------------------------------
@@ -649,25 +536,19 @@ def action(id_, alert_id, opt, owner, target_days, status, version, assumption_s
     assert prev == status, (id_, prev, status)
 
 
-action("AC-W-001", "AL-W-001", o["ref"], "u-manager", 12, "in_progress", 2, "approved", "Only qualified option that covers the horizon; request a firm quote and agree terms.", -4, [(-3, "u-manager", "in_progress", "Rouen Port Grain asked for a firm quote")])
-action("AC-W-002", "AL-W-001", o["stock"], "u-analyst-b", -1, "review", 3, "approved", "Bridge cover with buffer stock from Plant Rotterdam while the supplier is arranged.", -3, [(-2, "u-analyst-b", "in_progress", "Quantity confirmed with the plant"), (-1.5, "u-analyst-b", "review", "Transfer complete, ready for review")])
-action("AC-W-003", "AL-W-001", o["au"], "u-manager", 20, "open", 3, "approved", "Second source on a different route; decide before the quote lapses.", -2, [])
-action("AC-W-004", "AL-W-006", a1, "u-manager", -12, "done", 2, "approved", "Used the US hard red winter lot to cover the Argentine gap.", -17, [(-16, "u-manager", "in_progress", "Order placed"), (-13, "u-analyst-a", "review", "Cargo received"), (-12, "u-manager", "done", "Closed after delivery")])
-action("AC-W-005", "AL-W-003", u2, "u-analyst-a", 6, "in_progress", 1, "rejected", "Small stock transfer to cover the short Odesa delay.", -3, [(-2, "u-analyst-a", "in_progress", "Plant Milan agreed 300 t")])
-action("AC-W-006", "AL-W-001", o["ca"], "u-analyst-wheat", 25, "open", 3, "approved", "Long-lead option for the following quarter.", -1, [])
-action("AC-W-007", "AL-W-006", a2, "u-analyst-a", -15, "done", 2, "approved", "Drew down the Lyon buffer during the first week.", -17, [(-16, "u-analyst-a", "in_progress", "Transfer started"), (-15, "u-manager", "done", "Completed")])
 action("AC-T-001", "AL-T-001", t2, "u-manager", 15, "in_progress", 3, "approved", "Highest-priced but shortest qualified lead time; start qualification samples.", -3, [(-2, "u-manager", "in_progress", "Goslar contacted for samples")])
 action("AC-T-002", "AL-T-001", t5, "u-analyst-a", -2, "review", 2, "approved", "Bridge cover with strategic stock while sourcing is arranged.", -5, [(-4, "u-analyst-a", "in_progress", "Quantity check done"), (-3, "u-analyst-a", "review", "Ready for review")])
 action("AC-T-003", "AL-T-001", t1, "u-manager", -1, "done", 2, "approved", "Framework order with the Vietnamese refinery agreed.", -5, [(-4, "u-manager", "in_progress", "Terms negotiated"), (-1, "u-manager", "done", "Order confirmed")])
 action("AC-T-004", "AL-T-002", r3, "u-analyst-b", 9, "open", 1, "proposed", "Prepare to release stock if the assumption is approved.", -1, [])
+action("AC-T-006", "AL-T-007", u2, "u-analyst-a", 6, "in_progress", 1, "rejected", "Small stock transfer to cover the short Rotterdam delay.", -3, [(-2, "u-analyst-a", "in_progress", "Plant Graz agreed 1 t")])
 action("AC-T-005", "AL-T-001", t6, "u-analyst-tungsten", 10, "open", 3, "approved", "Spot cover for the gap before the first APT shipment; decide before the quote lapses.", -1, [])
 
 # ------------------------------------------------------------------------------------------------
 # Imports, rules history in the audit trail, source runs, quarantine, dead letter
 # ------------------------------------------------------------------------------------------------
 
-NETWORK_CSV = "from_id,to_id,material,source,effective_from,confidence\nw-rott,w-p-duisburg,flour input,Curated file v1,2024-01-01,medium\n"
-DEMAND_CSV = "plant_id,material,rate_per_day,unit,as_of\nw-p-duisburg,wheat flour input,40,t,2026-11-03\nt-p-essen,tungsten carbide powder,0.06,t,2026-11-03\n"
+NETWORK_CSV = "from_id,to_id,material,source,effective_from,confidence\nt-rhein,t-p-essen,tungsten carbide powder,Curated file v1,2024-01-01,medium\n"
+DEMAND_CSV = "plant_id,material,rate_per_day,unit,as_of\nt-p-graz,tungsten carbide powder,0.04,t,2026-11-03\nt-p-essen,tungsten carbide powder,0.06,t,2026-11-03\n"
 for i, (ds, version, rows, rejected, applied, csv, d) in enumerate([("supplier_network", 1, 71, 2, True, NETWORK_CSV, -12), ("demand", 1, 9, 0, False, DEMAND_CSV, -3)], 1):
     T["import_record"].append(dict(id=f"IMP-{i:03d}", dataset=ds, version=version, rows=rows, rejected=rejected,
                                    checksum=sha256(csv.encode()).hexdigest(), committed_by=NAME["u-steward"], committed_at=ts(d), applied=applied, content=csv))
@@ -680,8 +561,8 @@ for rid, name, com, versions in RULES:
 
 # quarantined samples: replayable (the record is kept) and one legacy row (it is not)
 bad = [
-    ("policy", "wheat", None, "export_restriction", "Export restriction announced, country missing in the source record", 62, 2, "country", "", "Missing required field: country", dict(country=None)),
-    ("policy", "wheat", "Rossiya", "export_restriction", "Export restriction announced, country spelled in an unknown way", 66, 3, "country", "Rossiya", "Unresolved location: 'Rossiya' is not a known country or alias", None),
+    ("policy", "tungsten", None, "export_restriction", "Export restriction announced, country missing in the source record", 62, 2, "country", "", "Missing required field: country", dict(country=None)),
+    ("policy", "tungsten", "Rossiya", "export_restriction", "Export restriction announced, country spelled in an unknown way", 66, 3, "country", "Rossiya", "Unresolved location: 'Rossiya' is not a known country or alias", None),
     ("price", "tungsten", None, "price_change_30d_pct", "Tungsten price report with an impossible confidence value", 150, 4, "confidencePct", "150", "confidencePct is not valid: Input should be less than or equal to 100", None),
 ]
 qn = 0
@@ -702,7 +583,7 @@ for i in range(2):  # rows rejected by the first supplier-network import
     qn += 1
     T["quarantine_item"].append(dict(id=f"Q-{qn:04d}", source_id="src-import", run_id="IMP-001", received_at=ts(-12), reason=["effective_from is not a valid date (YYYY-MM-DD)", "to_id is not a known supplier or site"][i],
                                      source_row=f"row {[14, 33][i]} of IMP-001.csv", object_key="evidence/import/IMP-001.csv", field=["effective_from", "to_id"][i],
-                                     bad_value=["2025-13-02", "w-nowhere"][i], status="resolved" if i == 0 else "quarantined", correction="2025-03-02" if i == 0 else None,
+                                     bad_value=["2025-13-02", "t-nowhere"][i], status="resolved" if i == 0 else "quarantined", correction="2025-03-02" if i == 0 else None,
                                      ingestion_id=None, record_json=None))
 
 # a resolved replay in the history, for the quarantine trail

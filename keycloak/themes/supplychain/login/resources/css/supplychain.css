@@ -27,7 +27,7 @@
 }
 #kc-header-wrapper > * { display: none; }
 .pf-v5-c-login__header::after {
-  content: "Map, detect, assess and act on wheat and tungsten supply risk";
+  content: "Map, detect, assess and act on tungsten supply risk";
   display: block; text-align: center; color: #9db3d3; font-size: 14px; margin: -6px 0 18px;
 }
 

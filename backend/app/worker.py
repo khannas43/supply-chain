@@ -22,6 +22,7 @@ from .config import get_settings
 from .db import get_engine
 from .envelope import TOPIC_RAW, TOPIC_REPLAY, RawObjectEnvelope, ReplayEnvelope
 from .ids import next_id
+from . import credibl
 from .models import DeadLetter, Ingestion, Outbox, QuarantineItem
 from .processing import PermanentError, process_raw, process_replay
 
@@ -94,6 +95,23 @@ def drain(engine=None, limit: int = 1000) -> int:
     return n
 
 
+def poll_credibl(next_at: float) -> float:
+    """Collect from Credibl when it is due (CREDIBL_MODE mock or http). Returns when to look again."""
+    if time.monotonic() < next_at:
+        return next_at
+    settings = get_settings()
+    try:
+        client = credibl.get_client(settings)
+        if client is not None:
+            with Session(get_engine()) as session:
+                got = credibl.poll(session, client)
+                session.commit()
+            log.info("credibl poll: %s", got.ingestion_id if got else "nothing collected")
+    except Exception:  # a failing provider must not stop the worker; the source shows its last error
+        log.exception("credibl poll failed")
+    return time.monotonic() + settings.credibl_poll_minutes * 60
+
+
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
     stop = False
@@ -105,8 +123,10 @@ def main() -> None:
     signal.signal(signal.SIGTERM, _stop)
     signal.signal(signal.SIGINT, _stop)
     log.info("worker started")
+    next_poll = 0.0
     while not stop:
         try:
+            next_poll = poll_credibl(next_poll)
             if not run_once():
                 time.sleep(get_settings().worker_poll_seconds)
         except Exception:  # keep the loop alive; the failing message is retried or dead-lettered

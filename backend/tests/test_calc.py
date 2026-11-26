@@ -3,18 +3,18 @@ from decimal import Decimal as D
 from app.calc import calculate, cover_days, d
 
 # Worked example: docs/data-to-dashboard-workflow.md section 6.
-WHEAT = dict(usable_stock=D(120), demand_per_day=D(20), baseline_price=D(200), exposed_value=D(100))
+WORKED = dict(usable_stock=D(120), demand_per_day=D(20), baseline_price=D(200), exposed_value=D(100))
 
 
 def run(**kw):
     base = dict(
-        approved_share_pct=D(100), unavailable_reason=None, reference_lead_days=10, reference_price=D(230), **WHEAT
+        approved_share_pct=D(100), unavailable_reason=None, reference_lead_days=10, reference_price=D(230), **WORKED
     )
     base.update(kw)
     return calculate(**base)
 
 
-def test_wheat_worked_example():
+def test_worked_example():
     r = run()
     assert r.cover_days == D(6)
     assert r.at_risk == D(100)

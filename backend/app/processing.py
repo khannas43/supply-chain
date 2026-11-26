@@ -47,12 +47,26 @@ class Normalized:
     headline: str
     published_at: datetime
     confidence_pct: int
+    provenance: "Provenance | None" = None  # external providers only
+
+
+class Provenance(BaseModel):
+    """What Credibl says about each value: when it is true for, when it was refreshed, and under what terms."""
+
+    model_config = ConfigDict(extra="ignore")
+    asOf: AwareDatetime
+    lastRefreshed: AwareDatetime
+    source: str = Field(min_length=1)
+    licenceClass: str = Field(min_length=1, max_length=40)
+    attribution: str = Field(min_length=1)
+    staleness: Literal["fresh", "stale", "unknown"]
+    completeness: Literal["complete", "partial", "estimated", "absent"]
 
 
 class _Base(BaseModel):
     model_config = ConfigDict(extra="ignore")
     recordId: str = Field(min_length=1, max_length=100)
-    commodity: Literal["wheat", "tungsten"]
+    commodity: Literal["tungsten"]
     headline: str = Field(min_length=1)
     confidencePct: int = Field(ge=0, le=100)
 
@@ -88,11 +102,23 @@ def _price(r: PriceRecord) -> Normalized:
     return Normalized(r.recordId, r.commodity, "price", r.indicator, "Global", r.value, r.headline, r.observedAt, r.confidencePct)
 
 
+class CreditblRecord(_Base):
+    indicator: str = Field(min_length=1, max_length=60)
+    country: str = Field(default="Global", min_length=1)
+    value: Decimal | None = None
+    provenance: Provenance  # required: a value without its source, date and terms is not accepted
+
+
+def _credibl(r: CreditblRecord) -> Normalized:
+    return Normalized(r.recordId, r.commodity, "indicator", r.indicator, r.country, r.value, r.headline, r.provenance.asOf, r.confidencePct, r.provenance)
+
+
 # source id -> (record model, mapper, mapping version)
 ADAPTERS: dict[str, tuple[type[BaseModel], Callable, str]] = {
     "src-policy": (PolicyRecord, _policy, "sim-policy v1"),
     "src-logistics": (LogisticsRecord, _logistics, "sim-logistics v1"),
     "src-price": (PriceRecord, _price, "sim-price v1"),
+    "src-credibl": (CreditblRecord, _credibl, "credibl v1 (assumed shape)"),
 }
 
 
@@ -130,6 +156,13 @@ def _quarantine(session: Session, ing: Ingestion, index: int, rej: RecordRejecte
     session.flush()
 
 
+def _provenance_columns(p: Provenance | None) -> dict:
+    if p is None:
+        return {}
+    return dict(origin_source=p.source, licence_class=p.licenceClass, attribution_text=p.attribution, source_refreshed_at=p.lastRefreshed,
+                staleness_flag=p.staleness, completeness_flag=p.completeness)
+
+
 def process_record(session: Session, ing: Ingestion, record: object, index: int, *, reject: Literal["quarantine", "raise"] = "quarantine") -> str:
     """Process one record. Returns accepted, duplicate or quarantined.
 
@@ -158,14 +191,16 @@ def process_record(session: Session, ing: Ingestion, record: object, index: int,
         _quarantine(session, ing, index, rej, text)
         return "quarantined"
 
-    newest = session.scalar(
-        select(func.max(Observation.published_at)).where(Observation.source_id == ing.source_id, Observation.country == country, Observation.kind == n.kind)
-    )
+    newest_q = select(func.max(Observation.published_at)).where(Observation.source_id == ing.source_id, Observation.country == country, Observation.kind == n.kind)
+    if n.provenance is not None:  # indicators are separate series: only the same indicator can make a value late
+        newest_q = newest_q.where(Observation.event_type == n.event_type)
+    newest = session.scalar(newest_q)
     obs = Observation(
         id=next_id(session, Observation.id, "OB-", 6), ingestion_id=ing.id, source_id=ing.source_id, record_id=n.record_id,
         record_sha256=digest, commodity=n.commodity, kind=n.kind, event_type=n.event_type, country=country, value=n.value,
         headline=n.headline, published_at=n.published_at, confidence_pct=n.confidence_pct, mode=ing.mode,
         scenario_run=ing.scenario_run, mapping_version=ADAPTERS[ing.source_id][2], ingested_at=clock.now(), outcome="late",
+        **_provenance_columns(n.provenance),
     )
     session.add(obs)
     session.flush()

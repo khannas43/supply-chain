@@ -185,23 +185,6 @@
       "id": "u-demo"
     },
     {
-      "username": "wheat.analyst",
-      "enabled": true,
-      "emailVerified": true,
-      "email": "wheat.analyst@example.invalid",
-      "firstName": "Wheat",
-      "lastName": "Analyst",
-      "realmRoles": [
-        "analyst"
-      ],
-      "attributes": {
-        "commodity_scope": [
-          "wheat"
-        ]
-      },
-      "id": "u-analyst-wheat"
-    },
-    {
       "username": "tungsten.analyst",
       "enabled": true,
       "emailVerified": true,

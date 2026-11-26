@@ -20,7 +20,7 @@ SEVERITIES = ("critical", "high", "medium", "low")
 
 
 def _commodities(actor: Actor | None, commodity: str | None) -> list[str]:
-    wanted = [commodity] if commodity else ["wheat", "tungsten"]
+    wanted = [commodity] if commodity else ["tungsten"]
     return [c for c in wanted if scope.allowed(actor, c)]
 
 
@@ -229,8 +229,8 @@ def data_lifecycle(
         age = source_health.hours_since(s.last_usable, now)
         src.append({"id": s.id, "name": s.name, "mode": s.mode, "state": source_health.state(s, now), "hoursSinceUsable": round(age, 1) if age is not None else None, "policyHours": s.policy_hours})
 
-    # the checks span both commodities, so a commodity-scoped user does not see them
-    unscoped = scope.allowed(actor, "wheat") and scope.allowed(actor, "tungsten")
+    # the checks span every commodity, so a commodity-scoped user does not see them
+    unscoped = scope.allowed(actor, "tungsten")
     integrity = [{"check": label, "violations": session.execute(text(sql)).scalar_one()} for label, sql in INTEGRITY] if unscoped else None
     if integrity is not None:
         integrity.append({"check": "Every stored original is present and matches its checksum", "violations": _evidence_unreadable(session)})

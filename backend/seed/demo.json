@@ -4,113 +4,11 @@
   "description": "Demo data: real geography, fictional companies, synthetic events"
  },
  "_evidence": {
-  "evidence/simulated/src-policy/20261103/ING-00001-c0a175c026d9.json": {
+  "evidence/simulated/src-policy/20261102/ING-00001-bb9b0609ae6e.json": {
    "schemaVersion": 1,
    "records": [
     {
      "recordId": "src-policy-00001",
-     "commodity": "wheat",
-     "headline": "Export restriction announced on wheat, Russia",
-     "confidencePct": 65,
-     "country": "Russia",
-     "policyType": "export_restriction",
-     "announcedAt": "2026-11-03T09:00:00Z"
-    }
-   ]
-  },
-  "evidence/simulated/src-policy/20261106/ING-00002-94fab290651f.json": {
-   "schemaVersion": 1,
-   "records": [
-    {
-     "recordId": "src-policy-00002",
-     "commodity": "wheat",
-     "headline": "Export quota notice for wheat, Kazakhstan",
-     "confidencePct": 55,
-     "country": "Kazakhstan",
-     "policyType": "export_quota",
-     "announcedAt": "2026-11-06T09:00:00Z"
-    }
-   ]
-  },
-  "evidence/simulated/src-logistics/20261105/ING-00003-8cad6769d39d.json": {
-   "schemaVersion": 1,
-   "records": [
-    {
-     "recordId": "src-logistics-00003",
-     "commodity": "wheat",
-     "headline": "Port congestion at Odesa delays grain shipments",
-     "confidencePct": 45,
-     "country": "Ukraine",
-     "eventType": "port_delay",
-     "delayDays": 5,
-     "reportedAt": "2026-11-05T09:00:00Z"
-    }
-   ]
-  },
-  "evidence/simulated/src-logistics/20261107/ING-00004-c92cf2bdcbb1.json": {
-   "schemaVersion": 1,
-   "records": [
-    {
-     "recordId": "src-logistics-00004",
-     "commodity": "wheat",
-     "headline": "Berth queue at Novorossiysk delays wheat loading",
-     "confidencePct": 60,
-     "country": "Russia",
-     "eventType": "port_delay",
-     "delayDays": 4,
-     "reportedAt": "2026-11-07T09:00:00Z"
-    }
-   ]
-  },
-  "evidence/simulated/src-logistics/20261101/ING-00005-dbf604d364b1.json": {
-   "schemaVersion": 1,
-   "records": [
-    {
-     "recordId": "src-logistics-00005",
-     "commodity": "wheat",
-     "headline": "River draft restrictions slow barge traffic to Rosario",
-     "confidencePct": 35,
-     "country": "Argentina",
-     "eventType": "port_delay",
-     "delayDays": 3,
-     "reportedAt": "2026-11-01T09:00:00Z"
-    }
-   ]
-  },
-  "evidence/replay/src-policy/20261020/ING-00006-2056bd5ec0f9.json": {
-   "schemaVersion": 1,
-   "records": [
-    {
-     "recordId": "src-policy-00006",
-     "commodity": "wheat",
-     "headline": "Export restriction announced on wheat, Argentina",
-     "confidencePct": 70,
-     "country": "Argentina",
-     "policyType": "export_restriction",
-     "announcedAt": "2026-10-20T09:00:00Z"
-    }
-   ]
-  },
-  "evidence/simulated/src-logistics/20261108/ING-00007-b3a126515f92.json": {
-   "schemaVersion": 1,
-   "records": [
-    {
-     "recordId": "src-logistics-00007",
-     "commodity": "wheat",
-     "headline": "Congestion at Constan\u021ba delays wheat departures",
-     "confidencePct": 50,
-     "country": "Romania",
-     "eventType": "port_delay",
-     "delayDays": 6,
-     "reportedAt": "2026-11-08T09:00:00Z"
-    }
-   ]
-  },
-  "evidence/simulated/src-policy/20261102/ING-00008-45c39c3e0083.json": {
-   "schemaVersion": 1,
-   "records": [
-    {
-     "recordId": "src-policy-00008",
      "commodity": "tungsten",
      "headline": "Export licence rules for tungsten products tightened, China",
      "confidencePct": 88,
@@ -120,11 +18,11 @@
     }
    ]
   },
-  "evidence/simulated/src-policy/20261104/ING-00009-48f0973468ec.json": {
+  "evidence/simulated/src-policy/20261104/ING-00002-a0505acb5b7b.json": {
    "schemaVersion": 1,
    "records": [
     {
-     "recordId": "src-policy-00009",
+     "recordId": "src-policy-00002",
      "commodity": "tungsten",
      "headline": "Export restriction announced on tungsten concentrate, Russia",
      "confidencePct": 62,
@@ -134,11 +32,11 @@
     }
    ]
   },
-  "evidence/simulated/src-policy/20261107/ING-00010-ce8e31daa7d8.json": {
+  "evidence/simulated/src-policy/20261107/ING-00003-052253d255d2.json": {
    "schemaVersion": 1,
    "records": [
     {
-     "recordId": "src-policy-00010",
+     "recordId": "src-policy-00003",
      "commodity": "tungsten",
      "headline": "Export quota notice for tungsten, Vietnam",
      "confidencePct": 71,
@@ -148,11 +46,11 @@
     }
    ]
   },
-  "evidence/replay/src-price/20261106/ING-00011-4c4dcf34be2d.json": {
+  "evidence/replay/src-price/20261106/ING-00004-c5d4658b0f52.json": {
    "schemaVersion": 1,
    "records": [
     {
-     "recordId": "src-price-00011",
+     "recordId": "src-price-00004",
      "commodity": "tungsten",
      "headline": "Tungsten concentrate price up 18.5% over 30 days",
      "confidencePct": 75,
@@ -162,11 +60,11 @@
     }
    ]
   },
-  "evidence/simulated/src-price/20261108/ING-00012-bdd6a5099e9b.json": {
+  "evidence/simulated/src-price/20261108/ING-00005-ed448b50f7c5.json": {
    "schemaVersion": 1,
    "records": [
     {
-     "recordId": "src-price-00012",
+     "recordId": "src-price-00005",
      "commodity": "tungsten",
      "headline": "Tungsten APT price up 24% over 30 days",
      "confidencePct": 80,
@@ -176,11 +74,11 @@
     }
    ]
   },
-  "evidence/replay/src-policy/20261010/ING-00013-b563efad76ba.json": {
+  "evidence/replay/src-policy/20261010/ING-00006-af5dd8ea2c2f.json": {
    "schemaVersion": 1,
    "records": [
     {
-     "recordId": "src-policy-00013",
+     "recordId": "src-policy-00006",
      "commodity": "tungsten",
      "headline": "Export licence suspension for wolframite, Rwanda",
      "confidencePct": 64,
@@ -190,27 +88,58 @@
     }
    ]
   },
-  "evidence/simulated/src-policy/20261104/ING-00014-109e55894971.json": {
+  "evidence/simulated/src-logistics/20261105/ING-00007-748d18234ac6.json": {
    "schemaVersion": 1,
    "records": [
     {
-     "recordId": "src-policy-00014",
-     "commodity": "wheat",
-     "headline": "Restriction on wheat exports reiterated, Russia",
-     "confidencePct": 68,
-     "country": "Russia",
-     "policyType": "export_restriction",
-     "announcedAt": "2026-11-04T12:00:00Z"
+     "recordId": "src-logistics-00007",
+     "commodity": "tungsten",
+     "headline": "Berth congestion at Rotterdam delays tungsten concentrate discharge",
+     "confidencePct": 50,
+     "country": "Netherlands",
+     "eventType": "port_delay",
+     "delayDays": 5,
+     "reportedAt": "2026-11-05T09:00:00Z"
     }
    ]
   },
-  "evidence/simulated/src-policy/20261105/ING-00015-b398a336d9cc.json": {
+  "evidence/simulated/src-logistics/20261107/ING-00008-1ca43478d098.json": {
    "schemaVersion": 1,
    "records": [
     {
-     "recordId": "src-policy-00015",
-     "commodity": "wheat",
-     "headline": "Clarification published; scope of the restriction unchanged",
+     "recordId": "src-logistics-00008",
+     "commodity": "tungsten",
+     "headline": "Terminal strike at Hamburg slows tungsten cargo handling",
+     "confidencePct": 60,
+     "country": "Germany",
+     "eventType": "port_delay",
+     "delayDays": 4,
+     "reportedAt": "2026-11-07T09:00:00Z"
+    }
+   ]
+  },
+  "evidence/simulated/src-logistics/20261101/ING-00009-19c4bd402b7e.json": {
+   "schemaVersion": 1,
+   "records": [
+    {
+     "recordId": "src-logistics-00009",
+     "commodity": "tungsten",
+     "headline": "Queue at Haiphong delays APT shipments",
+     "confidencePct": 35,
+     "country": "Vietnam",
+     "eventType": "port_delay",
+     "delayDays": 3,
+     "reportedAt": "2026-11-01T09:00:00Z"
+    }
+   ]
+  },
+  "evidence/simulated/src-policy/20261105/ING-00010-83d41d652887.json": {
+   "schemaVersion": 1,
+   "records": [
+    {
+     "recordId": "src-policy-00010",
+     "commodity": "tungsten",
+     "headline": "Clarification published; scope of the Russian restriction unchanged",
      "confidencePct": 70,
      "country": "Russia",
      "policyType": "clarification",
@@ -218,40 +147,26 @@
     }
    ]
   },
-  "evidence/simulated/src-policy/20261031/ING-00016-bba2b7c0ff4b.json": {
+  "evidence/simulated/src-logistics/20261103/ING-00011-0dae049bc364.json": {
    "schemaVersion": 1,
    "records": [
     {
-     "recordId": "src-policy-00016",
-     "commodity": "wheat",
-     "headline": "Draft export restriction under discussion, Argentina",
-     "confidencePct": 42,
-     "country": "Argentina",
-     "policyType": "export_restriction",
-     "announcedAt": "2026-10-31T12:00:00Z"
-    }
-   ]
-  },
-  "evidence/simulated/src-logistics/20261103/ING-00017-c826eb61860d.json": {
-   "schemaVersion": 1,
-   "records": [
-    {
-     "recordId": "src-logistics-00017",
-     "commodity": "wheat",
-     "headline": "Short delay at Rosario terminal",
+     "recordId": "src-logistics-00011",
+     "commodity": "tungsten",
+     "headline": "Short delay at Rotterdam terminal",
      "confidencePct": 40,
-     "country": "Argentina",
+     "country": "Netherlands",
      "eventType": "port_delay",
      "delayDays": 2,
      "reportedAt": "2026-11-03T12:00:00Z"
     }
    ]
   },
-  "evidence/simulated/src-policy/20261101/ING-00018-1536c821118e.json": {
+  "evidence/simulated/src-policy/20261101/ING-00012-915b8ad1a040.json": {
    "schemaVersion": 1,
    "records": [
     {
-     "recordId": "src-policy-00018",
+     "recordId": "src-policy-00012",
      "commodity": "tungsten",
      "headline": "Earlier notice on licence tightening, China",
      "confidencePct": 86,
@@ -261,11 +176,11 @@
     }
    ]
   },
-  "evidence/simulated/src-policy/20261103/ING-00019-bdcf8cd11597.json": {
+  "evidence/simulated/src-policy/20261103/ING-00013-580bdd4daae0.json": {
    "schemaVersion": 1,
    "records": [
     {
-     "recordId": "src-policy-00019",
+     "recordId": "src-policy-00013",
      "commodity": "tungsten",
      "headline": "Export licence quota notice, China",
      "confidencePct": 80,
@@ -275,11 +190,11 @@
     }
    ]
   },
-  "evidence/replay/src-price/20261028/ING-00020-b43b3949282d.json": {
+  "evidence/replay/src-price/20261028/ING-00014-623313dec23e.json": {
    "schemaVersion": 1,
    "records": [
     {
-     "recordId": "src-price-00020",
+     "recordId": "src-price-00014",
      "commodity": "tungsten",
      "headline": "Tungsten concentrate price up 9% over 30 days",
      "confidencePct": 70,
@@ -289,12 +204,12 @@
     }
    ]
   },
-  "evidence/simulated/src-policy/20261107/ING-00021-e4c8abbb6a8d.json": {
+  "evidence/simulated/src-policy/20261107/ING-00015-fdd8abeac100.json": {
    "schemaVersion": 1,
    "records": [
     {
-     "recordId": "src-policy-00021",
-     "commodity": "wheat",
+     "recordId": "src-policy-00015",
+     "commodity": "tungsten",
      "headline": "Export restriction announced, country missing in the source record",
      "confidencePct": 62,
      "policyType": "export_restriction",
@@ -302,12 +217,12 @@
     }
    ]
   },
-  "evidence/simulated/src-policy/20261106/ING-00022-15338e751249.json": {
+  "evidence/simulated/src-policy/20261106/ING-00016-b732a064f4a8.json": {
    "schemaVersion": 1,
    "records": [
     {
-     "recordId": "src-policy-00022",
-     "commodity": "wheat",
+     "recordId": "src-policy-00016",
+     "commodity": "tungsten",
      "headline": "Export restriction announced, country spelled in an unknown way",
      "confidencePct": 66,
      "country": "Rossiya",
@@ -316,11 +231,11 @@
     }
    ]
   },
-  "evidence/simulated/src-price/20261105/ING-00023-d26b4b0eee33.json": {
+  "evidence/simulated/src-price/20261105/ING-00017-d019d5b30944.json": {
    "schemaVersion": 1,
    "records": [
     {
-     "recordId": "src-price-00023",
+     "recordId": "src-price-00017",
      "commodity": "tungsten",
      "headline": "Tungsten price report with an impossible confidence value",
      "confidencePct": 150,
@@ -396,15 +311,6 @@
    "last_seen": null
   },
   {
-   "id": "u-analyst-wheat",
-   "name": "Wheat Analyst",
-   "roles": [
-    "analyst"
-   ],
-   "source": "demo",
-   "last_seen": null
-  },
-  {
    "id": "u-analyst-tungsten",
    "name": "Tungsten Analyst",
    "roles": [
@@ -420,28 +326,12 @@
    "name": "Russia"
   },
   {
-   "code": "UKR",
-   "name": "Ukraine"
-  },
-  {
-   "code": "KAZ",
-   "name": "Kazakhstan"
-  },
-  {
-   "code": "ROU",
-   "name": "Romania"
-  },
-  {
    "code": "AUS",
    "name": "Australia"
   },
   {
    "code": "CAN",
    "name": "Canada"
-  },
-  {
-   "code": "FRA",
-   "name": "France"
   },
   {
    "code": "DEU",
@@ -452,20 +342,8 @@
    "name": "United States"
   },
   {
-   "code": "ARG",
-   "name": "Argentina"
-  },
-  {
    "code": "NLD",
    "name": "Netherlands"
-  },
-  {
-   "code": "TUR",
-   "name": "T\u00fcrkiye"
-  },
-  {
-   "code": "ITA",
-   "name": "Italy"
   },
   {
    "code": "CHN",
@@ -514,28 +392,12 @@
    "country_code": "RUS"
   },
   {
-   "alias": "UA",
-   "country_code": "UKR"
-  },
-  {
-   "alias": "KZ",
-   "country_code": "KAZ"
-  },
-  {
-   "alias": "RO",
-   "country_code": "ROU"
-  },
-  {
    "alias": "AU",
    "country_code": "AUS"
   },
   {
    "alias": "CA",
    "country_code": "CAN"
-  },
-  {
-   "alias": "FR",
-   "country_code": "FRA"
   },
   {
    "alias": "DE",
@@ -558,32 +420,12 @@
    "country_code": "USA"
   },
   {
-   "alias": "AR",
-   "country_code": "ARG"
-  },
-  {
    "alias": "NL",
    "country_code": "NLD"
   },
   {
    "alias": "Holland",
    "country_code": "NLD"
-  },
-  {
-   "alias": "TR",
-   "country_code": "TUR"
-  },
-  {
-   "alias": "Turkey",
-   "country_code": "TUR"
-  },
-  {
-   "alias": "Turkiye",
-   "country_code": "TUR"
-  },
-  {
-   "alias": "IT",
-   "country_code": "ITA"
   },
   {
    "alias": "CN",
@@ -648,21 +490,6 @@
  ],
  "commodity_form": [
   {
-   "commodity": "wheat",
-   "form": "Milling grade",
-   "note": "Bread-making wheat to contract protein and moisture specification"
-  },
-  {
-   "commodity": "wheat",
-   "form": "Durum",
-   "note": "For semolina and pasta; not interchangeable with milling grade"
-  },
-  {
-   "commodity": "wheat",
-   "form": "Feed grade",
-   "note": "Not accepted for food plants"
-  },
-  {
    "commodity": "tungsten",
    "form": "Concentrate (65% WO3)",
    "note": "Basis for WO3-equivalent conversion"
@@ -707,14 +534,6 @@
   },
   {
    "id": "CV-3",
-   "from_unit": "bushel (wheat, 60 lb)",
-   "to_unit": "t",
-   "factor": 0.0272155,
-   "effective_from": "2021-05-19",
-   "source": "Approved unit table v2"
-  },
-  {
-   "id": "CV-4",
    "from_unit": "mtu WO3",
    "to_unit": "kg WO3",
    "factor": 10,
@@ -722,7 +541,7 @@
    "source": "Industry convention: 1 mtu = 10 kg WO3"
   },
   {
-   "id": "CV-5",
+   "id": "CV-4",
    "from_unit": "USD",
    "to_unit": "EUR",
    "factor": 0.93,
@@ -730,7 +549,7 @@
    "source": "Approved rate table v3 (synthetic)"
   },
   {
-   "id": "CV-6",
+   "id": "CV-5",
    "from_unit": "USD",
    "to_unit": "EUR",
    "factor": 0.91,
@@ -738,7 +557,7 @@
    "source": "Approved rate table v4 (synthetic)"
   },
   {
-   "id": "CV-7",
+   "id": "CV-6",
    "from_unit": "EUR",
    "to_unit": "GBP",
    "factor": 0.86,
@@ -791,23 +610,15 @@
  "source_commodity": [
   {
    "source_id": "src-policy",
-   "commodity": "wheat"
-  },
-  {
-   "source_id": "src-policy",
    "commodity": "tungsten"
   },
   {
    "source_id": "src-logistics",
-   "commodity": "wheat"
+   "commodity": "tungsten"
   },
   {
    "source_id": "src-price",
    "commodity": "tungsten"
-  },
-  {
-   "source_id": "src-import",
-   "commodity": "wheat"
   },
   {
    "source_id": "src-import",
@@ -816,14 +627,9 @@
  ],
  "rule": [
   {
-   "id": "R-W-EXP",
-   "name": "wheat-export-policy",
-   "commodity": "wheat"
-  },
-  {
-   "id": "R-W-LOG",
-   "name": "wheat-logistics",
-   "commodity": "wheat"
+   "id": "R-T-LOG",
+   "name": "tungsten-logistics",
+   "commodity": "tungsten"
   },
   {
    "id": "R-T-EXP",
@@ -838,94 +644,7 @@
  ],
  "rule_version": [
   {
-   "rule_id": "R-W-EXP",
-   "v": "1.0",
-   "status": "superseded",
-   "thresholds": [
-    {
-     "key": "conf",
-     "label": "Confidence floor to raise an alert",
-     "value": 60,
-     "unit": "%"
-    },
-    {
-     "key": "sev",
-     "label": "Severity score (1 low to 4 critical)",
-     "value": 2,
-     "unit": "score"
-    },
-    {
-     "key": "stale",
-     "label": "Stale after",
-     "value": 24,
-     "unit": "hours"
-    }
-   ],
-   "created_by": "Risk Analyst A",
-   "created_at": "2026-09-10T09:00:00Z",
-   "published_by": "Risk Analyst A",
-   "published_at": "2026-09-10T10:00:00Z"
-  },
-  {
-   "rule_id": "R-W-EXP",
-   "v": "1.1",
-   "status": "superseded",
-   "thresholds": [
-    {
-     "key": "conf",
-     "label": "Confidence floor to raise an alert",
-     "value": 55,
-     "unit": "%"
-    },
-    {
-     "key": "sev",
-     "label": "Severity score (1 low to 4 critical)",
-     "value": 3,
-     "unit": "score"
-    },
-    {
-     "key": "stale",
-     "label": "Stale after",
-     "value": 24,
-     "unit": "hours"
-    }
-   ],
-   "created_by": "Risk Analyst A",
-   "created_at": "2026-10-05T09:00:00Z",
-   "published_by": "Risk Analyst B",
-   "published_at": "2026-10-05T10:00:00Z"
-  },
-  {
-   "rule_id": "R-W-EXP",
-   "v": "1.2",
-   "status": "published",
-   "thresholds": [
-    {
-     "key": "conf",
-     "label": "Confidence floor to raise an alert",
-     "value": 50,
-     "unit": "%"
-    },
-    {
-     "key": "sev",
-     "label": "Severity score (1 low to 4 critical)",
-     "value": 3,
-     "unit": "score"
-    },
-    {
-     "key": "stale",
-     "label": "Stale after",
-     "value": 48,
-     "unit": "hours"
-    }
-   ],
-   "created_by": "Risk Analyst A",
-   "created_at": "2026-10-28T09:00:00Z",
-   "published_by": "Risk Analyst B",
-   "published_at": "2026-10-28T10:00:00Z"
-  },
-  {
-   "rule_id": "R-W-LOG",
+   "rule_id": "R-T-LOG",
    "v": "1.0",
    "status": "published",
    "thresholds": [
@@ -954,7 +673,7 @@
    "published_at": "2026-09-25T10:00:00Z"
   },
   {
-   "rule_id": "R-W-LOG",
+   "rule_id": "R-T-LOG",
    "v": "1.1",
    "status": "draft",
    "thresholds": [
@@ -1074,228 +793,168 @@
   {
    "id": "EV-ING-00001",
    "source": "Policy feed (simulator)",
-   "object_key": "evidence/simulated/src-policy/20261103/ING-00001-c0a175c026d9.json",
-   "sha256": "c0a175c026d9aab9b346ccc4ddf82b9aad0438953fe13944f2b1adbfe926c22c",
-   "published_at": "2026-11-03T09:00:00Z",
-   "ingested_at": "2026-11-03T09:25:00Z",
+   "object_key": "evidence/simulated/src-policy/20261102/ING-00001-bb9b0609ae6e.json",
+   "sha256": "bb9b0609ae6ebdaa2f2d0c794a90772454763ccca8b4b37fed08623ade05eb3c",
+   "published_at": "2026-11-02T09:00:00Z",
+   "ingested_at": "2026-11-02T09:25:00Z",
    "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4700"
+   "scenario_run": "SC-T-0 / run-4700"
   },
   {
    "id": "EV-ING-00002",
    "source": "Policy feed (simulator)",
-   "object_key": "evidence/simulated/src-policy/20261106/ING-00002-94fab290651f.json",
-   "sha256": "94fab290651f6e4fff541111d8a3f1573eac84dd09889f3ecd544d138c95d823",
-   "published_at": "2026-11-06T09:00:00Z",
-   "ingested_at": "2026-11-06T09:25:00Z",
+   "object_key": "evidence/simulated/src-policy/20261104/ING-00002-a0505acb5b7b.json",
+   "sha256": "a0505acb5b7b38c409ef93d17e75957e1b2e93a366add0e7e7ed685e50af9c3d",
+   "published_at": "2026-11-04T09:00:00Z",
+   "ingested_at": "2026-11-04T09:25:00Z",
    "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4701"
+   "scenario_run": "SC-T-0 / run-4701"
   },
   {
    "id": "EV-ING-00003",
-   "source": "Logistics feed (simulator)",
-   "object_key": "evidence/simulated/src-logistics/20261105/ING-00003-8cad6769d39d.json",
-   "sha256": "8cad6769d39d82ad23e02f495fd0d58d7a661abcdf538a88305355fc61ba02eb",
-   "published_at": "2026-11-05T09:00:00Z",
-   "ingested_at": "2026-11-05T09:25:00Z",
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4702"
-  },
-  {
-   "id": "EV-ING-00004",
-   "source": "Logistics feed (simulator)",
-   "object_key": "evidence/simulated/src-logistics/20261107/ING-00004-c92cf2bdcbb1.json",
-   "sha256": "c92cf2bdcbb145606c088b59a166f4d0c2b87f11f37fb3c9a89731f94c3c955a",
+   "source": "Policy feed (simulator)",
+   "object_key": "evidence/simulated/src-policy/20261107/ING-00003-052253d255d2.json",
+   "sha256": "052253d255d2296eb1a75ded21b9621345cecb0cccda6c01d889ea34d85d44ce",
    "published_at": "2026-11-07T09:00:00Z",
    "ingested_at": "2026-11-07T09:25:00Z",
    "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4703"
+   "scenario_run": "SC-T-0 / run-4702"
+  },
+  {
+   "id": "EV-ING-00004",
+   "source": "Price series (replay)",
+   "object_key": "evidence/replay/src-price/20261106/ING-00004-c5d4658b0f52.json",
+   "sha256": "c5d4658b0f52bec7dfd2626adf1f7216cb0a26288a75f76cf47dc0076826736d",
+   "published_at": "2026-11-06T09:00:00Z",
+   "ingested_at": "2026-11-06T09:25:00Z",
+   "mode": "replay",
+   "scenario_run": "history / run-0007"
   },
   {
    "id": "EV-ING-00005",
-   "source": "Logistics feed (simulator)",
-   "object_key": "evidence/simulated/src-logistics/20261101/ING-00005-dbf604d364b1.json",
-   "sha256": "dbf604d364b11d735e1a82b83556894624497e95be8550ddea8626eeaca5c805",
-   "published_at": "2026-11-01T09:00:00Z",
-   "ingested_at": "2026-11-01T09:25:00Z",
+   "source": "Price series (replay)",
+   "object_key": "evidence/simulated/src-price/20261108/ING-00005-ed448b50f7c5.json",
+   "sha256": "ed448b50f7c53d74001d149e7c99eec424d7b2c28a57985408a71dc527718ed1",
+   "published_at": "2026-11-08T09:00:00Z",
+   "ingested_at": "2026-11-08T09:25:00Z",
    "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4704"
+   "scenario_run": "SC-T-0 / run-4704"
   },
   {
    "id": "EV-ING-00006",
    "source": "Policy feed (simulator)",
-   "object_key": "evidence/replay/src-policy/20261020/ING-00006-2056bd5ec0f9.json",
-   "sha256": "2056bd5ec0f9610cf07187c381a91d4aeecec1e701405c3782f28cdd0c91c2ef",
-   "published_at": "2026-10-20T09:00:00Z",
-   "ingested_at": "2026-10-20T09:25:00Z",
-   "mode": "replay",
-   "scenario_run": "history / run-0007"
-  },
-  {
-   "id": "EV-ING-00007",
-   "source": "Logistics feed (simulator)",
-   "object_key": "evidence/simulated/src-logistics/20261108/ING-00007-b3a126515f92.json",
-   "sha256": "b3a126515f921db5d2c6fa240d95b989b8d14b99056dd057e8d65bd5e5f818c6",
-   "published_at": "2026-11-08T09:00:00Z",
-   "ingested_at": "2026-11-08T09:25:00Z",
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4706"
-  },
-  {
-   "id": "EV-ING-00008",
-   "source": "Policy feed (simulator)",
-   "object_key": "evidence/simulated/src-policy/20261102/ING-00008-45c39c3e0083.json",
-   "sha256": "45c39c3e00833b9580016a2805f39e78afec9efbf0ea75a600a03a29bbee1af1",
-   "published_at": "2026-11-02T09:00:00Z",
-   "ingested_at": "2026-11-02T09:25:00Z",
-   "mode": "simulated",
-   "scenario_run": "SC-T-0 / run-4707"
-  },
-  {
-   "id": "EV-ING-00009",
-   "source": "Policy feed (simulator)",
-   "object_key": "evidence/simulated/src-policy/20261104/ING-00009-48f0973468ec.json",
-   "sha256": "48f0973468ececc216fa1650e48ef57ff9c2466e2f0c0e378f852bb612bad2b0",
-   "published_at": "2026-11-04T09:00:00Z",
-   "ingested_at": "2026-11-04T09:25:00Z",
-   "mode": "simulated",
-   "scenario_run": "SC-T-0 / run-4708"
-  },
-  {
-   "id": "EV-ING-00010",
-   "source": "Policy feed (simulator)",
-   "object_key": "evidence/simulated/src-policy/20261107/ING-00010-ce8e31daa7d8.json",
-   "sha256": "ce8e31daa7d8669bf182b843f218e0f4f9bc8ebcf84db40507f265abb4b0d379",
-   "published_at": "2026-11-07T09:00:00Z",
-   "ingested_at": "2026-11-07T09:25:00Z",
-   "mode": "simulated",
-   "scenario_run": "SC-T-0 / run-4709"
-  },
-  {
-   "id": "EV-ING-00011",
-   "source": "Price series (replay)",
-   "object_key": "evidence/replay/src-price/20261106/ING-00011-4c4dcf34be2d.json",
-   "sha256": "4c4dcf34be2d0811287bf36a2d492ad751d662aefdb25ae5518bd2ff05112a37",
-   "published_at": "2026-11-06T09:00:00Z",
-   "ingested_at": "2026-11-06T09:25:00Z",
-   "mode": "replay",
-   "scenario_run": "history / run-0007"
-  },
-  {
-   "id": "EV-ING-00012",
-   "source": "Price series (replay)",
-   "object_key": "evidence/simulated/src-price/20261108/ING-00012-bdd6a5099e9b.json",
-   "sha256": "bdd6a5099e9b422419b030dff1141d3cd18db124ff6412d89bfa83c8c313c13b",
-   "published_at": "2026-11-08T09:00:00Z",
-   "ingested_at": "2026-11-08T09:25:00Z",
-   "mode": "simulated",
-   "scenario_run": "SC-T-0 / run-4711"
-  },
-  {
-   "id": "EV-ING-00013",
-   "source": "Policy feed (simulator)",
-   "object_key": "evidence/replay/src-policy/20261010/ING-00013-b563efad76ba.json",
-   "sha256": "b563efad76ba0952381ef190f6239b6b49a620a0d48d6a9af2854e4ebbfe70f8",
+   "object_key": "evidence/replay/src-policy/20261010/ING-00006-af5dd8ea2c2f.json",
+   "sha256": "af5dd8ea2c2f835fbf0d0460d19a80a0179c08eca6741f701a0c6bb073bf68f5",
    "published_at": "2026-10-10T09:00:00Z",
    "ingested_at": "2026-10-10T09:25:00Z",
    "mode": "replay",
    "scenario_run": "history / run-0007"
   },
   {
-   "id": "EV-ING-00014",
-   "source": "Policy feed (simulator)",
-   "object_key": "evidence/simulated/src-policy/20261104/ING-00014-109e55894971.json",
-   "sha256": "109e558949719712eecb6706c6fdf55e05c550f29115a20e7037687c827a073f",
-   "published_at": "2026-11-04T12:00:00Z",
-   "ingested_at": "2026-11-04T12:25:00Z",
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4700"
-  },
-  {
-   "id": "EV-ING-00015",
-   "source": "Policy feed (simulator)",
-   "object_key": "evidence/simulated/src-policy/20261105/ING-00015-b398a336d9cc.json",
-   "sha256": "b398a336d9cc5363b9d479ae7901ced354d19e9ee89c6121810203778eddf9fa",
-   "published_at": "2026-11-05T12:00:00Z",
-   "ingested_at": "2026-11-05T12:25:00Z",
-   "mode": "simulated",
-   "scenario_run": "history / run-4814"
-  },
-  {
-   "id": "EV-ING-00016",
-   "source": "Policy feed (simulator)",
-   "object_key": "evidence/simulated/src-policy/20261031/ING-00016-bba2b7c0ff4b.json",
-   "sha256": "bba2b7c0ff4bf6476bc6819c4b62768a7a2c6e0060f51a7ec8c1820eac609f3f",
-   "published_at": "2026-10-31T12:00:00Z",
-   "ingested_at": "2026-10-31T12:25:00Z",
-   "mode": "simulated",
-   "scenario_run": "history / run-4815"
-  },
-  {
-   "id": "EV-ING-00017",
+   "id": "EV-ING-00007",
    "source": "Logistics feed (simulator)",
-   "object_key": "evidence/simulated/src-logistics/20261103/ING-00017-c826eb61860d.json",
-   "sha256": "c826eb61860d0b82c332800bd0dd09dd67d13eb650897d0cf9cb71a595412c77",
-   "published_at": "2026-11-03T12:00:00Z",
-   "ingested_at": "2026-11-03T12:25:00Z",
+   "object_key": "evidence/simulated/src-logistics/20261105/ING-00007-748d18234ac6.json",
+   "sha256": "748d18234ac658c7cfd1825ab6ad6c9a2e398a27be568f933a057d3954432cab",
+   "published_at": "2026-11-05T09:00:00Z",
+   "ingested_at": "2026-11-05T09:25:00Z",
    "mode": "simulated",
-   "scenario_run": "history / run-4816"
+   "scenario_run": "SC-T-0 / run-4706"
   },
   {
-   "id": "EV-ING-00018",
-   "source": "Policy feed (simulator)",
-   "object_key": "evidence/simulated/src-policy/20261101/ING-00018-1536c821118e.json",
-   "sha256": "1536c821118e02d4277664d823d12d7b7b9a0f27bc3745cee0ae25806215184a",
-   "published_at": "2026-11-01T12:00:00Z",
-   "ingested_at": "2026-11-01T12:25:00Z",
-   "mode": "simulated",
-   "scenario_run": "history / run-4817"
-  },
-  {
-   "id": "EV-ING-00019",
-   "source": "Policy feed (simulator)",
-   "object_key": "evidence/simulated/src-policy/20261103/ING-00019-bdcf8cd11597.json",
-   "sha256": "bdcf8cd115975905c479d7edc8ef4dbf6f02655ef70b3422096c63a545a8d8d6",
-   "published_at": "2026-11-03T12:00:00Z",
-   "ingested_at": "2026-11-03T12:25:00Z",
+   "id": "EV-ING-00008",
+   "source": "Logistics feed (simulator)",
+   "object_key": "evidence/simulated/src-logistics/20261107/ING-00008-1ca43478d098.json",
+   "sha256": "1ca43478d098e81a2aa8034ca55712125e3f1a9e6ae6f8052876e9fdfb0a8eb3",
+   "published_at": "2026-11-07T09:00:00Z",
+   "ingested_at": "2026-11-07T09:25:00Z",
    "mode": "simulated",
    "scenario_run": "SC-T-0 / run-4707"
   },
   {
-   "id": "EV-ING-00020",
+   "id": "EV-ING-00009",
+   "source": "Logistics feed (simulator)",
+   "object_key": "evidence/simulated/src-logistics/20261101/ING-00009-19c4bd402b7e.json",
+   "sha256": "19c4bd402b7edde996e75c6eb5c035227264363d3d8876998919f69efa755e5d",
+   "published_at": "2026-11-01T09:00:00Z",
+   "ingested_at": "2026-11-01T09:25:00Z",
+   "mode": "simulated",
+   "scenario_run": "SC-T-0 / run-4708"
+  },
+  {
+   "id": "EV-ING-00010",
+   "source": "Policy feed (simulator)",
+   "object_key": "evidence/simulated/src-policy/20261105/ING-00010-83d41d652887.json",
+   "sha256": "83d41d65288723b2f9962fffcaf10f29d4ff270480d2184b982b2ab105ad7e07",
+   "published_at": "2026-11-05T12:00:00Z",
+   "ingested_at": "2026-11-05T12:25:00Z",
+   "mode": "simulated",
+   "scenario_run": "history / run-4809"
+  },
+  {
+   "id": "EV-ING-00011",
+   "source": "Logistics feed (simulator)",
+   "object_key": "evidence/simulated/src-logistics/20261103/ING-00011-0dae049bc364.json",
+   "sha256": "0dae049bc36431a467928258e70c25646c460ee1c2e67b03be88233b8c76dc02",
+   "published_at": "2026-11-03T12:00:00Z",
+   "ingested_at": "2026-11-03T12:25:00Z",
+   "mode": "simulated",
+   "scenario_run": "history / run-4810"
+  },
+  {
+   "id": "EV-ING-00012",
+   "source": "Policy feed (simulator)",
+   "object_key": "evidence/simulated/src-policy/20261101/ING-00012-915b8ad1a040.json",
+   "sha256": "915b8ad1a040ce989fe57185ca1da21fe640e22e8bb38294a2399247a0fdc7d0",
+   "published_at": "2026-11-01T12:00:00Z",
+   "ingested_at": "2026-11-01T12:25:00Z",
+   "mode": "simulated",
+   "scenario_run": "history / run-4811"
+  },
+  {
+   "id": "EV-ING-00013",
+   "source": "Policy feed (simulator)",
+   "object_key": "evidence/simulated/src-policy/20261103/ING-00013-580bdd4daae0.json",
+   "sha256": "580bdd4daae0c5af77bbea867fb2c96e6c7db42a21da029ba24b8df5c70a33ea",
+   "published_at": "2026-11-03T12:00:00Z",
+   "ingested_at": "2026-11-03T12:25:00Z",
+   "mode": "simulated",
+   "scenario_run": "SC-T-0 / run-4700"
+  },
+  {
+   "id": "EV-ING-00014",
    "source": "Price series (replay)",
-   "object_key": "evidence/replay/src-price/20261028/ING-00020-b43b3949282d.json",
-   "sha256": "b43b3949282ddf06244106d2a74c1ebc7b5c36bb4579fee853f9af982e8e8410",
+   "object_key": "evidence/replay/src-price/20261028/ING-00014-623313dec23e.json",
+   "sha256": "623313dec23e54f7191d6ffd570da5e6cb5ef149fb8274dca9424f51c2f5c509",
    "published_at": "2026-10-28T12:00:00Z",
    "ingested_at": "2026-10-28T12:25:00Z",
    "mode": "replay",
-   "scenario_run": "history / run-4819"
+   "scenario_run": "history / run-4813"
   },
   {
-   "id": "EV-ING-00021",
+   "id": "EV-ING-00015",
    "source": "Policy feed (simulator)",
-   "object_key": "evidence/simulated/src-policy/20261107/ING-00021-e4c8abbb6a8d.json",
-   "sha256": "e4c8abbb6a8d0cd3b18e8c3e212d67806b75f540b56d13612656d156211e8748",
+   "object_key": "evidence/simulated/src-policy/20261107/ING-00015-fdd8abeac100.json",
+   "sha256": "fdd8abeac1002277f4362cf831459beaf222f3fe89605a700fa4f295b063ea3f",
    "published_at": "2026-11-07T14:00:00Z",
    "ingested_at": "2026-11-07T14:25:00Z",
    "mode": "simulated",
    "scenario_run": "history / run-4901"
   },
   {
-   "id": "EV-ING-00022",
+   "id": "EV-ING-00016",
    "source": "Policy feed (simulator)",
-   "object_key": "evidence/simulated/src-policy/20261106/ING-00022-15338e751249.json",
-   "sha256": "15338e751249786fb3b9abc2f0de2066bfa8b08aef2ac0f067ee8d062c611406",
+   "object_key": "evidence/simulated/src-policy/20261106/ING-00016-b732a064f4a8.json",
+   "sha256": "b732a064f4a81e43335931e7818650e6c8f0b97b2b02b2d6a0456a0f66d72dc5",
    "published_at": "2026-11-06T14:00:00Z",
    "ingested_at": "2026-11-06T14:25:00Z",
    "mode": "simulated",
    "scenario_run": "history / run-4902"
   },
   {
-   "id": "EV-ING-00023",
+   "id": "EV-ING-00017",
    "source": "Price series (replay)",
-   "object_key": "evidence/simulated/src-price/20261105/ING-00023-d26b4b0eee33.json",
-   "sha256": "d26b4b0eee333589e59decf3ce88f841a89f5926c4faca4499e4d3363775a731",
+   "object_key": "evidence/simulated/src-price/20261105/ING-00017-d019d5b30944.json",
+   "sha256": "d019d5b309444093126891c595bd72691c5bd8ea85099439bccc9c67218c0346",
    "published_at": "2026-11-05T14:00:00Z",
    "ingested_at": "2026-11-05T14:25:00Z",
    "mode": "simulated",
@@ -1306,12 +965,12 @@
   {
    "id": "ING-00001",
    "source_id": "src-policy",
-   "received_at": "2026-11-03T09:25:00Z",
+   "received_at": "2026-11-02T09:25:00Z",
    "evidence_id": "EV-ING-00001",
-   "object_key": "evidence/simulated/src-policy/20261103/ING-00001-c0a175c026d9.json",
-   "sha256": "c0a175c026d9aab9b346ccc4ddf82b9aad0438953fe13944f2b1adbfe926c22c",
+   "object_key": "evidence/simulated/src-policy/20261102/ING-00001-bb9b0609ae6e.json",
+   "sha256": "bb9b0609ae6ebdaa2f2d0c794a90772454763ccca8b4b37fed08623ade05eb3c",
    "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4700",
+   "scenario_run": "SC-T-0 / run-4700",
    "status": "processed",
    "records": 1,
    "mapping_version": "sim-policy v1",
@@ -1320,12 +979,12 @@
   {
    "id": "ING-00002",
    "source_id": "src-policy",
-   "received_at": "2026-11-06T09:25:00Z",
+   "received_at": "2026-11-04T09:25:00Z",
    "evidence_id": "EV-ING-00002",
-   "object_key": "evidence/simulated/src-policy/20261106/ING-00002-94fab290651f.json",
-   "sha256": "94fab290651f6e4fff541111d8a3f1573eac84dd09889f3ecd544d138c95d823",
+   "object_key": "evidence/simulated/src-policy/20261104/ING-00002-a0505acb5b7b.json",
+   "sha256": "a0505acb5b7b38c409ef93d17e75957e1b2e93a366add0e7e7ed685e50af9c3d",
    "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4701",
+   "scenario_run": "SC-T-0 / run-4701",
    "status": "processed",
    "records": 1,
    "mapping_version": "sim-policy v1",
@@ -1333,53 +992,53 @@
   },
   {
    "id": "ING-00003",
-   "source_id": "src-logistics",
-   "received_at": "2026-11-05T09:25:00Z",
+   "source_id": "src-policy",
+   "received_at": "2026-11-07T09:25:00Z",
    "evidence_id": "EV-ING-00003",
-   "object_key": "evidence/simulated/src-logistics/20261105/ING-00003-8cad6769d39d.json",
-   "sha256": "8cad6769d39d82ad23e02f495fd0d58d7a661abcdf538a88305355fc61ba02eb",
+   "object_key": "evidence/simulated/src-policy/20261107/ING-00003-052253d255d2.json",
+   "sha256": "052253d255d2296eb1a75ded21b9621345cecb0cccda6c01d889ea34d85d44ce",
    "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4702",
+   "scenario_run": "SC-T-0 / run-4702",
    "status": "processed",
    "records": 1,
-   "mapping_version": "sim-logistics v1",
+   "mapping_version": "sim-policy v1",
    "error": null
   },
   {
    "id": "ING-00004",
-   "source_id": "src-logistics",
-   "received_at": "2026-11-07T09:25:00Z",
+   "source_id": "src-price",
+   "received_at": "2026-11-06T09:25:00Z",
    "evidence_id": "EV-ING-00004",
-   "object_key": "evidence/simulated/src-logistics/20261107/ING-00004-c92cf2bdcbb1.json",
-   "sha256": "c92cf2bdcbb145606c088b59a166f4d0c2b87f11f37fb3c9a89731f94c3c955a",
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4703",
+   "object_key": "evidence/replay/src-price/20261106/ING-00004-c5d4658b0f52.json",
+   "sha256": "c5d4658b0f52bec7dfd2626adf1f7216cb0a26288a75f76cf47dc0076826736d",
+   "mode": "replay",
+   "scenario_run": "history / run-0007",
    "status": "processed",
    "records": 1,
-   "mapping_version": "sim-logistics v1",
+   "mapping_version": "sim-price v1",
    "error": null
   },
   {
    "id": "ING-00005",
-   "source_id": "src-logistics",
-   "received_at": "2026-11-01T09:25:00Z",
+   "source_id": "src-price",
+   "received_at": "2026-11-08T09:25:00Z",
    "evidence_id": "EV-ING-00005",
-   "object_key": "evidence/simulated/src-logistics/20261101/ING-00005-dbf604d364b1.json",
-   "sha256": "dbf604d364b11d735e1a82b83556894624497e95be8550ddea8626eeaca5c805",
+   "object_key": "evidence/simulated/src-price/20261108/ING-00005-ed448b50f7c5.json",
+   "sha256": "ed448b50f7c53d74001d149e7c99eec424d7b2c28a57985408a71dc527718ed1",
    "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4704",
+   "scenario_run": "SC-T-0 / run-4704",
    "status": "processed",
    "records": 1,
-   "mapping_version": "sim-logistics v1",
+   "mapping_version": "sim-price v1",
    "error": null
   },
   {
    "id": "ING-00006",
    "source_id": "src-policy",
-   "received_at": "2026-10-20T09:25:00Z",
+   "received_at": "2026-10-10T09:25:00Z",
    "evidence_id": "EV-ING-00006",
-   "object_key": "evidence/replay/src-policy/20261020/ING-00006-2056bd5ec0f9.json",
-   "sha256": "2056bd5ec0f9610cf07187c381a91d4aeecec1e701405c3782f28cdd0c91c2ef",
+   "object_key": "evidence/replay/src-policy/20261010/ING-00006-af5dd8ea2c2f.json",
+   "sha256": "af5dd8ea2c2f835fbf0d0460d19a80a0179c08eca6741f701a0c6bb073bf68f5",
    "mode": "replay",
    "scenario_run": "history / run-0007",
    "status": "processed",
@@ -1390,12 +1049,12 @@
   {
    "id": "ING-00007",
    "source_id": "src-logistics",
-   "received_at": "2026-11-08T09:25:00Z",
+   "received_at": "2026-11-05T09:25:00Z",
    "evidence_id": "EV-ING-00007",
-   "object_key": "evidence/simulated/src-logistics/20261108/ING-00007-b3a126515f92.json",
-   "sha256": "b3a126515f921db5d2c6fa240d95b989b8d14b99056dd057e8d65bd5e5f818c6",
+   "object_key": "evidence/simulated/src-logistics/20261105/ING-00007-748d18234ac6.json",
+   "sha256": "748d18234ac658c7cfd1825ab6ad6c9a2e398a27be568f933a057d3954432cab",
    "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4706",
+   "scenario_run": "SC-T-0 / run-4706",
    "status": "processed",
    "records": 1,
    "mapping_version": "sim-logistics v1",
@@ -1403,41 +1062,41 @@
   },
   {
    "id": "ING-00008",
-   "source_id": "src-policy",
-   "received_at": "2026-11-02T09:25:00Z",
+   "source_id": "src-logistics",
+   "received_at": "2026-11-07T09:25:00Z",
    "evidence_id": "EV-ING-00008",
-   "object_key": "evidence/simulated/src-policy/20261102/ING-00008-45c39c3e0083.json",
-   "sha256": "45c39c3e00833b9580016a2805f39e78afec9efbf0ea75a600a03a29bbee1af1",
+   "object_key": "evidence/simulated/src-logistics/20261107/ING-00008-1ca43478d098.json",
+   "sha256": "1ca43478d098e81a2aa8034ca55712125e3f1a9e6ae6f8052876e9fdfb0a8eb3",
    "mode": "simulated",
    "scenario_run": "SC-T-0 / run-4707",
    "status": "processed",
    "records": 1,
-   "mapping_version": "sim-policy v1",
+   "mapping_version": "sim-logistics v1",
    "error": null
   },
   {
    "id": "ING-00009",
-   "source_id": "src-policy",
-   "received_at": "2026-11-04T09:25:00Z",
+   "source_id": "src-logistics",
+   "received_at": "2026-11-01T09:25:00Z",
    "evidence_id": "EV-ING-00009",
-   "object_key": "evidence/simulated/src-policy/20261104/ING-00009-48f0973468ec.json",
-   "sha256": "48f0973468ececc216fa1650e48ef57ff9c2466e2f0c0e378f852bb612bad2b0",
+   "object_key": "evidence/simulated/src-logistics/20261101/ING-00009-19c4bd402b7e.json",
+   "sha256": "19c4bd402b7edde996e75c6eb5c035227264363d3d8876998919f69efa755e5d",
    "mode": "simulated",
    "scenario_run": "SC-T-0 / run-4708",
    "status": "processed",
    "records": 1,
-   "mapping_version": "sim-policy v1",
+   "mapping_version": "sim-logistics v1",
    "error": null
   },
   {
    "id": "ING-00010",
    "source_id": "src-policy",
-   "received_at": "2026-11-07T09:25:00Z",
+   "received_at": "2026-11-05T12:25:00Z",
    "evidence_id": "EV-ING-00010",
-   "object_key": "evidence/simulated/src-policy/20261107/ING-00010-ce8e31daa7d8.json",
-   "sha256": "ce8e31daa7d8669bf182b843f218e0f4f9bc8ebcf84db40507f265abb4b0d379",
+   "object_key": "evidence/simulated/src-policy/20261105/ING-00010-83d41d652887.json",
+   "sha256": "83d41d65288723b2f9962fffcaf10f29d4ff270480d2184b982b2ab105ad7e07",
    "mode": "simulated",
-   "scenario_run": "SC-T-0 / run-4709",
+   "scenario_run": "history / run-4809",
    "status": "processed",
    "records": 1,
    "mapping_version": "sim-policy v1",
@@ -1445,41 +1104,41 @@
   },
   {
    "id": "ING-00011",
-   "source_id": "src-price",
-   "received_at": "2026-11-06T09:25:00Z",
+   "source_id": "src-logistics",
+   "received_at": "2026-11-03T12:25:00Z",
    "evidence_id": "EV-ING-00011",
-   "object_key": "evidence/replay/src-price/20261106/ING-00011-4c4dcf34be2d.json",
-   "sha256": "4c4dcf34be2d0811287bf36a2d492ad751d662aefdb25ae5518bd2ff05112a37",
-   "mode": "replay",
-   "scenario_run": "history / run-0007",
+   "object_key": "evidence/simulated/src-logistics/20261103/ING-00011-0dae049bc364.json",
+   "sha256": "0dae049bc36431a467928258e70c25646c460ee1c2e67b03be88233b8c76dc02",
+   "mode": "simulated",
+   "scenario_run": "history / run-4810",
    "status": "processed",
    "records": 1,
-   "mapping_version": "sim-price v1",
+   "mapping_version": "sim-logistics v1",
    "error": null
   },
   {
    "id": "ING-00012",
-   "source_id": "src-price",
-   "received_at": "2026-11-08T09:25:00Z",
+   "source_id": "src-policy",
+   "received_at": "2026-11-01T12:25:00Z",
    "evidence_id": "EV-ING-00012",
-   "object_key": "evidence/simulated/src-price/20261108/ING-00012-bdd6a5099e9b.json",
-   "sha256": "bdd6a5099e9b422419b030dff1141d3cd18db124ff6412d89bfa83c8c313c13b",
+   "object_key": "evidence/simulated/src-policy/20261101/ING-00012-915b8ad1a040.json",
+   "sha256": "915b8ad1a040ce989fe57185ca1da21fe640e22e8bb38294a2399247a0fdc7d0",
    "mode": "simulated",
-   "scenario_run": "SC-T-0 / run-4711",
+   "scenario_run": "history / run-4811",
    "status": "processed",
    "records": 1,
-   "mapping_version": "sim-price v1",
+   "mapping_version": "sim-policy v1",
    "error": null
   },
   {
    "id": "ING-00013",
    "source_id": "src-policy",
-   "received_at": "2026-10-10T09:25:00Z",
+   "received_at": "2026-11-03T12:25:00Z",
    "evidence_id": "EV-ING-00013",
-   "object_key": "evidence/replay/src-policy/20261010/ING-00013-b563efad76ba.json",
-   "sha256": "b563efad76ba0952381ef190f6239b6b49a620a0d48d6a9af2854e4ebbfe70f8",
-   "mode": "replay",
-   "scenario_run": "history / run-0007",
+   "object_key": "evidence/simulated/src-policy/20261103/ING-00013-580bdd4daae0.json",
+   "sha256": "580bdd4daae0c5af77bbea867fb2c96e6c7db42a21da029ba24b8df5c70a33ea",
+   "mode": "simulated",
+   "scenario_run": "SC-T-0 / run-4700",
    "status": "processed",
    "records": 1,
    "mapping_version": "sim-policy v1",
@@ -1487,109 +1146,25 @@
   },
   {
    "id": "ING-00014",
-   "source_id": "src-policy",
-   "received_at": "2026-11-04T12:25:00Z",
-   "evidence_id": "EV-ING-00014",
-   "object_key": "evidence/simulated/src-policy/20261104/ING-00014-109e55894971.json",
-   "sha256": "109e558949719712eecb6706c6fdf55e05c550f29115a20e7037687c827a073f",
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4700",
-   "status": "processed",
-   "records": 1,
-   "mapping_version": "sim-policy v1",
-   "error": null
-  },
-  {
-   "id": "ING-00015",
-   "source_id": "src-policy",
-   "received_at": "2026-11-05T12:25:00Z",
-   "evidence_id": "EV-ING-00015",
-   "object_key": "evidence/simulated/src-policy/20261105/ING-00015-b398a336d9cc.json",
-   "sha256": "b398a336d9cc5363b9d479ae7901ced354d19e9ee89c6121810203778eddf9fa",
-   "mode": "simulated",
-   "scenario_run": "history / run-4814",
-   "status": "processed",
-   "records": 1,
-   "mapping_version": "sim-policy v1",
-   "error": null
-  },
-  {
-   "id": "ING-00016",
-   "source_id": "src-policy",
-   "received_at": "2026-10-31T12:25:00Z",
-   "evidence_id": "EV-ING-00016",
-   "object_key": "evidence/simulated/src-policy/20261031/ING-00016-bba2b7c0ff4b.json",
-   "sha256": "bba2b7c0ff4bf6476bc6819c4b62768a7a2c6e0060f51a7ec8c1820eac609f3f",
-   "mode": "simulated",
-   "scenario_run": "history / run-4815",
-   "status": "processed",
-   "records": 1,
-   "mapping_version": "sim-policy v1",
-   "error": null
-  },
-  {
-   "id": "ING-00017",
-   "source_id": "src-logistics",
-   "received_at": "2026-11-03T12:25:00Z",
-   "evidence_id": "EV-ING-00017",
-   "object_key": "evidence/simulated/src-logistics/20261103/ING-00017-c826eb61860d.json",
-   "sha256": "c826eb61860d0b82c332800bd0dd09dd67d13eb650897d0cf9cb71a595412c77",
-   "mode": "simulated",
-   "scenario_run": "history / run-4816",
-   "status": "processed",
-   "records": 1,
-   "mapping_version": "sim-logistics v1",
-   "error": null
-  },
-  {
-   "id": "ING-00018",
-   "source_id": "src-policy",
-   "received_at": "2026-11-01T12:25:00Z",
-   "evidence_id": "EV-ING-00018",
-   "object_key": "evidence/simulated/src-policy/20261101/ING-00018-1536c821118e.json",
-   "sha256": "1536c821118e02d4277664d823d12d7b7b9a0f27bc3745cee0ae25806215184a",
-   "mode": "simulated",
-   "scenario_run": "history / run-4817",
-   "status": "processed",
-   "records": 1,
-   "mapping_version": "sim-policy v1",
-   "error": null
-  },
-  {
-   "id": "ING-00019",
-   "source_id": "src-policy",
-   "received_at": "2026-11-03T12:25:00Z",
-   "evidence_id": "EV-ING-00019",
-   "object_key": "evidence/simulated/src-policy/20261103/ING-00019-bdcf8cd11597.json",
-   "sha256": "bdcf8cd115975905c479d7edc8ef4dbf6f02655ef70b3422096c63a545a8d8d6",
-   "mode": "simulated",
-   "scenario_run": "SC-T-0 / run-4707",
-   "status": "processed",
-   "records": 1,
-   "mapping_version": "sim-policy v1",
-   "error": null
-  },
-  {
-   "id": "ING-00020",
    "source_id": "src-price",
    "received_at": "2026-10-28T12:25:00Z",
-   "evidence_id": "EV-ING-00020",
-   "object_key": "evidence/replay/src-price/20261028/ING-00020-b43b3949282d.json",
-   "sha256": "b43b3949282ddf06244106d2a74c1ebc7b5c36bb4579fee853f9af982e8e8410",
+   "evidence_id": "EV-ING-00014",
+   "object_key": "evidence/replay/src-price/20261028/ING-00014-623313dec23e.json",
+   "sha256": "623313dec23e54f7191d6ffd570da5e6cb5ef149fb8274dca9424f51c2f5c509",
    "mode": "replay",
-   "scenario_run": "history / run-4819",
+   "scenario_run": "history / run-4813",
    "status": "processed",
    "records": 1,
    "mapping_version": "sim-price v1",
    "error": null
   },
   {
-   "id": "ING-00021",
+   "id": "ING-00015",
    "source_id": "src-policy",
    "received_at": "2026-11-07T14:25:00Z",
-   "evidence_id": "EV-ING-00021",
-   "object_key": "evidence/simulated/src-policy/20261107/ING-00021-e4c8abbb6a8d.json",
-   "sha256": "e4c8abbb6a8d0cd3b18e8c3e212d67806b75f540b56d13612656d156211e8748",
+   "evidence_id": "EV-ING-00015",
+   "object_key": "evidence/simulated/src-policy/20261107/ING-00015-fdd8abeac100.json",
+   "sha256": "fdd8abeac1002277f4362cf831459beaf222f3fe89605a700fa4f295b063ea3f",
    "mode": "simulated",
    "scenario_run": "history / run-4901",
    "status": "processed",
@@ -1598,12 +1173,12 @@
    "error": null
   },
   {
-   "id": "ING-00022",
+   "id": "ING-00016",
    "source_id": "src-policy",
    "received_at": "2026-11-06T14:25:00Z",
-   "evidence_id": "EV-ING-00022",
-   "object_key": "evidence/simulated/src-policy/20261106/ING-00022-15338e751249.json",
-   "sha256": "15338e751249786fb3b9abc2f0de2066bfa8b08aef2ac0f067ee8d062c611406",
+   "evidence_id": "EV-ING-00016",
+   "object_key": "evidence/simulated/src-policy/20261106/ING-00016-b732a064f4a8.json",
+   "sha256": "b732a064f4a81e43335931e7818650e6c8f0b97b2b02b2d6a0456a0f66d72dc5",
    "mode": "simulated",
    "scenario_run": "history / run-4902",
    "status": "processed",
@@ -1612,12 +1187,12 @@
    "error": null
   },
   {
-   "id": "ING-00023",
+   "id": "ING-00017",
    "source_id": "src-price",
    "received_at": "2026-11-05T14:25:00Z",
-   "evidence_id": "EV-ING-00023",
-   "object_key": "evidence/simulated/src-price/20261105/ING-00023-d26b4b0eee33.json",
-   "sha256": "d26b4b0eee333589e59decf3ce88f841a89f5926c4faca4499e4d3363775a731",
+   "evidence_id": "EV-ING-00017",
+   "object_key": "evidence/simulated/src-price/20261105/ING-00017-d019d5b30944.json",
+   "sha256": "d019d5b309444093126891c595bd72691c5bd8ea85099439bccc9c67218c0346",
    "mode": "simulated",
    "scenario_run": "history / run-4903",
    "status": "processed",
@@ -1627,339 +1202,6 @@
   }
  ],
  "node": [
-  {
-   "id": "w-kuban",
-   "commodity": "wheat",
-   "name": "Kuban Grain Cooperative",
-   "kind": "origin",
-   "tier": "Tier 4",
-   "country": "Russia",
-   "site": "Krasnodar Krai"
-  },
-  {
-   "id": "w-volga",
-   "commodity": "wheat",
-   "name": "Volga Steppe Farms",
-   "kind": "origin",
-   "tier": "Tier 4",
-   "country": "Russia",
-   "site": "Saratov Oblast"
-  },
-  {
-   "id": "w-poltava",
-   "commodity": "wheat",
-   "name": "Poltava Harvest Group",
-   "kind": "origin",
-   "tier": "Tier 4",
-   "country": "Ukraine",
-   "site": "Poltava Oblast"
-  },
-  {
-   "id": "w-odagro",
-   "commodity": "wheat",
-   "name": "Odesa Agro Holdings",
-   "kind": "origin",
-   "tier": "Tier 4",
-   "country": "Ukraine",
-   "site": "Odesa Oblast"
-  },
-  {
-   "id": "w-akmola",
-   "commodity": "wheat",
-   "name": "Akmola Wheat Producers",
-   "kind": "origin",
-   "tier": "Tier 4",
-   "country": "Kazakhstan",
-   "site": "Akmola Region"
-  },
-  {
-   "id": "w-dobro",
-   "commodity": "wheat",
-   "name": "Dobrogea Agri Trade",
-   "kind": "origin",
-   "tier": "Tier 4",
-   "country": "Romania",
-   "site": "Constan\u021ba County"
-  },
-  {
-   "id": "w-wimmera",
-   "commodity": "wheat",
-   "name": "Wimmera Growers Alliance",
-   "kind": "origin",
-   "tier": "Tier 4",
-   "country": "Australia",
-   "site": "Victoria"
-  },
-  {
-   "id": "w-eyre",
-   "commodity": "wheat",
-   "name": "Eyre Peninsula Grain Co-op",
-   "kind": "origin",
-   "tier": "Tier 4",
-   "country": "Australia",
-   "site": "South Australia"
-  },
-  {
-   "id": "w-prairie",
-   "commodity": "wheat",
-   "name": "Prairie Gold Cooperative",
-   "kind": "origin",
-   "tier": "Tier 4",
-   "country": "Canada",
-   "site": "Saskatchewan"
-  },
-  {
-   "id": "w-beauce",
-   "commodity": "wheat",
-   "name": "Beauce C\u00e9r\u00e9ales Union",
-   "kind": "origin",
-   "tier": "Tier 4",
-   "country": "France",
-   "site": "Centre-Val de Loire"
-  },
-  {
-   "id": "w-borde",
-   "commodity": "wheat",
-   "name": "Magdeburger B\u00f6rde Landhandel",
-   "kind": "origin",
-   "tier": "Tier 4",
-   "country": "Germany",
-   "site": "Saxony-Anhalt"
-  },
-  {
-   "id": "w-plains",
-   "commodity": "wheat",
-   "name": "Great Plains Elevator Network",
-   "kind": "origin",
-   "tier": "Tier 4",
-   "country": "United States",
-   "site": "Kansas"
-  },
-  {
-   "id": "w-pampa",
-   "commodity": "wheat",
-   "name": "Pampa Cereales SA",
-   "kind": "origin",
-   "tier": "Tier 4",
-   "country": "Argentina",
-   "site": "Buenos Aires Province"
-  },
-  {
-   "id": "w-novoross",
-   "commodity": "wheat",
-   "name": "Novoross Grain Terminal",
-   "kind": "supplier",
-   "tier": "Tier 3",
-   "country": "Russia",
-   "site": "Novorossiysk"
-  },
-  {
-   "id": "w-azov",
-   "commodity": "wheat",
-   "name": "Azov Export Services",
-   "kind": "supplier",
-   "tier": "Tier 3",
-   "country": "Russia",
-   "site": "Rostov-on-Don"
-  },
-  {
-   "id": "w-odterm",
-   "commodity": "wheat",
-   "name": "Black Sea Maritime Grain",
-   "kind": "supplier",
-   "tier": "Tier 3",
-   "country": "Ukraine",
-   "site": "Odesa"
-  },
-  {
-   "id": "w-constanta",
-   "commodity": "wheat",
-   "name": "Constanta Cereal Terminal",
-   "kind": "supplier",
-   "tier": "Tier 3",
-   "country": "Romania",
-   "site": "Constan\u021ba"
-  },
-  {
-   "id": "w-astana",
-   "commodity": "wheat",
-   "name": "Astana Trade Link",
-   "kind": "supplier",
-   "tier": "Tier 3",
-   "country": "Kazakhstan",
-   "site": "Astana"
-  },
-  {
-   "id": "w-adelaide",
-   "commodity": "wheat",
-   "name": "Southern Cross Grain Exports",
-   "kind": "supplier",
-   "tier": "Tier 3",
-   "country": "Australia",
-   "site": "Port Adelaide"
-  },
-  {
-   "id": "w-thunder",
-   "commodity": "wheat",
-   "name": "Great Lakes Commodities",
-   "kind": "supplier",
-   "tier": "Tier 3",
-   "country": "Canada",
-   "site": "Thunder Bay"
-  },
-  {
-   "id": "w-rouen",
-   "commodity": "wheat",
-   "name": "Rouen Port Grain",
-   "kind": "supplier",
-   "tier": "Tier 3",
-   "country": "France",
-   "site": "Rouen"
-  },
-  {
-   "id": "w-hamburg",
-   "commodity": "wheat",
-   "name": "Hamburg Getreide Handel",
-   "kind": "supplier",
-   "tier": "Tier 3",
-   "country": "Germany",
-   "site": "Hamburg"
-  },
-  {
-   "id": "w-houston",
-   "commodity": "wheat",
-   "name": "Gulf Coast Exporters",
-   "kind": "supplier",
-   "tier": "Tier 3",
-   "country": "United States",
-   "site": "Houston"
-  },
-  {
-   "id": "w-rosario",
-   "commodity": "wheat",
-   "name": "Rosario Export Terminal",
-   "kind": "supplier",
-   "tier": "Tier 3",
-   "country": "Argentina",
-   "site": "Rosario"
-  },
-  {
-   "id": "w-rott",
-   "commodity": "wheat",
-   "name": "Rotterdam Flour Blenders",
-   "kind": "supplier",
-   "tier": "Tier 1",
-   "country": "Netherlands",
-   "site": "Rotterdam"
-  },
-  {
-   "id": "w-istanbul",
-   "commodity": "wheat",
-   "name": "Istanbul Unlu Milling",
-   "kind": "supplier",
-   "tier": "Tier 1",
-   "country": "T\u00fcrkiye",
-   "site": "Istanbul"
-  },
-  {
-   "id": "w-hmv",
-   "commodity": "wheat",
-   "name": "Hamburg M\u00fchlen Verbund",
-   "kind": "supplier",
-   "tier": "Tier 1",
-   "country": "Germany",
-   "site": "Hamburg"
-  },
-  {
-   "id": "w-marseille",
-   "commodity": "wheat",
-   "name": "Marseille Semoulerie",
-   "kind": "supplier",
-   "tier": "Tier 1",
-   "country": "France",
-   "site": "Marseille"
-  },
-  {
-   "id": "w-p-duisburg",
-   "commodity": "wheat",
-   "name": "Plant Duisburg (bakery flour)",
-   "kind": "plant",
-   "tier": null,
-   "country": "Germany",
-   "site": "Duisburg"
-  },
-  {
-   "id": "w-p-lyon",
-   "commodity": "wheat",
-   "name": "Plant Lyon (pasta)",
-   "kind": "plant",
-   "tier": null,
-   "country": "France",
-   "site": "Lyon"
-  },
-  {
-   "id": "w-p-milan",
-   "commodity": "wheat",
-   "name": "Plant Milan (pasta)",
-   "kind": "plant",
-   "tier": null,
-   "country": "Italy",
-   "site": "Milan"
-  },
-  {
-   "id": "w-p-izmir",
-   "commodity": "wheat",
-   "name": "Plant Izmir (biscuits)",
-   "kind": "plant",
-   "tier": null,
-   "country": "T\u00fcrkiye",
-   "site": "Izmir"
-  },
-  {
-   "id": "w-p-rott",
-   "commodity": "wheat",
-   "name": "Plant Rotterdam (bakery premix)",
-   "kind": "plant",
-   "tier": null,
-   "country": "Netherlands",
-   "site": "Rotterdam"
-  },
-  {
-   "id": "w-prod-flour",
-   "commodity": "wheat",
-   "name": "Bread flour (retail)",
-   "kind": "product",
-   "tier": null,
-   "country": "Germany",
-   "site": null
-  },
-  {
-   "id": "w-prod-pasta",
-   "commodity": "wheat",
-   "name": "Durum pasta",
-   "kind": "product",
-   "tier": null,
-   "country": "Italy",
-   "site": null
-  },
-  {
-   "id": "w-prod-biscuit",
-   "commodity": "wheat",
-   "name": "Biscuit dough",
-   "kind": "product",
-   "tier": null,
-   "country": "T\u00fcrkiye",
-   "site": null
-  },
-  {
-   "id": "w-prod-premix",
-   "commodity": "wheat",
-   "name": "Bakery premix",
-   "kind": "product",
-   "tier": null,
-   "country": "Netherlands",
-   "site": null
-  },
   {
    "id": "t-ganzhou",
    "commodity": "tungsten",
@@ -2306,618 +1548,6 @@
  "supply_edge": [
   {
    "id": "e1",
-   "from_node": "w-kuban",
-   "to_node": "w-novoross",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e2",
-   "from_node": "w-kuban",
-   "to_node": "w-azov",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e3",
-   "from_node": "w-volga",
-   "to_node": "w-azov",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e4",
-   "from_node": "w-poltava",
-   "to_node": "w-odterm",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e5",
-   "from_node": "w-odagro",
-   "to_node": "w-odterm",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e6",
-   "from_node": "w-akmola",
-   "to_node": "w-astana",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e7",
-   "from_node": "w-dobro",
-   "to_node": "w-constanta",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e8",
-   "from_node": "w-wimmera",
-   "to_node": "w-adelaide",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e9",
-   "from_node": "w-eyre",
-   "to_node": "w-adelaide",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e10",
-   "from_node": "w-prairie",
-   "to_node": "w-thunder",
-   "material": "durum wheat",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e11",
-   "from_node": "w-beauce",
-   "to_node": "w-rouen",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e12",
-   "from_node": "w-borde",
-   "to_node": "w-hamburg",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e13",
-   "from_node": "w-plains",
-   "to_node": "w-houston",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e14",
-   "from_node": "w-pampa",
-   "to_node": "w-rosario",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e15",
-   "from_node": "w-astana",
-   "to_node": "w-novoross",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "low",
-   "effective_from": "2025-11-09",
-   "effective_to": null,
-   "uncertain": true,
-   "note": "Transit by Russian rail; routing not confirmed by the supplier"
-  },
-  {
-   "id": "e16",
-   "from_node": "w-novoross",
-   "to_node": "w-istanbul",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e17",
-   "from_node": "w-novoross",
-   "to_node": "w-rott",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e18",
-   "from_node": "w-azov",
-   "to_node": "w-istanbul",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e19",
-   "from_node": "w-odterm",
-   "to_node": "w-istanbul",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e20",
-   "from_node": "w-odterm",
-   "to_node": "w-rott",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e21",
-   "from_node": "w-constanta",
-   "to_node": "w-hmv",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e22",
-   "from_node": "w-adelaide",
-   "to_node": "w-istanbul",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e23",
-   "from_node": "w-thunder",
-   "to_node": "w-rott",
-   "material": "durum wheat",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e24",
-   "from_node": "w-thunder",
-   "to_node": "w-marseille",
-   "material": "durum wheat",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e25",
-   "from_node": "w-rouen",
-   "to_node": "w-rott",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e26",
-   "from_node": "w-rouen",
-   "to_node": "w-marseille",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e27",
-   "from_node": "w-rouen",
-   "to_node": "w-hmv",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e28",
-   "from_node": "w-hamburg",
-   "to_node": "w-hmv",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e29",
-   "from_node": "w-hamburg",
-   "to_node": "w-rott",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e30",
-   "from_node": "w-houston",
-   "to_node": "w-rott",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e31",
-   "from_node": "w-rosario",
-   "to_node": "w-istanbul",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e32",
-   "from_node": "w-constanta",
-   "to_node": "w-istanbul",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "low",
-   "effective_from": "2026-05-11",
-   "effective_to": null,
-   "uncertain": true,
-   "note": "Spot cargoes only; no contract on file"
-  },
-  {
-   "id": "e33",
-   "from_node": "w-adelaide",
-   "to_node": "w-rott",
-   "material": "wheat, milling grade",
-   "source": "Curated supplier file v1",
-   "confidence": "low",
-   "effective_from": "2025-11-09",
-   "effective_to": null,
-   "uncertain": true,
-   "note": "Occasional cargoes; share not recorded"
-  },
-  {
-   "id": "e34",
-   "from_node": "w-rott",
-   "to_node": "w-hamburg",
-   "material": "wheat, surplus transfer",
-   "source": "Curated supplier file v1",
-   "confidence": "low",
-   "effective_from": "2025-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": "Stock transfers between blenders; creates a loop with the Hamburg link"
-  },
-  {
-   "id": "e35",
-   "from_node": "w-istanbul",
-   "to_node": "w-p-izmir",
-   "material": "flour input",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2023-11-10",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e36",
-   "from_node": "w-istanbul",
-   "to_node": "w-p-milan",
-   "material": "flour input",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e37",
-   "from_node": "w-rott",
-   "to_node": "w-p-rott",
-   "material": "flour input",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2023-11-10",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e38",
-   "from_node": "w-rott",
-   "to_node": "w-p-duisburg",
-   "material": "flour input",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e39",
-   "from_node": "w-rott",
-   "to_node": "w-p-lyon",
-   "material": "flour input",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e40",
-   "from_node": "w-hmv",
-   "to_node": "w-p-duisburg",
-   "material": "flour input",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2023-11-10",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e41",
-   "from_node": "w-hmv",
-   "to_node": "w-p-milan",
-   "material": "flour input",
-   "source": "Curated supplier file v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e42",
-   "from_node": "w-marseille",
-   "to_node": "w-p-lyon",
-   "material": "durum semolina",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2023-11-10",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e43",
-   "from_node": "w-marseille",
-   "to_node": "w-p-milan",
-   "material": "durum semolina",
-   "source": "Curated supplier file v1",
-   "confidence": "high",
-   "effective_from": "2023-11-10",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e44",
-   "from_node": "w-p-duisburg",
-   "to_node": "w-prod-flour",
-   "material": "flour",
-   "source": "Curated BOM v1",
-   "confidence": "high",
-   "effective_from": "2023-11-10",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e45",
-   "from_node": "w-p-duisburg",
-   "to_node": "w-prod-premix",
-   "material": "flour",
-   "source": "Curated BOM v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e46",
-   "from_node": "w-p-lyon",
-   "to_node": "w-prod-pasta",
-   "material": "durum semolina",
-   "source": "Curated BOM v1",
-   "confidence": "high",
-   "effective_from": "2023-11-10",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e47",
-   "from_node": "w-p-milan",
-   "to_node": "w-prod-pasta",
-   "material": "durum semolina",
-   "source": "Curated BOM v1",
-   "confidence": "high",
-   "effective_from": "2023-11-10",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e48",
-   "from_node": "w-p-izmir",
-   "to_node": "w-prod-biscuit",
-   "material": "flour",
-   "source": "Curated BOM v1",
-   "confidence": "high",
-   "effective_from": "2023-11-10",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e49",
-   "from_node": "w-p-izmir",
-   "to_node": "w-prod-flour",
-   "material": "flour",
-   "source": "Curated BOM v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e50",
-   "from_node": "w-p-rott",
-   "to_node": "w-prod-premix",
-   "material": "flour",
-   "source": "Curated BOM v1",
-   "confidence": "high",
-   "effective_from": "2023-11-10",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e51",
-   "from_node": "w-p-rott",
-   "to_node": "w-prod-flour",
-   "material": "flour",
-   "source": "Curated BOM v1",
-   "confidence": "medium",
-   "effective_from": "2024-11-09",
-   "effective_to": null,
-   "uncertain": false,
-   "note": null
-  },
-  {
-   "id": "e52",
    "from_node": "t-ganzhou",
    "to_node": "t-ganconc",
    "material": "tungsten ore",
@@ -2929,7 +1559,7 @@
    "note": null
   },
   {
-   "id": "e53",
+   "id": "e2",
    "from_node": "t-xiushui",
    "to_node": "t-ganconc",
    "material": "tungsten ore",
@@ -2941,7 +1571,7 @@
    "note": null
   },
   {
-   "id": "e54",
+   "id": "e3",
    "from_node": "t-chenzhou",
    "to_node": "t-chenconc",
    "material": "tungsten ore",
@@ -2953,7 +1583,7 @@
    "note": null
   },
   {
-   "id": "e55",
+   "id": "e4",
    "from_node": "t-thainguyen",
    "to_node": "t-vnconc",
    "material": "tungsten ore",
@@ -2965,7 +1595,7 @@
    "note": null
   },
   {
-   "id": "e56",
+   "id": "e5",
    "from_node": "t-rutsiro",
    "to_node": "t-kigali",
    "material": "tungsten ore",
@@ -2977,7 +1607,7 @@
    "note": null
   },
   {
-   "id": "e57",
+   "id": "e6",
    "from_node": "t-potosi",
    "to_node": "t-lapaz",
    "material": "tungsten ore",
@@ -2989,7 +1619,7 @@
    "note": null
   },
   {
-   "id": "e58",
+   "id": "e7",
    "from_node": "t-beira",
    "to_node": "t-lisbon",
    "material": "tungsten concentrate",
@@ -3001,7 +1631,7 @@
    "note": null
   },
   {
-   "id": "e59",
+   "id": "e8",
    "from_node": "t-alpine",
    "to_node": "t-goslar",
    "material": "tungsten concentrate",
@@ -3013,7 +1643,7 @@
    "note": null
   },
   {
-   "id": "e60",
+   "id": "e9",
    "from_node": "t-gangwon",
    "to_node": "t-korea",
    "material": "tungsten concentrate",
@@ -3025,7 +1655,7 @@
    "note": null
   },
   {
-   "id": "e61",
+   "id": "e10",
    "from_node": "t-yukon",
    "to_node": "t-rottmet",
    "material": "tungsten concentrate",
@@ -3037,7 +1667,7 @@
    "note": null
   },
   {
-   "id": "e62",
+   "id": "e11",
    "from_node": "t-qld",
    "to_node": "t-rottmet",
    "material": "tungsten concentrate",
@@ -3049,7 +1679,7 @@
    "note": null
   },
   {
-   "id": "e63",
+   "id": "e12",
    "from_node": "t-primorsky",
    "to_node": "t-ganconc",
    "material": "tungsten ore",
@@ -3061,7 +1691,7 @@
    "note": "Cross-border shipments to China; volumes not confirmed"
   },
   {
-   "id": "e64",
+   "id": "e13",
    "from_node": "t-ganconc",
    "to_node": "t-jxapt",
    "material": "tungsten concentrate",
@@ -3073,7 +1703,7 @@
    "note": null
   },
   {
-   "id": "e65",
+   "id": "e14",
    "from_node": "t-chenconc",
    "to_node": "t-hnox",
    "material": "tungsten concentrate",
@@ -3085,7 +1715,7 @@
    "note": null
   },
   {
-   "id": "e66",
+   "id": "e15",
    "from_node": "t-ganconc",
    "to_node": "t-hnox",
    "material": "tungsten concentrate",
@@ -3097,7 +1727,7 @@
    "note": null
   },
   {
-   "id": "e67",
+   "id": "e16",
    "from_node": "t-vnconc",
    "to_node": "t-vnapt",
    "material": "tungsten concentrate",
@@ -3109,7 +1739,7 @@
    "note": null
   },
   {
-   "id": "e68",
+   "id": "e17",
    "from_node": "t-kigali",
    "to_node": "t-rottmet",
    "material": "tungsten concentrate",
@@ -3121,7 +1751,7 @@
    "note": null
   },
   {
-   "id": "e69",
+   "id": "e18",
    "from_node": "t-lapaz",
    "to_node": "t-hamroh",
    "material": "tungsten concentrate",
@@ -3133,7 +1763,7 @@
    "note": null
   },
   {
-   "id": "e70",
+   "id": "e19",
    "from_node": "t-rottmet",
    "to_node": "t-goslar",
    "material": "tungsten concentrate",
@@ -3145,7 +1775,7 @@
    "note": null
   },
   {
-   "id": "e71",
+   "id": "e20",
    "from_node": "t-rottmet",
    "to_node": "t-lisbon",
    "material": "tungsten concentrate",
@@ -3157,7 +1787,7 @@
    "note": null
   },
   {
-   "id": "e72",
+   "id": "e21",
    "from_node": "t-hamroh",
    "to_node": "t-goslar",
    "material": "tungsten concentrate",
@@ -3169,7 +1799,7 @@
    "note": null
   },
   {
-   "id": "e73",
+   "id": "e22",
    "from_node": "t-hamroh",
    "to_node": "t-pitt",
    "material": "tungsten concentrate",
@@ -3181,7 +1811,7 @@
    "note": null
   },
   {
-   "id": "e74",
+   "id": "e23",
    "from_node": "t-vnconc",
    "to_node": "t-jxapt",
    "material": "tungsten concentrate",
@@ -3193,7 +1823,7 @@
    "note": "Resale to Chinese refiners; contract not seen"
   },
   {
-   "id": "e75",
+   "id": "e24",
    "from_node": "t-rottmet",
    "to_node": "t-hamroh",
    "material": "tungsten concentrate, trade swap",
@@ -3205,7 +1835,7 @@
    "note": "Swaps between traders; creates a loop with the Rotterdam link"
   },
   {
-   "id": "e76",
+   "id": "e25",
    "from_node": "t-hamroh",
    "to_node": "t-rottmet",
    "material": "tungsten concentrate, trade swap",
@@ -3217,7 +1847,7 @@
    "note": "Swaps between traders; creates a loop with the Hamburg link"
   },
   {
-   "id": "e77",
+   "id": "e26",
    "from_node": "t-jxapt",
    "to_node": "t-rhein",
    "material": "APT (ammonium paratungstate)",
@@ -3229,7 +1859,7 @@
    "note": null
   },
   {
-   "id": "e78",
+   "id": "e27",
    "from_node": "t-jxapt",
    "to_node": "t-saar",
    "material": "APT (ammonium paratungstate)",
@@ -3241,7 +1871,7 @@
    "note": null
   },
   {
-   "id": "e79",
+   "id": "e28",
    "from_node": "t-hnox",
    "to_node": "t-sheff",
    "material": "tungsten oxide",
@@ -3253,7 +1883,7 @@
    "note": null
   },
   {
-   "id": "e80",
+   "id": "e29",
    "from_node": "t-vnapt",
    "to_node": "t-rhein",
    "material": "APT (ammonium paratungstate)",
@@ -3265,7 +1895,7 @@
    "note": null
   },
   {
-   "id": "e81",
+   "id": "e30",
    "from_node": "t-goslar",
    "to_node": "t-rhein",
    "material": "APT (ammonium paratungstate)",
@@ -3277,7 +1907,7 @@
    "note": null
   },
   {
-   "id": "e82",
+   "id": "e31",
    "from_node": "t-goslar",
    "to_node": "t-saar",
    "material": "APT (ammonium paratungstate)",
@@ -3289,7 +1919,7 @@
    "note": null
   },
   {
-   "id": "e83",
+   "id": "e32",
    "from_node": "t-goslar",
    "to_node": "t-goth",
    "material": "APT (ammonium paratungstate)",
@@ -3301,7 +1931,7 @@
    "note": null
   },
   {
-   "id": "e84",
+   "id": "e33",
    "from_node": "t-lisbon",
    "to_node": "t-sheff",
    "material": "APT (ammonium paratungstate)",
@@ -3313,7 +1943,7 @@
    "note": null
   },
   {
-   "id": "e85",
+   "id": "e34",
    "from_node": "t-lisbon",
    "to_node": "t-goth",
    "material": "APT (ammonium paratungstate)",
@@ -3325,7 +1955,7 @@
    "note": null
   },
   {
-   "id": "e86",
+   "id": "e35",
    "from_node": "t-korea",
    "to_node": "t-sheff",
    "material": "tungsten oxide",
@@ -3337,7 +1967,7 @@
    "note": null
   },
   {
-   "id": "e87",
+   "id": "e36",
    "from_node": "t-hnox",
    "to_node": "t-goth",
    "material": "tungsten oxide",
@@ -3349,7 +1979,7 @@
    "note": "Single trial shipment recorded"
   },
   {
-   "id": "e88",
+   "id": "e37",
    "from_node": "t-pitt",
    "to_node": "t-sheff",
    "material": "tungsten oxide",
@@ -3361,7 +1991,7 @@
    "note": "Spot supply only"
   },
   {
-   "id": "e89",
+   "id": "e38",
    "from_node": "t-rhein",
    "to_node": "t-p-essen",
    "material": "carbide powder",
@@ -3373,7 +2003,7 @@
    "note": null
   },
   {
-   "id": "e90",
+   "id": "e39",
    "from_node": "t-rhein",
    "to_node": "t-p-graz",
    "material": "carbide powder",
@@ -3385,7 +2015,7 @@
    "note": null
   },
   {
-   "id": "e91",
+   "id": "e40",
    "from_node": "t-saar",
    "to_node": "t-p-essen",
    "material": "carbide powder",
@@ -3397,7 +2027,7 @@
    "note": null
   },
   {
-   "id": "e92",
+   "id": "e41",
    "from_node": "t-saar",
    "to_node": "t-p-graz",
    "material": "carbide powder",
@@ -3409,7 +2039,7 @@
    "note": null
   },
   {
-   "id": "e93",
+   "id": "e42",
    "from_node": "t-sheff",
    "to_node": "t-p-sheffield",
    "material": "carbide powder",
@@ -3421,7 +2051,7 @@
    "note": null
   },
   {
-   "id": "e94",
+   "id": "e43",
    "from_node": "t-goth",
    "to_node": "t-p-goth",
    "material": "carbide powder",
@@ -3433,7 +2063,7 @@
    "note": null
   },
   {
-   "id": "e95",
+   "id": "e44",
    "from_node": "t-goth",
    "to_node": "t-p-sheffield",
    "material": "carbide powder",
@@ -3445,7 +2075,7 @@
    "note": null
   },
   {
-   "id": "e96",
+   "id": "e45",
    "from_node": "t-p-essen",
    "to_node": "t-prod-insert",
    "material": "carbide insert",
@@ -3457,7 +2087,7 @@
    "note": null
   },
   {
-   "id": "e97",
+   "id": "e46",
    "from_node": "t-p-essen",
    "to_node": "t-prod-roll",
    "material": "carbide roll",
@@ -3469,7 +2099,7 @@
    "note": null
   },
   {
-   "id": "e98",
+   "id": "e47",
    "from_node": "t-p-graz",
    "to_node": "t-prod-insert",
    "material": "carbide insert",
@@ -3481,7 +2111,7 @@
    "note": null
   },
   {
-   "id": "e99",
+   "id": "e48",
    "from_node": "t-p-sheffield",
    "to_node": "t-prod-bit",
    "material": "drill bit",
@@ -3493,7 +2123,7 @@
    "note": null
   },
   {
-   "id": "e100",
+   "id": "e49",
    "from_node": "t-p-sheffield",
    "to_node": "t-prod-wear",
    "material": "wear part",
@@ -3505,7 +2135,7 @@
    "note": null
   },
   {
-   "id": "e101",
+   "id": "e50",
    "from_node": "t-p-goth",
    "to_node": "t-prod-wear",
    "material": "wear part",
@@ -3517,7 +2147,7 @@
    "note": null
   },
   {
-   "id": "e102",
+   "id": "e51",
    "from_node": "t-p-goth",
    "to_node": "t-prod-bit",
    "material": "drill bit",
@@ -3531,167 +2161,6 @@
  ],
  "alert": [
   {
-   "id": "AL-W-001",
-   "commodity": "wheat",
-   "title": "Export restriction announced, Russia",
-   "summary": "Export restriction announced on wheat, Russia. This is hazard evidence: it does not confirm an interruption or quantify lost supply.",
-   "location": "Russia",
-   "severity": "high",
-   "confidence": "medium",
-   "observed_at": "2026-11-03T09:00:00Z",
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4700",
-   "assessment_status": "complete",
-   "disposition": "confirmed",
-   "rule_id": "R-W-EXP",
-   "rule_v": "1.2",
-   "rule_inputs": [
-    "policy = export_restriction",
-    "country = Russia",
-    "commodity = wheat",
-    "confidence 65% >= floor 50%"
-   ],
-   "evidence_id": "EV-ING-00001"
-  },
-  {
-   "id": "AL-W-002",
-   "commodity": "wheat",
-   "title": "Export quota notice, Kazakhstan",
-   "summary": "Export quota notice for wheat, Kazakhstan. This is hazard evidence: it does not confirm an interruption or quantify lost supply.",
-   "location": "Kazakhstan",
-   "severity": "high",
-   "confidence": "medium",
-   "observed_at": "2026-11-06T09:00:00Z",
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4701",
-   "assessment_status": "partial",
-   "disposition": "new",
-   "rule_id": "R-W-EXP",
-   "rule_v": "1.2",
-   "rule_inputs": [
-    "policy = export_quota",
-    "country = Kazakhstan",
-    "commodity = wheat",
-    "confidence 55% >= floor 50%"
-   ],
-   "evidence_id": "EV-ING-00002"
-  },
-  {
-   "id": "AL-W-003",
-   "commodity": "wheat",
-   "title": "Port congestion, Ukraine",
-   "summary": "Port congestion at Odesa delays grain shipments. This is hazard evidence: it does not confirm an interruption or quantify lost supply.",
-   "location": "Ukraine",
-   "severity": "medium",
-   "confidence": "low",
-   "observed_at": "2026-11-05T09:00:00Z",
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4702",
-   "assessment_status": "partial",
-   "disposition": "monitor",
-   "rule_id": "R-W-LOG",
-   "rule_v": "1.0",
-   "rule_inputs": [
-    "logistics = port_delay",
-    "country = Ukraine",
-    "commodity = wheat",
-    "delay 5 days >= threshold 3 days"
-   ],
-   "evidence_id": "EV-ING-00003"
-  },
-  {
-   "id": "AL-W-004",
-   "commodity": "wheat",
-   "title": "Port congestion, Russia",
-   "summary": "Berth queue at Novorossiysk delays wheat loading. This is hazard evidence: it does not confirm an interruption or quantify lost supply.",
-   "location": "Russia",
-   "severity": "medium",
-   "confidence": "medium",
-   "observed_at": "2026-11-07T09:00:00Z",
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4703",
-   "assessment_status": "partial",
-   "disposition": "new",
-   "rule_id": "R-W-LOG",
-   "rule_v": "1.0",
-   "rule_inputs": [
-    "logistics = port_delay",
-    "country = Russia",
-    "commodity = wheat",
-    "delay 4 days >= threshold 3 days"
-   ],
-   "evidence_id": "EV-ING-00004"
-  },
-  {
-   "id": "AL-W-005",
-   "commodity": "wheat",
-   "title": "Port congestion, Argentina",
-   "summary": "River draft restrictions slow barge traffic to Rosario. This is hazard evidence: it does not confirm an interruption or quantify lost supply.",
-   "location": "Argentina",
-   "severity": "medium",
-   "confidence": "low",
-   "observed_at": "2026-11-01T09:00:00Z",
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4704",
-   "assessment_status": "partial",
-   "disposition": "dismissed",
-   "rule_id": "R-W-LOG",
-   "rule_v": "1.0",
-   "rule_inputs": [
-    "logistics = port_delay",
-    "country = Argentina",
-    "commodity = wheat",
-    "delay 3 days >= threshold 3 days"
-   ],
-   "evidence_id": "EV-ING-00005"
-  },
-  {
-   "id": "AL-W-006",
-   "commodity": "wheat",
-   "title": "Export restriction announced, Argentina",
-   "summary": "Export restriction announced on wheat, Argentina. This is hazard evidence: it does not confirm an interruption or quantify lost supply.",
-   "location": "Argentina",
-   "severity": "high",
-   "confidence": "medium",
-   "observed_at": "2026-10-20T09:00:00Z",
-   "mode": "replay",
-   "scenario_run": "history / run-0007",
-   "assessment_status": "complete",
-   "disposition": "confirmed",
-   "rule_id": "R-W-EXP",
-   "rule_v": "1.2",
-   "rule_inputs": [
-    "policy = export_restriction",
-    "country = Argentina",
-    "commodity = wheat",
-    "confidence 70% >= floor 50%"
-   ],
-   "evidence_id": "EV-ING-00006"
-  },
-  {
-   "id": "AL-W-007",
-   "commodity": "wheat",
-   "title": "Port congestion, Romania",
-   "summary": "Congestion at Constan\u021ba delays wheat departures. This is hazard evidence: it does not confirm an interruption or quantify lost supply.",
-   "location": "Romania",
-   "severity": "medium",
-   "confidence": "medium",
-   "observed_at": "2026-11-08T09:00:00Z",
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4706",
-   "assessment_status": "partial",
-   "disposition": "new",
-   "rule_id": "R-W-LOG",
-   "rule_v": "1.0",
-   "rule_inputs": [
-    "logistics = port_delay",
-    "country = Romania",
-    "commodity = wheat",
-    "delay 6 days >= threshold 3 days"
-   ],
-   "evidence_id": "EV-ING-00007"
-  },
-  {
    "id": "AL-T-001",
    "commodity": "tungsten",
    "title": "Export licence tightening, China",
@@ -3701,7 +2170,7 @@
    "confidence": "high",
    "observed_at": "2026-11-02T09:00:00Z",
    "mode": "simulated",
-   "scenario_run": "SC-T-0 / run-4707",
+   "scenario_run": "SC-T-0 / run-4700",
    "assessment_status": "complete",
    "disposition": "confirmed",
    "rule_id": "R-T-EXP",
@@ -3712,7 +2181,7 @@
     "commodity = tungsten",
     "confidence 88% >= floor 60%"
    ],
-   "evidence_id": "EV-ING-00008"
+   "evidence_id": "EV-ING-00001"
   },
   {
    "id": "AL-T-002",
@@ -3724,7 +2193,7 @@
    "confidence": "medium",
    "observed_at": "2026-11-04T09:00:00Z",
    "mode": "simulated",
-   "scenario_run": "SC-T-0 / run-4708",
+   "scenario_run": "SC-T-0 / run-4701",
    "assessment_status": "awaiting_validation",
    "disposition": "new",
    "rule_id": "R-T-EXP",
@@ -3735,7 +2204,7 @@
     "commodity = tungsten",
     "confidence 62% >= floor 60%"
    ],
-   "evidence_id": "EV-ING-00009"
+   "evidence_id": "EV-ING-00002"
   },
   {
    "id": "AL-T-003",
@@ -3747,7 +2216,7 @@
    "confidence": "medium",
    "observed_at": "2026-11-07T09:00:00Z",
    "mode": "simulated",
-   "scenario_run": "SC-T-0 / run-4709",
+   "scenario_run": "SC-T-0 / run-4702",
    "assessment_status": "partial",
    "disposition": "new",
    "rule_id": "R-T-EXP",
@@ -3758,7 +2227,7 @@
     "commodity = tungsten",
     "confidence 71% >= floor 60%"
    ],
-   "evidence_id": "EV-ING-00010"
+   "evidence_id": "EV-ING-00003"
   },
   {
    "id": "AL-T-004",
@@ -3781,7 +2250,7 @@
     "commodity = tungsten",
     "30-day change 18.5% >= threshold 15%"
    ],
-   "evidence_id": "EV-ING-00011"
+   "evidence_id": "EV-ING-00004"
   },
   {
    "id": "AL-T-005",
@@ -3793,7 +2262,7 @@
    "confidence": "high",
    "observed_at": "2026-11-08T09:00:00Z",
    "mode": "simulated",
-   "scenario_run": "SC-T-0 / run-4711",
+   "scenario_run": "SC-T-0 / run-4704",
    "assessment_status": "unassessed",
    "disposition": "new",
    "rule_id": "R-T-PRC",
@@ -3804,7 +2273,7 @@
     "commodity = tungsten",
     "30-day change 24% >= threshold 15%"
    ],
-   "evidence_id": "EV-ING-00012"
+   "evidence_id": "EV-ING-00005"
   },
   {
    "id": "AL-T-006",
@@ -3827,7 +2296,76 @@
     "commodity = tungsten",
     "confidence 64% >= floor 60%"
    ],
-   "evidence_id": "EV-ING-00013"
+   "evidence_id": "EV-ING-00006"
+  },
+  {
+   "id": "AL-T-007",
+   "commodity": "tungsten",
+   "title": "Port congestion, Netherlands",
+   "summary": "Berth congestion at Rotterdam delays tungsten concentrate discharge. This is hazard evidence: it does not confirm an interruption or quantify lost supply.",
+   "location": "Netherlands",
+   "severity": "medium",
+   "confidence": "medium",
+   "observed_at": "2026-11-05T09:00:00Z",
+   "mode": "simulated",
+   "scenario_run": "SC-T-0 / run-4706",
+   "assessment_status": "partial",
+   "disposition": "monitor",
+   "rule_id": "R-T-LOG",
+   "rule_v": "1.0",
+   "rule_inputs": [
+    "logistics = port_delay",
+    "country = Netherlands",
+    "commodity = tungsten",
+    "delay 5 days >= threshold 3 days"
+   ],
+   "evidence_id": "EV-ING-00007"
+  },
+  {
+   "id": "AL-T-008",
+   "commodity": "tungsten",
+   "title": "Port congestion, Germany",
+   "summary": "Terminal strike at Hamburg slows tungsten cargo handling. This is hazard evidence: it does not confirm an interruption or quantify lost supply.",
+   "location": "Germany",
+   "severity": "medium",
+   "confidence": "medium",
+   "observed_at": "2026-11-07T09:00:00Z",
+   "mode": "simulated",
+   "scenario_run": "SC-T-0 / run-4707",
+   "assessment_status": "partial",
+   "disposition": "new",
+   "rule_id": "R-T-LOG",
+   "rule_v": "1.0",
+   "rule_inputs": [
+    "logistics = port_delay",
+    "country = Germany",
+    "commodity = tungsten",
+    "delay 4 days >= threshold 3 days"
+   ],
+   "evidence_id": "EV-ING-00008"
+  },
+  {
+   "id": "AL-T-009",
+   "commodity": "tungsten",
+   "title": "Port congestion, Vietnam",
+   "summary": "Queue at Haiphong delays APT shipments. This is hazard evidence: it does not confirm an interruption or quantify lost supply.",
+   "location": "Vietnam",
+   "severity": "medium",
+   "confidence": "low",
+   "observed_at": "2026-11-01T09:00:00Z",
+   "mode": "simulated",
+   "scenario_run": "SC-T-0 / run-4708",
+   "assessment_status": "partial",
+   "disposition": "dismissed",
+   "rule_id": "R-T-LOG",
+   "rule_v": "1.0",
+   "rule_inputs": [
+    "logistics = port_delay",
+    "country = Vietnam",
+    "commodity = tungsten",
+    "delay 3 days >= threshold 3 days"
+   ],
+   "evidence_id": "EV-ING-00009"
   }
  ],
  "observation": [
@@ -3836,154 +2374,7 @@
    "ingestion_id": "ING-00001",
    "source_id": "src-policy",
    "record_id": "src-policy-00001",
-   "record_sha256": "048a38ab9159d3c16d0d7139459b00be819782a287ceac968eda8f26b20b5bd6",
-   "commodity": "wheat",
-   "kind": "policy",
-   "event_type": "export_restriction",
-   "country": "Russia",
-   "value": null,
-   "headline": "Export restriction announced on wheat, Russia",
-   "published_at": "2026-11-03T09:00:00Z",
-   "confidence_pct": 65,
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4700",
-   "mapping_version": "sim-policy v1",
-   "ingested_at": "2026-11-03T09:25:00Z",
-   "outcome": "alert_raised",
-   "alert_id": "AL-W-001"
-  },
-  {
-   "id": "OB-000002",
-   "ingestion_id": "ING-00002",
-   "source_id": "src-policy",
-   "record_id": "src-policy-00002",
-   "record_sha256": "13f037c2550608ae6425dd290d7ade21aa47f5e0567c441bd026fc92c506bd67",
-   "commodity": "wheat",
-   "kind": "policy",
-   "event_type": "export_quota",
-   "country": "Kazakhstan",
-   "value": null,
-   "headline": "Export quota notice for wheat, Kazakhstan",
-   "published_at": "2026-11-06T09:00:00Z",
-   "confidence_pct": 55,
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4701",
-   "mapping_version": "sim-policy v1",
-   "ingested_at": "2026-11-06T09:25:00Z",
-   "outcome": "alert_raised",
-   "alert_id": "AL-W-002"
-  },
-  {
-   "id": "OB-000003",
-   "ingestion_id": "ING-00003",
-   "source_id": "src-logistics",
-   "record_id": "src-logistics-00003",
-   "record_sha256": "fae9d1de908db6f53b7768d69d314fac736d9c7c39932b5ec427c4d85f107a52",
-   "commodity": "wheat",
-   "kind": "logistics",
-   "event_type": "port_delay",
-   "country": "Ukraine",
-   "value": 5,
-   "headline": "Port congestion at Odesa delays grain shipments",
-   "published_at": "2026-11-05T09:00:00Z",
-   "confidence_pct": 45,
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4702",
-   "mapping_version": "sim-logistics v1",
-   "ingested_at": "2026-11-05T09:25:00Z",
-   "outcome": "alert_raised",
-   "alert_id": "AL-W-003"
-  },
-  {
-   "id": "OB-000004",
-   "ingestion_id": "ING-00004",
-   "source_id": "src-logistics",
-   "record_id": "src-logistics-00004",
-   "record_sha256": "b72a6f636b487404132f394efb84dfb9ed4b8d2249876ac47550acd9c30b280d",
-   "commodity": "wheat",
-   "kind": "logistics",
-   "event_type": "port_delay",
-   "country": "Russia",
-   "value": 4,
-   "headline": "Berth queue at Novorossiysk delays wheat loading",
-   "published_at": "2026-11-07T09:00:00Z",
-   "confidence_pct": 60,
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4703",
-   "mapping_version": "sim-logistics v1",
-   "ingested_at": "2026-11-07T09:25:00Z",
-   "outcome": "alert_raised",
-   "alert_id": "AL-W-004"
-  },
-  {
-   "id": "OB-000005",
-   "ingestion_id": "ING-00005",
-   "source_id": "src-logistics",
-   "record_id": "src-logistics-00005",
-   "record_sha256": "042a80623236043bc2712d8cf3d718e109a84c6acae5b66acfd67545bb54c8f7",
-   "commodity": "wheat",
-   "kind": "logistics",
-   "event_type": "port_delay",
-   "country": "Argentina",
-   "value": 3,
-   "headline": "River draft restrictions slow barge traffic to Rosario",
-   "published_at": "2026-11-01T09:00:00Z",
-   "confidence_pct": 35,
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4704",
-   "mapping_version": "sim-logistics v1",
-   "ingested_at": "2026-11-01T09:25:00Z",
-   "outcome": "alert_raised",
-   "alert_id": "AL-W-005"
-  },
-  {
-   "id": "OB-000006",
-   "ingestion_id": "ING-00006",
-   "source_id": "src-policy",
-   "record_id": "src-policy-00006",
-   "record_sha256": "6841b5328905b0ceb928bbc3139e438756fd2cfefc1eea8fe543a52aa6aa465f",
-   "commodity": "wheat",
-   "kind": "policy",
-   "event_type": "export_restriction",
-   "country": "Argentina",
-   "value": null,
-   "headline": "Export restriction announced on wheat, Argentina",
-   "published_at": "2026-10-20T09:00:00Z",
-   "confidence_pct": 70,
-   "mode": "replay",
-   "scenario_run": "history / run-0007",
-   "mapping_version": "sim-policy v1",
-   "ingested_at": "2026-10-20T09:25:00Z",
-   "outcome": "alert_raised",
-   "alert_id": "AL-W-006"
-  },
-  {
-   "id": "OB-000007",
-   "ingestion_id": "ING-00007",
-   "source_id": "src-logistics",
-   "record_id": "src-logistics-00007",
-   "record_sha256": "5853a0ad54fb7b4107b37d1f26c9f0f3bca3611db06d8c714e4e72bd9ebd36d2",
-   "commodity": "wheat",
-   "kind": "logistics",
-   "event_type": "port_delay",
-   "country": "Romania",
-   "value": 6,
-   "headline": "Congestion at Constan\u021ba delays wheat departures",
-   "published_at": "2026-11-08T09:00:00Z",
-   "confidence_pct": 50,
-   "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4706",
-   "mapping_version": "sim-logistics v1",
-   "ingested_at": "2026-11-08T09:25:00Z",
-   "outcome": "alert_raised",
-   "alert_id": "AL-W-007"
-  },
-  {
-   "id": "OB-000008",
-   "ingestion_id": "ING-00008",
-   "source_id": "src-policy",
-   "record_id": "src-policy-00008",
-   "record_sha256": "d227dbb92daa3ddaff73910330ee973a1324e4362caa4a8958f1ed490603669d",
+   "record_sha256": "a85b95667a034c8d0d578061b2e0b86bdc1366d57053077181676145ce8b64c9",
    "commodity": "tungsten",
    "kind": "policy",
    "event_type": "export_licence",
@@ -3993,18 +2384,18 @@
    "published_at": "2026-11-02T09:00:00Z",
    "confidence_pct": 88,
    "mode": "simulated",
-   "scenario_run": "SC-T-0 / run-4707",
+   "scenario_run": "SC-T-0 / run-4700",
    "mapping_version": "sim-policy v1",
    "ingested_at": "2026-11-02T09:25:00Z",
    "outcome": "alert_raised",
    "alert_id": "AL-T-001"
   },
   {
-   "id": "OB-000009",
-   "ingestion_id": "ING-00009",
+   "id": "OB-000002",
+   "ingestion_id": "ING-00002",
    "source_id": "src-policy",
-   "record_id": "src-policy-00009",
-   "record_sha256": "6e7c30879c9512eb0002c3eb16208a5f4d4ea4bc28e106ca815f9ddd4e79914b",
+   "record_id": "src-policy-00002",
+   "record_sha256": "08d63a1dd0ae9207b69194b00f59588088f53f502334b55ac08549ae114ebb9a",
    "commodity": "tungsten",
    "kind": "policy",
    "event_type": "export_restriction",
@@ -4014,18 +2405,18 @@
    "published_at": "2026-11-04T09:00:00Z",
    "confidence_pct": 62,
    "mode": "simulated",
-   "scenario_run": "SC-T-0 / run-4708",
+   "scenario_run": "SC-T-0 / run-4701",
    "mapping_version": "sim-policy v1",
    "ingested_at": "2026-11-04T09:25:00Z",
    "outcome": "alert_raised",
    "alert_id": "AL-T-002"
   },
   {
-   "id": "OB-000010",
-   "ingestion_id": "ING-00010",
+   "id": "OB-000003",
+   "ingestion_id": "ING-00003",
    "source_id": "src-policy",
-   "record_id": "src-policy-00010",
-   "record_sha256": "13c797c23c03e4dde047d539b2db235c73f3dde391eb5e478374eff4ab025222",
+   "record_id": "src-policy-00003",
+   "record_sha256": "2a9dc7bc8f094c61ea71e81d81cc7a1977f4cb5bb5fce1966835461331ca50d1",
    "commodity": "tungsten",
    "kind": "policy",
    "event_type": "export_quota",
@@ -4035,18 +2426,18 @@
    "published_at": "2026-11-07T09:00:00Z",
    "confidence_pct": 71,
    "mode": "simulated",
-   "scenario_run": "SC-T-0 / run-4709",
+   "scenario_run": "SC-T-0 / run-4702",
    "mapping_version": "sim-policy v1",
    "ingested_at": "2026-11-07T09:25:00Z",
    "outcome": "alert_raised",
    "alert_id": "AL-T-003"
   },
   {
-   "id": "OB-000011",
-   "ingestion_id": "ING-00011",
+   "id": "OB-000004",
+   "ingestion_id": "ING-00004",
    "source_id": "src-price",
-   "record_id": "src-price-00011",
-   "record_sha256": "d3deabfd63b415ab457a331b1cbffa3fae28b1582f6239fc69fc907accc2a686",
+   "record_id": "src-price-00004",
+   "record_sha256": "26207193a39618625c0f27a4ab65bc1157e56826f276793f771212caf0a033f8",
    "commodity": "tungsten",
    "kind": "price",
    "event_type": "price_change_30d_pct",
@@ -4063,11 +2454,11 @@
    "alert_id": "AL-T-004"
   },
   {
-   "id": "OB-000012",
-   "ingestion_id": "ING-00012",
+   "id": "OB-000005",
+   "ingestion_id": "ING-00005",
    "source_id": "src-price",
-   "record_id": "src-price-00012",
-   "record_sha256": "226fb4d92236e7d54948b115e5280bf37e2b29ed055225e458acd2f7844e33fc",
+   "record_id": "src-price-00005",
+   "record_sha256": "41e2e706789a07cfedb915e91e6e486527d5d8ecc245d89f57cbef0383ae39aa",
    "commodity": "tungsten",
    "kind": "price",
    "event_type": "price_change_30d_pct",
@@ -4077,18 +2468,18 @@
    "published_at": "2026-11-08T09:00:00Z",
    "confidence_pct": 80,
    "mode": "simulated",
-   "scenario_run": "SC-T-0 / run-4711",
+   "scenario_run": "SC-T-0 / run-4704",
    "mapping_version": "sim-price v1",
    "ingested_at": "2026-11-08T09:25:00Z",
    "outcome": "alert_raised",
    "alert_id": "AL-T-005"
   },
   {
-   "id": "OB-000013",
-   "ingestion_id": "ING-00013",
+   "id": "OB-000006",
+   "ingestion_id": "ING-00006",
    "source_id": "src-policy",
-   "record_id": "src-policy-00013",
-   "record_sha256": "52a03bfd23e890647d6f066d1ff8c77f74709ae499c93a0d6dad5a74aafd9727",
+   "record_id": "src-policy-00006",
+   "record_sha256": "9156b861ba109d13f503c3a989db9281af11f54d60e35af72374da71cab8525d",
    "commodity": "tungsten",
    "kind": "policy",
    "event_type": "export_licence",
@@ -4105,95 +2496,116 @@
    "alert_id": "AL-T-006"
   },
   {
-   "id": "OB-000014",
-   "ingestion_id": "ING-00014",
-   "source_id": "src-policy",
-   "record_id": "src-policy-00014",
-   "record_sha256": "afd8c5c2c559ea3fb1b7bf5df845916b3792ffbc00f242b82b8389ef7cfb54ba",
-   "commodity": "wheat",
-   "kind": "policy",
-   "event_type": "export_restriction",
-   "country": "Russia",
-   "value": null,
-   "headline": "Restriction on wheat exports reiterated, Russia",
-   "published_at": "2026-11-04T12:00:00Z",
-   "confidence_pct": 68,
+   "id": "OB-000007",
+   "ingestion_id": "ING-00007",
+   "source_id": "src-logistics",
+   "record_id": "src-logistics-00007",
+   "record_sha256": "6837b6a9998ef18d7ea65b6a331110ff9745cb216584f737644f9333132338d2",
+   "commodity": "tungsten",
+   "kind": "logistics",
+   "event_type": "port_delay",
+   "country": "Netherlands",
+   "value": 5,
+   "headline": "Berth congestion at Rotterdam delays tungsten concentrate discharge",
+   "published_at": "2026-11-05T09:00:00Z",
+   "confidence_pct": 50,
    "mode": "simulated",
-   "scenario_run": "SC-W-0 / run-4700",
-   "mapping_version": "sim-policy v1",
-   "ingested_at": "2026-11-04T12:25:00Z",
-   "outcome": "merged",
-   "alert_id": "AL-W-001"
+   "scenario_run": "SC-T-0 / run-4706",
+   "mapping_version": "sim-logistics v1",
+   "ingested_at": "2026-11-05T09:25:00Z",
+   "outcome": "alert_raised",
+   "alert_id": "AL-T-007"
   },
   {
-   "id": "OB-000015",
-   "ingestion_id": "ING-00015",
+   "id": "OB-000008",
+   "ingestion_id": "ING-00008",
+   "source_id": "src-logistics",
+   "record_id": "src-logistics-00008",
+   "record_sha256": "f24d478e706cd99a02fd406ba7750fddcdd19634261d286a4bb9b768e7ab6ddb",
+   "commodity": "tungsten",
+   "kind": "logistics",
+   "event_type": "port_delay",
+   "country": "Germany",
+   "value": 4,
+   "headline": "Terminal strike at Hamburg slows tungsten cargo handling",
+   "published_at": "2026-11-07T09:00:00Z",
+   "confidence_pct": 60,
+   "mode": "simulated",
+   "scenario_run": "SC-T-0 / run-4707",
+   "mapping_version": "sim-logistics v1",
+   "ingested_at": "2026-11-07T09:25:00Z",
+   "outcome": "alert_raised",
+   "alert_id": "AL-T-008"
+  },
+  {
+   "id": "OB-000009",
+   "ingestion_id": "ING-00009",
+   "source_id": "src-logistics",
+   "record_id": "src-logistics-00009",
+   "record_sha256": "b7e688e1f0c37408eb90284d03f9e594d669cf650a1db415514d173455541247",
+   "commodity": "tungsten",
+   "kind": "logistics",
+   "event_type": "port_delay",
+   "country": "Vietnam",
+   "value": 3,
+   "headline": "Queue at Haiphong delays APT shipments",
+   "published_at": "2026-11-01T09:00:00Z",
+   "confidence_pct": 35,
+   "mode": "simulated",
+   "scenario_run": "SC-T-0 / run-4708",
+   "mapping_version": "sim-logistics v1",
+   "ingested_at": "2026-11-01T09:25:00Z",
+   "outcome": "alert_raised",
+   "alert_id": "AL-T-009"
+  },
+  {
+   "id": "OB-000010",
+   "ingestion_id": "ING-00010",
    "source_id": "src-policy",
-   "record_id": "src-policy-00015",
-   "record_sha256": "8a928de8d18d502e97f840a8a9b59470d280d795a1792627ae396942a2c85f93",
-   "commodity": "wheat",
+   "record_id": "src-policy-00010",
+   "record_sha256": "a53cd6f9e0eed6f66194a649b839d644e98715a0ed34b6fcad32699aba7f5632",
+   "commodity": "tungsten",
    "kind": "policy",
    "event_type": "clarification",
    "country": "Russia",
    "value": null,
-   "headline": "Clarification published; scope of the restriction unchanged",
+   "headline": "Clarification published; scope of the Russian restriction unchanged",
    "published_at": "2026-11-05T12:00:00Z",
    "confidence_pct": 70,
    "mode": "simulated",
-   "scenario_run": "history / run-4815",
+   "scenario_run": "history / run-4810",
    "mapping_version": "sim-policy v1",
    "ingested_at": "2026-11-05T12:25:00Z",
    "outcome": "no_rule_match",
    "alert_id": null
   },
   {
-   "id": "OB-000016",
-   "ingestion_id": "ING-00016",
-   "source_id": "src-policy",
-   "record_id": "src-policy-00016",
-   "record_sha256": "6777bac544d83b062d3f50af45e22e81680e06320e52eee1f7ae56d09550deb2",
-   "commodity": "wheat",
-   "kind": "policy",
-   "event_type": "export_restriction",
-   "country": "Argentina",
-   "value": null,
-   "headline": "Draft export restriction under discussion, Argentina",
-   "published_at": "2026-10-31T12:00:00Z",
-   "confidence_pct": 42,
-   "mode": "simulated",
-   "scenario_run": "history / run-4816",
-   "mapping_version": "sim-policy v1",
-   "ingested_at": "2026-10-31T12:25:00Z",
-   "outcome": "below_threshold",
-   "alert_id": null
-  },
-  {
-   "id": "OB-000017",
-   "ingestion_id": "ING-00017",
+   "id": "OB-000011",
+   "ingestion_id": "ING-00011",
    "source_id": "src-logistics",
-   "record_id": "src-logistics-00017",
-   "record_sha256": "ec07325a4db0028055333d28a63a676173d96740d001cfd846c29362c8edfe60",
-   "commodity": "wheat",
+   "record_id": "src-logistics-00011",
+   "record_sha256": "766e6cd424a9d4f69ad8c2b58d191a1dffa7277339673b290f5d4d3b8a8370d1",
+   "commodity": "tungsten",
    "kind": "logistics",
    "event_type": "port_delay",
-   "country": "Argentina",
+   "country": "Netherlands",
    "value": 2,
-   "headline": "Short delay at Rosario terminal",
+   "headline": "Short delay at Rotterdam terminal",
    "published_at": "2026-11-03T12:00:00Z",
    "confidence_pct": 40,
    "mode": "simulated",
-   "scenario_run": "history / run-4817",
+   "scenario_run": "history / run-4811",
    "mapping_version": "sim-logistics v1",
    "ingested_at": "2026-11-03T12:25:00Z",
    "outcome": "below_threshold",
    "alert_id": null
   },
   {
-   "id": "OB-000018",
-   "ingestion_id": "ING-00018",
+   "id": "OB-000012",
+   "ingestion_id": "ING-00012",
    "source_id": "src-policy",
-   "record_id": "src-policy-00018",
-   "record_sha256": "f06e144bf62d22371b91d8d60b85c4e5a3ae7c51f090c01373e710ee0364a4d3",
+   "record_id": "src-policy-00012",
+   "record_sha256": "96dbd4f51fd860f74963257ea854705212d66e38fe955651257a956dde7c70f5",
    "commodity": "tungsten",
    "kind": "policy",
    "event_type": "export_licence",
@@ -4203,18 +2615,18 @@
    "published_at": "2026-11-01T12:00:00Z",
    "confidence_pct": 86,
    "mode": "simulated",
-   "scenario_run": "history / run-4818",
+   "scenario_run": "history / run-4812",
    "mapping_version": "sim-policy v1",
    "ingested_at": "2026-11-01T12:25:00Z",
    "outcome": "late",
    "alert_id": null
   },
   {
-   "id": "OB-000019",
-   "ingestion_id": "ING-00019",
+   "id": "OB-000013",
+   "ingestion_id": "ING-00013",
    "source_id": "src-policy",
-   "record_id": "src-policy-00019",
-   "record_sha256": "681f2d63be26d47ca68030538086302f651aa64febb907ff185060f2954e5a3f",
+   "record_id": "src-policy-00013",
+   "record_sha256": "1cfbaff3d171d89dd6fb9a2fbecab9ff236d2788881358249c556bfa709e9cc0",
    "commodity": "tungsten",
    "kind": "policy",
    "event_type": "export_quota",
@@ -4224,18 +2636,18 @@
    "published_at": "2026-11-03T12:00:00Z",
    "confidence_pct": 80,
    "mode": "simulated",
-   "scenario_run": "SC-T-0 / run-4707",
+   "scenario_run": "SC-T-0 / run-4700",
    "mapping_version": "sim-policy v1",
    "ingested_at": "2026-11-03T12:25:00Z",
    "outcome": "merged",
    "alert_id": "AL-T-001"
   },
   {
-   "id": "OB-000020",
-   "ingestion_id": "ING-00020",
+   "id": "OB-000014",
+   "ingestion_id": "ING-00014",
    "source_id": "src-price",
-   "record_id": "src-price-00020",
-   "record_sha256": "e35aad2dfc14b3ec0153ad2384789cac65056d02b38ede930e0ac339ef207c04",
+   "record_id": "src-price-00014",
+   "record_sha256": "1d8862c8ffc6730aadaf750462a28c090b1c0c30653c866e68d56abd405ed3e7",
    "commodity": "tungsten",
    "kind": "price",
    "event_type": "price_change_30d_pct",
@@ -4245,7 +2657,7 @@
    "published_at": "2026-10-28T12:00:00Z",
    "confidence_pct": 70,
    "mode": "replay",
-   "scenario_run": "history / run-4820",
+   "scenario_run": "history / run-4814",
    "mapping_version": "sim-price v1",
    "ingested_at": "2026-10-28T12:25:00Z",
    "outcome": "below_threshold",
@@ -4253,471 +2665,6 @@
   }
  ],
  "alert_exposed_node": [
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-azov",
-   "position": 0
-  },
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-istanbul",
-   "position": 1
-  },
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-p-izmir",
-   "position": 2
-  },
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-p-milan",
-   "position": 3
-  },
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-prod-biscuit",
-   "position": 4
-  },
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-prod-flour",
-   "position": 5
-  },
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-prod-pasta",
-   "position": 6
-  },
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-kuban",
-   "position": 7
-  },
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-novoross",
-   "position": 8
-  },
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-rott",
-   "position": 9
-  },
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-hamburg",
-   "position": 10
-  },
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-p-duisburg",
-   "position": 11
-  },
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-p-lyon",
-   "position": 12
-  },
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-p-rott",
-   "position": 13
-  },
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-hmv",
-   "position": 14
-  },
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-prod-premix",
-   "position": 15
-  },
-  {
-   "alert_id": "AL-W-001",
-   "node_id": "w-volga",
-   "position": 16
-  },
-  {
-   "alert_id": "AL-W-002",
-   "node_id": "w-akmola",
-   "position": 0
-  },
-  {
-   "alert_id": "AL-W-002",
-   "node_id": "w-astana",
-   "position": 1
-  },
-  {
-   "alert_id": "AL-W-002",
-   "node_id": "w-novoross",
-   "position": 2
-  },
-  {
-   "alert_id": "AL-W-002",
-   "node_id": "w-istanbul",
-   "position": 3
-  },
-  {
-   "alert_id": "AL-W-002",
-   "node_id": "w-rott",
-   "position": 4
-  },
-  {
-   "alert_id": "AL-W-002",
-   "node_id": "w-hamburg",
-   "position": 5
-  },
-  {
-   "alert_id": "AL-W-002",
-   "node_id": "w-p-duisburg",
-   "position": 6
-  },
-  {
-   "alert_id": "AL-W-002",
-   "node_id": "w-p-izmir",
-   "position": 7
-  },
-  {
-   "alert_id": "AL-W-002",
-   "node_id": "w-p-lyon",
-   "position": 8
-  },
-  {
-   "alert_id": "AL-W-002",
-   "node_id": "w-p-milan",
-   "position": 9
-  },
-  {
-   "alert_id": "AL-W-002",
-   "node_id": "w-p-rott",
-   "position": 10
-  },
-  {
-   "alert_id": "AL-W-002",
-   "node_id": "w-hmv",
-   "position": 11
-  },
-  {
-   "alert_id": "AL-W-002",
-   "node_id": "w-prod-biscuit",
-   "position": 12
-  },
-  {
-   "alert_id": "AL-W-002",
-   "node_id": "w-prod-flour",
-   "position": 13
-  },
-  {
-   "alert_id": "AL-W-002",
-   "node_id": "w-prod-pasta",
-   "position": 14
-  },
-  {
-   "alert_id": "AL-W-002",
-   "node_id": "w-prod-premix",
-   "position": 15
-  },
-  {
-   "alert_id": "AL-W-003",
-   "node_id": "w-odagro",
-   "position": 0
-  },
-  {
-   "alert_id": "AL-W-003",
-   "node_id": "w-odterm",
-   "position": 1
-  },
-  {
-   "alert_id": "AL-W-003",
-   "node_id": "w-istanbul",
-   "position": 2
-  },
-  {
-   "alert_id": "AL-W-003",
-   "node_id": "w-rott",
-   "position": 3
-  },
-  {
-   "alert_id": "AL-W-003",
-   "node_id": "w-hamburg",
-   "position": 4
-  },
-  {
-   "alert_id": "AL-W-003",
-   "node_id": "w-p-duisburg",
-   "position": 5
-  },
-  {
-   "alert_id": "AL-W-003",
-   "node_id": "w-p-izmir",
-   "position": 6
-  },
-  {
-   "alert_id": "AL-W-003",
-   "node_id": "w-p-lyon",
-   "position": 7
-  },
-  {
-   "alert_id": "AL-W-003",
-   "node_id": "w-p-milan",
-   "position": 8
-  },
-  {
-   "alert_id": "AL-W-003",
-   "node_id": "w-p-rott",
-   "position": 9
-  },
-  {
-   "alert_id": "AL-W-003",
-   "node_id": "w-hmv",
-   "position": 10
-  },
-  {
-   "alert_id": "AL-W-003",
-   "node_id": "w-prod-biscuit",
-   "position": 11
-  },
-  {
-   "alert_id": "AL-W-003",
-   "node_id": "w-prod-flour",
-   "position": 12
-  },
-  {
-   "alert_id": "AL-W-003",
-   "node_id": "w-prod-pasta",
-   "position": 13
-  },
-  {
-   "alert_id": "AL-W-003",
-   "node_id": "w-prod-premix",
-   "position": 14
-  },
-  {
-   "alert_id": "AL-W-003",
-   "node_id": "w-poltava",
-   "position": 15
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-azov",
-   "position": 0
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-istanbul",
-   "position": 1
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-p-izmir",
-   "position": 2
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-p-milan",
-   "position": 3
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-prod-biscuit",
-   "position": 4
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-prod-flour",
-   "position": 5
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-prod-pasta",
-   "position": 6
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-kuban",
-   "position": 7
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-novoross",
-   "position": 8
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-rott",
-   "position": 9
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-hamburg",
-   "position": 10
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-p-duisburg",
-   "position": 11
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-p-lyon",
-   "position": 12
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-p-rott",
-   "position": 13
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-hmv",
-   "position": 14
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-prod-premix",
-   "position": 15
-  },
-  {
-   "alert_id": "AL-W-004",
-   "node_id": "w-volga",
-   "position": 16
-  },
-  {
-   "alert_id": "AL-W-005",
-   "node_id": "w-pampa",
-   "position": 0
-  },
-  {
-   "alert_id": "AL-W-005",
-   "node_id": "w-rosario",
-   "position": 1
-  },
-  {
-   "alert_id": "AL-W-005",
-   "node_id": "w-istanbul",
-   "position": 2
-  },
-  {
-   "alert_id": "AL-W-005",
-   "node_id": "w-p-izmir",
-   "position": 3
-  },
-  {
-   "alert_id": "AL-W-005",
-   "node_id": "w-p-milan",
-   "position": 4
-  },
-  {
-   "alert_id": "AL-W-005",
-   "node_id": "w-prod-biscuit",
-   "position": 5
-  },
-  {
-   "alert_id": "AL-W-005",
-   "node_id": "w-prod-flour",
-   "position": 6
-  },
-  {
-   "alert_id": "AL-W-005",
-   "node_id": "w-prod-pasta",
-   "position": 7
-  },
-  {
-   "alert_id": "AL-W-006",
-   "node_id": "w-pampa",
-   "position": 0
-  },
-  {
-   "alert_id": "AL-W-006",
-   "node_id": "w-rosario",
-   "position": 1
-  },
-  {
-   "alert_id": "AL-W-006",
-   "node_id": "w-istanbul",
-   "position": 2
-  },
-  {
-   "alert_id": "AL-W-006",
-   "node_id": "w-p-izmir",
-   "position": 3
-  },
-  {
-   "alert_id": "AL-W-006",
-   "node_id": "w-p-milan",
-   "position": 4
-  },
-  {
-   "alert_id": "AL-W-006",
-   "node_id": "w-prod-biscuit",
-   "position": 5
-  },
-  {
-   "alert_id": "AL-W-006",
-   "node_id": "w-prod-flour",
-   "position": 6
-  },
-  {
-   "alert_id": "AL-W-006",
-   "node_id": "w-prod-pasta",
-   "position": 7
-  },
-  {
-   "alert_id": "AL-W-007",
-   "node_id": "w-constanta",
-   "position": 0
-  },
-  {
-   "alert_id": "AL-W-007",
-   "node_id": "w-hmv",
-   "position": 1
-  },
-  {
-   "alert_id": "AL-W-007",
-   "node_id": "w-istanbul",
-   "position": 2
-  },
-  {
-   "alert_id": "AL-W-007",
-   "node_id": "w-p-duisburg",
-   "position": 3
-  },
-  {
-   "alert_id": "AL-W-007",
-   "node_id": "w-p-izmir",
-   "position": 4
-  },
-  {
-   "alert_id": "AL-W-007",
-   "node_id": "w-p-milan",
-   "position": 5
-  },
-  {
-   "alert_id": "AL-W-007",
-   "node_id": "w-prod-biscuit",
-   "position": 6
-  },
-  {
-   "alert_id": "AL-W-007",
-   "node_id": "w-prod-flour",
-   "position": 7
-  },
-  {
-   "alert_id": "AL-W-007",
-   "node_id": "w-prod-pasta",
-   "position": 8
-  },
-  {
-   "alert_id": "AL-W-007",
-   "node_id": "w-prod-premix",
-   "position": 9
-  },
-  {
-   "alert_id": "AL-W-007",
-   "node_id": "w-dobro",
-   "position": 10
-  },
   {
    "alert_id": "AL-T-001",
    "node_id": "t-chenconc",
@@ -5037,177 +2984,229 @@
    "alert_id": "AL-T-006",
    "node_id": "t-rutsiro",
    "position": 18
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-rottmet",
+   "position": 0
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-goslar",
+   "position": 1
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-hamroh",
+   "position": 2
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-lisbon",
+   "position": 3
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-goth",
+   "position": 4
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-pitt",
+   "position": 5
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-rhein",
+   "position": 6
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-saar",
+   "position": 7
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-sheff",
+   "position": 8
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-p-essen",
+   "position": 9
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-p-goth",
+   "position": 10
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-p-graz",
+   "position": 11
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-p-sheffield",
+   "position": 12
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-prod-bit",
+   "position": 13
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-prod-insert",
+   "position": 14
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-prod-roll",
+   "position": 15
+  },
+  {
+   "alert_id": "AL-T-007",
+   "node_id": "t-prod-wear",
+   "position": 16
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-goslar",
+   "position": 0
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-goth",
+   "position": 1
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-rhein",
+   "position": 2
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-saar",
+   "position": 3
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-p-essen",
+   "position": 4
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-p-goth",
+   "position": 5
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-p-graz",
+   "position": 6
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-p-sheffield",
+   "position": 7
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-prod-bit",
+   "position": 8
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-prod-insert",
+   "position": 9
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-prod-roll",
+   "position": 10
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-prod-wear",
+   "position": 11
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-hamroh",
+   "position": 12
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-pitt",
+   "position": 13
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-rottmet",
+   "position": 14
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-lisbon",
+   "position": 15
+  },
+  {
+   "alert_id": "AL-T-008",
+   "node_id": "t-sheff",
+   "position": 16
+  },
+  {
+   "alert_id": "AL-T-009",
+   "node_id": "t-thainguyen",
+   "position": 0
+  },
+  {
+   "alert_id": "AL-T-009",
+   "node_id": "t-vnconc",
+   "position": 1
+  },
+  {
+   "alert_id": "AL-T-009",
+   "node_id": "t-jxapt",
+   "position": 2
+  },
+  {
+   "alert_id": "AL-T-009",
+   "node_id": "t-vnapt",
+   "position": 3
+  },
+  {
+   "alert_id": "AL-T-009",
+   "node_id": "t-rhein",
+   "position": 4
+  },
+  {
+   "alert_id": "AL-T-009",
+   "node_id": "t-saar",
+   "position": 5
+  },
+  {
+   "alert_id": "AL-T-009",
+   "node_id": "t-p-essen",
+   "position": 6
+  },
+  {
+   "alert_id": "AL-T-009",
+   "node_id": "t-p-graz",
+   "position": 7
+  },
+  {
+   "alert_id": "AL-T-009",
+   "node_id": "t-prod-insert",
+   "position": 8
+  },
+  {
+   "alert_id": "AL-T-009",
+   "node_id": "t-prod-roll",
+   "position": 9
   }
  ],
  "response_option": [
-  {
-   "id": "O-W-01",
-   "alert_id": "AL-W-001",
-   "type": "sourcing",
-   "name": "French milling wheat via Rouen (Rouen Port Grain)",
-   "qualification": "qualified",
-   "spec_fit": "meets",
-   "capacity": "12,000 t / month (stated, not verified)",
-   "unit_price": 318,
-   "quantity_available": null,
-   "lead_time_days": 30,
-   "quote_valid_until": "2026-12-04",
-   "note": "Qualified milling grade. Commercial terms not agreed."
-  },
-  {
-   "id": "O-W-02",
-   "alert_id": "AL-W-001",
-   "type": "sourcing",
-   "name": "Canadian milling wheat via Thunder Bay (Great Lakes Commodities)",
-   "qualification": "qualified",
-   "spec_fit": "meets",
-   "capacity": "8,000 t / month (stated, not verified)",
-   "unit_price": 342,
-   "quantity_available": null,
-   "lead_time_days": 38,
-   "quote_valid_until": "2026-12-19",
-   "note": "Qualified; longest lead time."
-  },
-  {
-   "id": "O-W-03",
-   "alert_id": "AL-W-001",
-   "type": "sourcing",
-   "name": "Australian milling wheat via Port Adelaide (Southern Cross Grain Exports)",
-   "qualification": "qualified",
-   "spec_fit": "meets",
-   "capacity": "10,000 t / month (stated, not verified)",
-   "unit_price": 329,
-   "quantity_available": null,
-   "lead_time_days": 45,
-   "quote_valid_until": "2026-11-21",
-   "note": "Quote lapses soon; needs a decision this fortnight."
-  },
-  {
-   "id": "O-W-04",
-   "alert_id": "AL-W-001",
-   "type": "sourcing",
-   "name": "Romanian wheat via Constan\u021ba (Constanta Cereal Terminal)",
-   "qualification": "unknown",
-   "spec_fit": "partial",
-   "capacity": "6,000 t / month (stated, not verified)",
-   "unit_price": 301,
-   "quantity_available": null,
-   "lead_time_days": 18,
-   "quote_valid_until": "2026-11-29",
-   "note": "Qualification not on file; protein specification only partly met."
-  },
-  {
-   "id": "O-W-05",
-   "alert_id": "AL-W-001",
-   "type": "inventory",
-   "name": "Transfer buffer stock from Plant Rotterdam",
-   "qualification": "qualified",
-   "spec_fit": "meets",
-   "capacity": "600 t available",
-   "unit_price": null,
-   "quantity_available": 600,
-   "lead_time_days": 2,
-   "quote_valid_until": null,
-   "note": "Internal transfer. Handling cost not included."
-  },
-  {
-   "id": "O-W-06",
-   "alert_id": "AL-W-001",
-   "type": "logistics",
-   "name": "Expedited rail from Beauce to Rouen",
-   "qualification": "qualified",
-   "spec_fit": "meets",
-   "capacity": "Route-limited",
-   "unit_price": 309,
-   "quantity_available": null,
-   "lead_time_days": 21,
-   "quote_valid_until": "2026-11-03",
-   "note": "Quote has expired. Needs a fresh quote."
-  },
-  {
-   "id": "O-W-07",
-   "alert_id": "AL-W-006",
-   "type": "sourcing",
-   "name": "US hard red winter via Houston (Gulf Coast Exporters)",
-   "qualification": "qualified",
-   "spec_fit": "meets",
-   "capacity": "9,000 t / month (stated, not verified)",
-   "unit_price": 291,
-   "quantity_available": null,
-   "lead_time_days": 20,
-   "quote_valid_until": "2026-11-18",
-   "note": "Used for the earlier response."
-  },
-  {
-   "id": "O-W-08",
-   "alert_id": "AL-W-006",
-   "type": "inventory",
-   "name": "Draw down Lyon pasta-plant buffer",
-   "qualification": "qualified",
-   "spec_fit": "meets",
-   "capacity": "400 t available",
-   "unit_price": null,
-   "quantity_available": 400,
-   "lead_time_days": 1,
-   "quote_valid_until": null,
-   "note": "Internal transfer."
-  },
-  {
-   "id": "O-W-09",
-   "alert_id": "AL-W-006",
-   "type": "sourcing",
-   "name": "French soft wheat via Rouen (Rouen Port Grain)",
-   "qualification": "qualified",
-   "spec_fit": "partial",
-   "capacity": "5,000 t / month (stated, not verified)",
-   "unit_price": 284,
-   "quantity_available": null,
-   "lead_time_days": 16,
-   "quote_valid_until": "2026-11-24",
-   "note": "Soft wheat; specification only partly met for pasta."
-  },
-  {
-   "id": "O-W-10",
-   "alert_id": "AL-W-003",
-   "type": "sourcing",
-   "name": "Romanian wheat via Constan\u021ba (qualified lot)",
-   "qualification": "qualified",
-   "spec_fit": "meets",
-   "capacity": "6,000 t / month (stated, not verified)",
-   "unit_price": 296,
-   "quantity_available": null,
-   "lead_time_days": 14,
-   "quote_valid_until": "2026-11-27",
-   "note": "Qualified lot from the Dobrogea region."
-  },
-  {
-   "id": "O-W-11",
-   "alert_id": "AL-W-003",
-   "type": "inventory",
-   "name": "Transfer stock from Plant Milan",
-   "qualification": "qualified",
-   "spec_fit": "meets",
-   "capacity": "300 t available",
-   "unit_price": null,
-   "quantity_available": 300,
-   "lead_time_days": 3,
-   "quote_valid_until": null,
-   "note": "Internal transfer."
-  },
-  {
-   "id": "O-W-12",
-   "alert_id": "AL-W-003",
-   "type": "logistics",
-   "name": "Switch loading to a second Black Sea berth",
-   "qualification": "qualified",
-   "spec_fit": "meets",
-   "capacity": "Berth-limited",
-   "unit_price": 289,
-   "quantity_available": null,
-   "lead_time_days": 9,
-   "quote_valid_until": "2026-11-13",
-   "note": "Depends on terminal availability; quote expires soon."
-  },
   {
    "id": "O-T-01",
    "alert_id": "AL-T-001",
@@ -5333,65 +3332,51 @@
    "lead_time_days": 2,
    "quote_valid_until": null,
    "note": "Approval needed."
+  },
+  {
+   "id": "O-T-10",
+   "alert_id": "AL-T-007",
+   "type": "sourcing",
+   "name": "Spot concentrate via Hamburg Rohstoffhandel",
+   "qualification": "qualified",
+   "spec_fit": "meets",
+   "capacity": "2 t (spot)",
+   "unit_price": 54500,
+   "quantity_available": null,
+   "lead_time_days": 20,
+   "quote_valid_until": "2026-11-21",
+   "note": "Qualified; quote expires soon."
+  },
+  {
+   "id": "O-T-11",
+   "alert_id": "AL-T-007",
+   "type": "inventory",
+   "name": "Transfer stock from Plant Graz",
+   "qualification": "qualified",
+   "spec_fit": "meets",
+   "capacity": "1 t available",
+   "unit_price": null,
+   "quantity_available": 1,
+   "lead_time_days": 3,
+   "quote_valid_until": null,
+   "note": "Internal transfer."
+  },
+  {
+   "id": "O-T-12",
+   "alert_id": "AL-T-007",
+   "type": "logistics",
+   "name": "Divert the next cargo to Hamburg",
+   "qualification": "qualified",
+   "spec_fit": "meets",
+   "capacity": "Berth-limited",
+   "unit_price": 50200,
+   "quantity_available": null,
+   "lead_time_days": 9,
+   "quote_valid_until": "2026-11-13",
+   "note": "Depends on terminal availability."
   }
  ],
  "assumption": [
-  {
-   "id": "AS-W-1",
-   "alert_id": "AL-W-001",
-   "affected_share_pct": 80,
-   "basis": "Restriction covers all exports from the Black Sea ports for the full horizon (analyst estimate, synthetic).",
-   "proposed_by_id": "u-analyst-a",
-   "proposed_by_name": "Risk Analyst A",
-   "proposed_at": "2026-11-03T21:00:00Z",
-   "status": "superseded",
-   "decided_by_id": "u-analyst-b",
-   "decided_by_name": "Risk Analyst B",
-   "decided_at": "2026-11-04T09:00:00Z",
-   "decision_note": "Accepted for the first assessment."
-  },
-  {
-   "id": "AS-W-2",
-   "alert_id": "AL-W-001",
-   "affected_share_pct": 70,
-   "basis": "Clarification limits the restriction to bulk cargoes; 70% of contracted volume affected (synthetic).",
-   "proposed_by_id": "u-analyst-a",
-   "proposed_by_name": "Risk Analyst A",
-   "proposed_at": "2026-11-05T21:00:00Z",
-   "status": "approved",
-   "decided_by_id": "u-analyst-b",
-   "decided_by_name": "Risk Analyst B",
-   "decided_at": "2026-11-06T09:00:00Z",
-   "decision_note": "Agreed after the clarification."
-  },
-  {
-   "id": "AS-W-3",
-   "alert_id": "AL-W-006",
-   "affected_share_pct": 60,
-   "basis": "Restriction applies to roughly 60% of contracted Argentine volume (synthetic).",
-   "proposed_by_id": "u-analyst-a",
-   "proposed_by_name": "Risk Analyst A",
-   "proposed_at": "2026-10-21T09:00:00Z",
-   "status": "approved",
-   "decided_by_id": "u-analyst-b",
-   "decided_by_name": "Risk Analyst B",
-   "decided_at": "2026-10-22T09:00:00Z",
-   "decision_note": "Reasonable for the case."
-  },
-  {
-   "id": "AS-W-4",
-   "alert_id": "AL-W-003",
-   "affected_share_pct": 30,
-   "basis": "Short delay; part of the volume re-routed (synthetic).",
-   "proposed_by_id": "u-analyst-a",
-   "proposed_by_name": "Risk Analyst A",
-   "proposed_at": "2026-11-05T21:00:00Z",
-   "status": "rejected",
-   "decided_by_id": "u-analyst-b",
-   "decided_by_name": "Risk Analyst B",
-   "decided_at": "2026-11-06T09:00:00Z",
-   "decision_note": "Delay is short and Odesa holds stock buffers; no disruption assumption needed."
-  },
   {
    "id": "AS-T-1",
    "alert_id": "AL-T-001",
@@ -5433,321 +3418,23 @@
    "decided_by_name": null,
    "decided_at": null,
    "decision_note": null
+  },
+  {
+   "id": "AS-T-4",
+   "alert_id": "AL-T-007",
+   "affected_share_pct": 30,
+   "basis": "Short delay; part of the volume re-routed (synthetic).",
+   "proposed_by_id": "u-analyst-a",
+   "proposed_by_name": "Risk Analyst A",
+   "proposed_at": "2026-11-05T21:00:00Z",
+   "status": "rejected",
+   "decided_by_id": "u-analyst-b",
+   "decided_by_name": "Risk Analyst B",
+   "decided_at": "2026-11-06T09:00:00Z",
+   "decision_note": "Delay is short and the plants hold stock buffers; no disruption assumption needed."
   }
  ],
  "assessment": [
-  {
-   "alert_id": "AL-W-001",
-   "version": 1,
-   "created_at": "2026-11-03T09:00:00Z",
-   "note": "Initial partial assessment: exposure and cover only",
-   "calc_version": "impact-calc 0.3",
-   "assumption_id": null,
-   "exposed_value": 5400,
-   "exposed_unit": "t",
-   "exposed_horizon": "60 days",
-   "reference_option_id": "O-W-01",
-   "inputs": {
-    "asOf": "2026-11-03",
-    "usableStock": 2900,
-    "stockUnit": "t",
-    "demandPerDay": 120,
-    "baselinePrice": 285,
-    "currency": "USD",
-    "priceUnit": "per t",
-    "notes": [
-     "Usable stock only; reserved stock excluded",
-     "Constant demand, no other receipts assumed"
-    ]
-   },
-   "paths": [
-    {
-     "nodes": [
-      "Azov Export Services (Russia)",
-      "Istanbul Unlu Milling",
-      "Plant Izmir (biscuits)",
-      "Biscuit dough"
-     ],
-     "classification": "potential",
-     "basis": "Country match; weakest link confidence medium"
-    },
-    {
-     "nodes": [
-      "Azov Export Services (Russia)",
-      "Istanbul Unlu Milling",
-      "Plant Izmir (biscuits)",
-      "Bread flour (retail)"
-     ],
-     "classification": "potential",
-     "basis": "Country match; weakest link confidence medium"
-    }
-   ],
-   "missing": [
-    "Freight and other additional costs (not included in the cost figure)",
-    "Share of each mill's volume sourced from the affected country (allocation unknown)"
-   ]
-  },
-  {
-   "alert_id": "AL-W-001",
-   "version": 2,
-   "created_at": "2026-11-04T09:00:00Z",
-   "note": "Assumption AS-W-1 approved (80% affected share)",
-   "calc_version": "impact-calc 0.3",
-   "assumption_id": "AS-W-1",
-   "exposed_value": 5400,
-   "exposed_unit": "t",
-   "exposed_horizon": "60 days",
-   "reference_option_id": "O-W-01",
-   "inputs": {
-    "asOf": "2026-11-03",
-    "usableStock": 2900,
-    "stockUnit": "t",
-    "demandPerDay": 120,
-    "baselinePrice": 285,
-    "currency": "USD",
-    "priceUnit": "per t",
-    "notes": [
-     "Usable stock only; reserved stock excluded",
-     "Constant demand, no other receipts assumed"
-    ]
-   },
-   "paths": [
-    {
-     "nodes": [
-      "Azov Export Services (Russia)",
-      "Istanbul Unlu Milling",
-      "Plant Izmir (biscuits)",
-      "Biscuit dough"
-     ],
-     "classification": "potential",
-     "basis": "Country match; weakest link confidence medium"
-    },
-    {
-     "nodes": [
-      "Azov Export Services (Russia)",
-      "Istanbul Unlu Milling",
-      "Plant Izmir (biscuits)",
-      "Bread flour (retail)"
-     ],
-     "classification": "potential",
-     "basis": "Country match; weakest link confidence medium"
-    }
-   ],
-   "missing": [
-    "Freight and other additional costs (not included in the cost figure)",
-    "Share of each mill's volume sourced from the affected country (allocation unknown)"
-   ]
-  },
-  {
-   "alert_id": "AL-W-001",
-   "version": 3,
-   "created_at": "2026-11-06T09:00:00Z",
-   "note": "Assumption AS-W-2 approved (70% affected share)",
-   "calc_version": "impact-calc 0.3",
-   "assumption_id": "AS-W-2",
-   "exposed_value": 5400,
-   "exposed_unit": "t",
-   "exposed_horizon": "60 days",
-   "reference_option_id": "O-W-01",
-   "inputs": {
-    "asOf": "2026-11-03",
-    "usableStock": 2900,
-    "stockUnit": "t",
-    "demandPerDay": 120,
-    "baselinePrice": 285,
-    "currency": "USD",
-    "priceUnit": "per t",
-    "notes": [
-     "Usable stock only; reserved stock excluded",
-     "Constant demand, no other receipts assumed"
-    ]
-   },
-   "paths": [
-    {
-     "nodes": [
-      "Azov Export Services (Russia)",
-      "Istanbul Unlu Milling",
-      "Plant Izmir (biscuits)",
-      "Biscuit dough"
-     ],
-     "classification": "potential",
-     "basis": "Country match; weakest link confidence medium"
-    },
-    {
-     "nodes": [
-      "Azov Export Services (Russia)",
-      "Istanbul Unlu Milling",
-      "Plant Izmir (biscuits)",
-      "Bread flour (retail)"
-     ],
-     "classification": "potential",
-     "basis": "Country match; weakest link confidence medium"
-    }
-   ],
-   "missing": [
-    "Freight and other additional costs (not included in the cost figure)",
-    "Share of each mill's volume sourced from the affected country (allocation unknown)"
-   ]
-  },
-  {
-   "alert_id": "AL-W-006",
-   "version": 1,
-   "created_at": "2026-10-20T09:00:00Z",
-   "note": "Initial partial assessment: exposure and cover only",
-   "calc_version": "impact-calc 0.3",
-   "assumption_id": null,
-   "exposed_value": 1800,
-   "exposed_unit": "t",
-   "exposed_horizon": "45 days",
-   "reference_option_id": "O-W-07",
-   "inputs": {
-    "asOf": "2026-10-20",
-    "usableStock": 1500,
-    "stockUnit": "t",
-    "demandPerDay": 60,
-    "baselinePrice": 270,
-    "currency": "USD",
-    "priceUnit": "per t",
-    "notes": [
-     "Usable stock only; reserved stock excluded",
-     "Constant demand, no other receipts assumed"
-    ]
-   },
-   "paths": [
-    {
-     "nodes": [
-      "Pampa Cereales SA (Argentina)",
-      "Rosario Export Terminal",
-      "Istanbul Unlu Milling",
-      "Plant Izmir (biscuits)",
-      "Biscuit dough"
-     ],
-     "classification": "potential",
-     "basis": "Country match; weakest link confidence medium"
-    },
-    {
-     "nodes": [
-      "Pampa Cereales SA (Argentina)",
-      "Rosario Export Terminal",
-      "Istanbul Unlu Milling",
-      "Plant Izmir (biscuits)",
-      "Bread flour (retail)"
-     ],
-     "classification": "potential",
-     "basis": "Country match; weakest link confidence medium"
-    }
-   ],
-   "missing": [
-    "Freight and other additional costs (not included in the cost figure)",
-    "Share of each mill's volume sourced from the affected country (allocation unknown)"
-   ]
-  },
-  {
-   "alert_id": "AL-W-006",
-   "version": 2,
-   "created_at": "2026-10-22T09:00:00Z",
-   "note": "Assumption AS-W-3 approved (60% affected share)",
-   "calc_version": "impact-calc 0.3",
-   "assumption_id": "AS-W-3",
-   "exposed_value": 1800,
-   "exposed_unit": "t",
-   "exposed_horizon": "45 days",
-   "reference_option_id": "O-W-07",
-   "inputs": {
-    "asOf": "2026-10-20",
-    "usableStock": 1500,
-    "stockUnit": "t",
-    "demandPerDay": 60,
-    "baselinePrice": 270,
-    "currency": "USD",
-    "priceUnit": "per t",
-    "notes": [
-     "Usable stock only; reserved stock excluded",
-     "Constant demand, no other receipts assumed"
-    ]
-   },
-   "paths": [
-    {
-     "nodes": [
-      "Pampa Cereales SA (Argentina)",
-      "Rosario Export Terminal",
-      "Istanbul Unlu Milling",
-      "Plant Izmir (biscuits)",
-      "Biscuit dough"
-     ],
-     "classification": "potential",
-     "basis": "Country match; weakest link confidence medium"
-    },
-    {
-     "nodes": [
-      "Pampa Cereales SA (Argentina)",
-      "Rosario Export Terminal",
-      "Istanbul Unlu Milling",
-      "Plant Izmir (biscuits)",
-      "Bread flour (retail)"
-     ],
-     "classification": "potential",
-     "basis": "Country match; weakest link confidence medium"
-    }
-   ],
-   "missing": [
-    "Freight and other additional costs (not included in the cost figure)",
-    "Share of each mill's volume sourced from the affected country (allocation unknown)"
-   ]
-  },
-  {
-   "alert_id": "AL-W-003",
-   "version": 1,
-   "created_at": "2026-11-05T09:00:00Z",
-   "note": "Initial partial assessment: exposure and cover only",
-   "calc_version": "impact-calc 0.3",
-   "assumption_id": null,
-   "exposed_value": 2100,
-   "exposed_unit": "t",
-   "exposed_horizon": "30 days",
-   "reference_option_id": "O-W-10",
-   "inputs": {
-    "asOf": "2026-11-05",
-    "usableStock": 2400,
-    "stockUnit": "t",
-    "demandPerDay": 90,
-    "baselinePrice": 285,
-    "currency": "USD",
-    "priceUnit": "per t",
-    "notes": [
-     "Usable stock only; reserved stock excluded",
-     "Constant demand, no other receipts assumed"
-    ]
-   },
-   "paths": [
-    {
-     "nodes": [
-      "Odesa Agro Holdings (Ukraine)",
-      "Black Sea Maritime Grain",
-      "Istanbul Unlu Milling",
-      "Plant Izmir (biscuits)",
-      "Biscuit dough"
-     ],
-     "classification": "potential",
-     "basis": "Country match; weakest link confidence medium"
-    },
-    {
-     "nodes": [
-      "Odesa Agro Holdings (Ukraine)",
-      "Black Sea Maritime Grain",
-      "Istanbul Unlu Milling",
-      "Plant Izmir (biscuits)",
-      "Bread flour (retail)"
-     ],
-     "classification": "potential",
-     "basis": "Country match; weakest link confidence medium"
-    }
-   ],
-   "missing": [
-    "Freight and other additional costs (not included in the cost figure)",
-    "Share of each mill's volume sourced from the affected country (allocation unknown)"
-   ]
-  },
   {
    "alert_id": "AL-T-001",
    "version": 1,
@@ -5965,114 +3652,63 @@
     "Inbound receipts schedule not supplied (time-phased balance not possible)",
     "Freight, duties and licence fees not included in the cost figure"
    ]
+  },
+  {
+   "alert_id": "AL-T-007",
+   "version": 1,
+   "created_at": "2026-11-05T09:00:00Z",
+   "note": "Initial partial assessment: exposure and cover only",
+   "calc_version": "impact-calc 0.3",
+   "assumption_id": null,
+   "exposed_value": 3,
+   "exposed_unit": "t WO3 eq.",
+   "exposed_horizon": "30 days",
+   "reference_option_id": "O-T-10",
+   "inputs": {
+    "asOf": "2026-11-05",
+    "usableStock": 9,
+    "stockUnit": "t WO3 eq.",
+    "demandPerDay": 0.14,
+    "baselinePrice": 41500,
+    "currency": "USD",
+    "priceUnit": "per t WO3 eq.",
+    "notes": [
+     "Usable stock only; reserved stock excluded",
+     "Constant demand, no other receipts assumed",
+     "Quantities in WO3 equivalent"
+    ]
+   },
+   "paths": [
+    {
+     "nodes": [
+      "Rotterdam Metals Trading (Netherlands)",
+      "Goslar Tungstenchemie",
+      "Gothenburg Carbide Works",
+      "Plant Gothenburg (wear parts)",
+      "Mining drill bit"
+     ],
+     "classification": "potential",
+     "basis": "Country match; weakest link confidence medium"
+    },
+    {
+     "nodes": [
+      "Rotterdam Metals Trading (Netherlands)",
+      "Goslar Tungstenchemie",
+      "Rhein Carbide Powders",
+      "Plant Essen (cutting tools)",
+      "Carbide cutting insert"
+     ],
+     "classification": "confirmed",
+     "basis": "Country match; weakest link confidence high"
+    }
+   ],
+   "missing": [
+    "Inbound receipts schedule not supplied (time-phased balance not possible)",
+    "Freight, duties and licence fees not included in the cost figure"
+   ]
   }
  ],
  "action": [
-  {
-   "id": "AC-W-001",
-   "alert_id": "AL-W-001",
-   "commodity": "wheat",
-   "option_id": "O-W-01",
-   "owner_id": "u-manager",
-   "owner_name": "Procurement Manager",
-   "target_date": "2026-11-21",
-   "rationale": "Only qualified option that covers the horizon; request a firm quote and agree terms.",
-   "status": "in_progress",
-   "created_at": "2026-11-05T09:00:00Z",
-   "created_by": "Procurement Manager",
-   "assessment_version": 2,
-   "assumption_status": "approved"
-  },
-  {
-   "id": "AC-W-002",
-   "alert_id": "AL-W-001",
-   "commodity": "wheat",
-   "option_id": "O-W-05",
-   "owner_id": "u-analyst-b",
-   "owner_name": "Risk Analyst B",
-   "target_date": "2026-11-08",
-   "rationale": "Bridge cover with buffer stock from Plant Rotterdam while the supplier is arranged.",
-   "status": "review",
-   "created_at": "2026-11-06T09:00:00Z",
-   "created_by": "Procurement Manager",
-   "assessment_version": 3,
-   "assumption_status": "approved"
-  },
-  {
-   "id": "AC-W-003",
-   "alert_id": "AL-W-001",
-   "commodity": "wheat",
-   "option_id": "O-W-03",
-   "owner_id": "u-manager",
-   "owner_name": "Procurement Manager",
-   "target_date": "2026-11-29",
-   "rationale": "Second source on a different route; decide before the quote lapses.",
-   "status": "open",
-   "created_at": "2026-11-07T09:00:00Z",
-   "created_by": "Procurement Manager",
-   "assessment_version": 3,
-   "assumption_status": "approved"
-  },
-  {
-   "id": "AC-W-004",
-   "alert_id": "AL-W-006",
-   "commodity": "wheat",
-   "option_id": "O-W-07",
-   "owner_id": "u-manager",
-   "owner_name": "Procurement Manager",
-   "target_date": "2026-10-28",
-   "rationale": "Used the US hard red winter lot to cover the Argentine gap.",
-   "status": "done",
-   "created_at": "2026-10-23T09:00:00Z",
-   "created_by": "Procurement Manager",
-   "assessment_version": 2,
-   "assumption_status": "approved"
-  },
-  {
-   "id": "AC-W-005",
-   "alert_id": "AL-W-003",
-   "commodity": "wheat",
-   "option_id": "O-W-11",
-   "owner_id": "u-analyst-a",
-   "owner_name": "Risk Analyst A",
-   "target_date": "2026-11-15",
-   "rationale": "Small stock transfer to cover the short Odesa delay.",
-   "status": "in_progress",
-   "created_at": "2026-11-06T09:00:00Z",
-   "created_by": "Procurement Manager",
-   "assessment_version": 1,
-   "assumption_status": "rejected"
-  },
-  {
-   "id": "AC-W-006",
-   "alert_id": "AL-W-001",
-   "commodity": "wheat",
-   "option_id": "O-W-02",
-   "owner_id": "u-analyst-wheat",
-   "owner_name": "Wheat Analyst",
-   "target_date": "2026-12-04",
-   "rationale": "Long-lead option for the following quarter.",
-   "status": "open",
-   "created_at": "2026-11-08T09:00:00Z",
-   "created_by": "Procurement Manager",
-   "assessment_version": 3,
-   "assumption_status": "approved"
-  },
-  {
-   "id": "AC-W-007",
-   "alert_id": "AL-W-006",
-   "commodity": "wheat",
-   "option_id": "O-W-08",
-   "owner_id": "u-analyst-a",
-   "owner_name": "Risk Analyst A",
-   "target_date": "2026-10-25",
-   "rationale": "Drew down the Lyon buffer during the first week.",
-   "status": "done",
-   "created_at": "2026-10-23T09:00:00Z",
-   "created_by": "Procurement Manager",
-   "assessment_version": 2,
-   "assumption_status": "approved"
-  },
   {
    "id": "AC-T-001",
    "alert_id": "AL-T-001",
@@ -6134,6 +3770,21 @@
    "assumption_status": "proposed"
   },
   {
+   "id": "AC-T-006",
+   "alert_id": "AL-T-007",
+   "commodity": "tungsten",
+   "option_id": "O-T-11",
+   "owner_id": "u-analyst-a",
+   "owner_name": "Risk Analyst A",
+   "target_date": "2026-11-15",
+   "rationale": "Small stock transfer to cover the short Rotterdam delay.",
+   "status": "in_progress",
+   "created_at": "2026-11-06T09:00:00Z",
+   "created_by": "Procurement Manager",
+   "assessment_version": 1,
+   "assumption_status": "rejected"
+  },
+  {
    "id": "AC-T-005",
    "alert_id": "AL-T-001",
    "commodity": "tungsten",
@@ -6150,134 +3801,6 @@
   }
  ],
  "action_status_history": [
-  {
-   "action_id": "AC-W-001",
-   "at": "2026-11-05T09:00:00Z",
-   "actor": "Procurement Manager",
-   "from_status": null,
-   "to_status": "open",
-   "note": "Decision recorded"
-  },
-  {
-   "action_id": "AC-W-001",
-   "at": "2026-11-06T09:00:00Z",
-   "actor": "Procurement Manager",
-   "from_status": "open",
-   "to_status": "in_progress",
-   "note": "Rouen Port Grain asked for a firm quote"
-  },
-  {
-   "action_id": "AC-W-002",
-   "at": "2026-11-06T09:00:00Z",
-   "actor": "Procurement Manager",
-   "from_status": null,
-   "to_status": "open",
-   "note": "Decision recorded"
-  },
-  {
-   "action_id": "AC-W-002",
-   "at": "2026-11-07T09:00:00Z",
-   "actor": "Risk Analyst B",
-   "from_status": "open",
-   "to_status": "in_progress",
-   "note": "Quantity confirmed with the plant"
-  },
-  {
-   "action_id": "AC-W-002",
-   "at": "2026-11-07T21:00:00Z",
-   "actor": "Risk Analyst B",
-   "from_status": "in_progress",
-   "to_status": "review",
-   "note": "Transfer complete, ready for review"
-  },
-  {
-   "action_id": "AC-W-003",
-   "at": "2026-11-07T09:00:00Z",
-   "actor": "Procurement Manager",
-   "from_status": null,
-   "to_status": "open",
-   "note": "Decision recorded"
-  },
-  {
-   "action_id": "AC-W-004",
-   "at": "2026-10-23T09:00:00Z",
-   "actor": "Procurement Manager",
-   "from_status": null,
-   "to_status": "open",
-   "note": "Decision recorded"
-  },
-  {
-   "action_id": "AC-W-004",
-   "at": "2026-10-24T09:00:00Z",
-   "actor": "Procurement Manager",
-   "from_status": "open",
-   "to_status": "in_progress",
-   "note": "Order placed"
-  },
-  {
-   "action_id": "AC-W-004",
-   "at": "2026-10-27T09:00:00Z",
-   "actor": "Risk Analyst A",
-   "from_status": "in_progress",
-   "to_status": "review",
-   "note": "Cargo received"
-  },
-  {
-   "action_id": "AC-W-004",
-   "at": "2026-10-28T09:00:00Z",
-   "actor": "Procurement Manager",
-   "from_status": "review",
-   "to_status": "done",
-   "note": "Closed after delivery"
-  },
-  {
-   "action_id": "AC-W-005",
-   "at": "2026-11-06T09:00:00Z",
-   "actor": "Procurement Manager",
-   "from_status": null,
-   "to_status": "open",
-   "note": "Decision recorded"
-  },
-  {
-   "action_id": "AC-W-005",
-   "at": "2026-11-07T09:00:00Z",
-   "actor": "Risk Analyst A",
-   "from_status": "open",
-   "to_status": "in_progress",
-   "note": "Plant Milan agreed 300 t"
-  },
-  {
-   "action_id": "AC-W-006",
-   "at": "2026-11-08T09:00:00Z",
-   "actor": "Procurement Manager",
-   "from_status": null,
-   "to_status": "open",
-   "note": "Decision recorded"
-  },
-  {
-   "action_id": "AC-W-007",
-   "at": "2026-10-23T09:00:00Z",
-   "actor": "Procurement Manager",
-   "from_status": null,
-   "to_status": "open",
-   "note": "Decision recorded"
-  },
-  {
-   "action_id": "AC-W-007",
-   "at": "2026-10-24T09:00:00Z",
-   "actor": "Risk Analyst A",
-   "from_status": "open",
-   "to_status": "in_progress",
-   "note": "Transfer started"
-  },
-  {
-   "action_id": "AC-W-007",
-   "at": "2026-10-25T09:00:00Z",
-   "actor": "Procurement Manager",
-   "from_status": "in_progress",
-   "to_status": "done",
-   "note": "Completed"
-  },
   {
    "action_id": "AC-T-001",
    "at": "2026-11-06T09:00:00Z",
@@ -6351,6 +3874,22 @@
    "note": "Decision recorded"
   },
   {
+   "action_id": "AC-T-006",
+   "at": "2026-11-06T09:00:00Z",
+   "actor": "Procurement Manager",
+   "from_status": null,
+   "to_status": "open",
+   "note": "Decision recorded"
+  },
+  {
+   "action_id": "AC-T-006",
+   "at": "2026-11-07T09:00:00Z",
+   "actor": "Risk Analyst A",
+   "from_status": "open",
+   "to_status": "in_progress",
+   "note": "Plant Graz agreed 1 t"
+  },
+  {
    "action_id": "AC-T-005",
    "at": "2026-11-08T09:00:00Z",
    "actor": "Procurement Manager",
@@ -6360,20 +3899,6 @@
   }
  ],
  "audit_event": [
-  {
-   "at": "2026-09-10T09:00:00Z",
-   "actor": "Risk Analyst A",
-   "event": "rule.draft",
-   "ref": "R-W-EXP",
-   "detail": "version 1.0"
-  },
-  {
-   "at": "2026-09-10T10:00:00Z",
-   "actor": "Risk Analyst A",
-   "event": "rule.published",
-   "ref": "R-W-EXP",
-   "detail": "version 1.0"
-  },
   {
    "at": "2026-09-20T09:00:00Z",
    "actor": "Risk Analyst B",
@@ -6392,7 +3917,7 @@
    "at": "2026-09-25T09:00:00Z",
    "actor": "Risk Analyst A",
    "event": "rule.draft",
-   "ref": "R-W-LOG",
+   "ref": "R-T-LOG",
    "detail": "version 1.0"
   },
   {
@@ -6406,7 +3931,7 @@
    "at": "2026-09-25T10:00:00Z",
    "actor": "Risk Analyst A",
    "event": "rule.published",
-   "ref": "R-W-LOG",
+   "ref": "R-T-LOG",
    "detail": "version 1.0"
   },
   {
@@ -6417,25 +3942,11 @@
    "detail": "version 1.0"
   },
   {
-   "at": "2026-10-05T09:00:00Z",
-   "actor": "Risk Analyst A",
-   "event": "rule.draft",
-   "ref": "R-W-EXP",
-   "detail": "version 1.1"
-  },
-  {
-   "at": "2026-10-05T10:00:00Z",
-   "actor": "Risk Analyst B",
-   "event": "rule.published",
-   "ref": "R-W-EXP",
-   "detail": "version 1.1"
-  },
-  {
    "at": "2026-10-10T09:25:00Z",
    "actor": "Ingestion worker",
    "event": "alert.raised",
    "ref": "AL-T-006",
-   "detail": "tungsten-export-policy v1.1 from OB-000013"
+   "detail": "tungsten-export-policy v1.1 from OB-000006"
   },
   {
    "at": "2026-10-20T09:00:00Z",
@@ -6445,81 +3956,11 @@
    "detail": "version 1.1"
   },
   {
-   "at": "2026-10-20T09:25:00Z",
-   "actor": "Ingestion worker",
-   "event": "alert.raised",
-   "ref": "AL-W-006",
-   "detail": "wheat-export-policy v1.2 from OB-000006"
-  },
-  {
    "at": "2026-10-20T10:00:00Z",
    "actor": "Risk Analyst A",
    "event": "rule.published",
    "ref": "R-T-EXP",
    "detail": "version 1.1"
-  },
-  {
-   "at": "2026-10-21T09:00:00Z",
-   "actor": "Risk Analyst A",
-   "event": "assumption.proposed",
-   "ref": "AS-W-3",
-   "detail": "60% affected share"
-  },
-  {
-   "at": "2026-10-22T09:00:00Z",
-   "actor": "Risk Analyst B",
-   "event": "assumption.approved",
-   "ref": "AS-W-3",
-   "detail": "Reasonable for the case."
-  },
-  {
-   "at": "2026-10-23T09:00:00Z",
-   "actor": "Procurement Manager",
-   "event": "decision.created",
-   "ref": "AC-W-004",
-   "detail": "US hard red winter via Houston (Gulf Coast Exporters), owner Procurement Manager"
-  },
-  {
-   "at": "2026-10-23T09:00:00Z",
-   "actor": "Procurement Manager",
-   "event": "decision.created",
-   "ref": "AC-W-007",
-   "detail": "Draw down Lyon pasta-plant buffer, owner Risk Analyst A"
-  },
-  {
-   "at": "2026-10-24T09:00:00Z",
-   "actor": "Procurement Manager",
-   "event": "action.status",
-   "ref": "AC-W-004",
-   "detail": "in_progress: Order placed"
-  },
-  {
-   "at": "2026-10-24T09:00:00Z",
-   "actor": "Risk Analyst A",
-   "event": "action.status",
-   "ref": "AC-W-007",
-   "detail": "in_progress: Transfer started"
-  },
-  {
-   "at": "2026-10-25T09:00:00Z",
-   "actor": "Procurement Manager",
-   "event": "action.status",
-   "ref": "AC-W-007",
-   "detail": "done: Completed"
-  },
-  {
-   "at": "2026-10-27T09:00:00Z",
-   "actor": "Risk Analyst A",
-   "event": "action.status",
-   "ref": "AC-W-004",
-   "detail": "review: Cargo received"
-  },
-  {
-   "at": "2026-10-28T09:00:00Z",
-   "actor": "Procurement Manager",
-   "event": "action.status",
-   "ref": "AC-W-004",
-   "detail": "done: Closed after delivery"
   },
   {
    "at": "2026-10-28T09:00:00Z",
@@ -6529,32 +3970,18 @@
    "detail": "supplier_network v1: 71 accepted, 2 quarantined"
   },
   {
-   "at": "2026-10-28T09:00:00Z",
-   "actor": "Risk Analyst A",
-   "event": "rule.draft",
-   "ref": "R-W-EXP",
-   "detail": "version 1.2"
-  },
-  {
-   "at": "2026-10-28T10:00:00Z",
-   "actor": "Risk Analyst B",
-   "event": "rule.published",
-   "ref": "R-W-EXP",
-   "detail": "version 1.2"
-  },
-  {
    "at": "2026-11-01T09:25:00Z",
    "actor": "Ingestion worker",
    "event": "alert.raised",
-   "ref": "AL-W-005",
-   "detail": "wheat-logistics v1.0 from OB-000005"
+   "ref": "AL-T-009",
+   "detail": "tungsten-logistics v1.0 from OB-000009"
   },
   {
    "at": "2026-11-02T09:25:00Z",
    "actor": "Ingestion worker",
    "event": "alert.raised",
    "ref": "AL-T-001",
-   "detail": "tungsten-export-policy v1.1 from OB-000008"
+   "detail": "tungsten-export-policy v1.1 from OB-000001"
   },
   {
    "at": "2026-11-02T21:00:00Z",
@@ -6578,20 +4005,6 @@
    "detail": "accepted"
   },
   {
-   "at": "2026-11-03T09:25:00Z",
-   "actor": "Ingestion worker",
-   "event": "alert.raised",
-   "ref": "AL-W-001",
-   "detail": "wheat-export-policy v1.2 from OB-000001"
-  },
-  {
-   "at": "2026-11-03T21:00:00Z",
-   "actor": "Risk Analyst A",
-   "event": "assumption.proposed",
-   "ref": "AS-W-1",
-   "detail": "80% affected share"
-  },
-  {
    "at": "2026-11-04T09:00:00Z",
    "actor": "Procurement Manager",
    "event": "decision.created",
@@ -6610,7 +4023,7 @@
    "actor": "Ingestion worker",
    "event": "alert.raised",
    "ref": "AL-T-002",
-   "detail": "tungsten-export-policy v1.1 from OB-000009"
+   "detail": "tungsten-export-policy v1.1 from OB-000002"
   },
   {
    "at": "2026-11-04T21:00:00Z",
@@ -6625,13 +4038,6 @@
    "event": "assumption.approved",
    "ref": "AS-T-2",
    "detail": "Agreed after the quota notice."
-  },
-  {
-   "at": "2026-11-05T09:00:00Z",
-   "actor": "Procurement Manager",
-   "event": "decision.created",
-   "ref": "AC-W-001",
-   "detail": "French milling wheat via Rouen (Rouen Port Grain), owner Procurement Manager"
   },
   {
    "at": "2026-11-05T09:00:00Z",
@@ -6651,57 +4057,22 @@
    "at": "2026-11-05T09:25:00Z",
    "actor": "Ingestion worker",
    "event": "alert.raised",
-   "ref": "AL-W-003",
-   "detail": "wheat-logistics v1.0 from OB-000003"
+   "ref": "AL-T-007",
+   "detail": "tungsten-logistics v1.0 from OB-000007"
   },
   {
    "at": "2026-11-05T21:00:00Z",
    "actor": "Risk Analyst A",
    "event": "assumption.proposed",
-   "ref": "AS-W-2",
-   "detail": "70% affected share"
-  },
-  {
-   "at": "2026-11-05T21:00:00Z",
-   "actor": "Risk Analyst A",
-   "event": "assumption.proposed",
-   "ref": "AS-W-4",
+   "ref": "AS-T-4",
    "detail": "30% affected share"
   },
   {
    "at": "2026-11-06T09:00:00Z",
    "actor": "Risk Analyst B",
-   "event": "assumption.approved",
-   "ref": "AS-W-2",
-   "detail": "Agreed after the clarification."
-  },
-  {
-   "at": "2026-11-06T09:00:00Z",
-   "actor": "Risk Analyst B",
    "event": "assumption.rejected",
-   "ref": "AS-W-4",
-   "detail": "Delay is short and Odesa holds stock buffers; no disruption assumption needed."
-  },
-  {
-   "at": "2026-11-06T09:00:00Z",
-   "actor": "Procurement Manager",
-   "event": "action.status",
-   "ref": "AC-W-001",
-   "detail": "in_progress: Rouen Port Grain asked for a firm quote"
-  },
-  {
-   "at": "2026-11-06T09:00:00Z",
-   "actor": "Procurement Manager",
-   "event": "decision.created",
-   "ref": "AC-W-002",
-   "detail": "Transfer buffer stock from Plant Rotterdam, owner Risk Analyst B"
-  },
-  {
-   "at": "2026-11-06T09:00:00Z",
-   "actor": "Procurement Manager",
-   "event": "decision.created",
-   "ref": "AC-W-005",
-   "detail": "Transfer stock from Plant Milan, owner Risk Analyst A"
+   "ref": "AS-T-4",
+   "detail": "Delay is short and the plants hold stock buffers; no disruption assumption needed."
   },
   {
    "at": "2026-11-06T09:00:00Z",
@@ -6719,6 +4090,13 @@
   },
   {
    "at": "2026-11-06T09:00:00Z",
+   "actor": "Procurement Manager",
+   "event": "decision.created",
+   "ref": "AC-T-006",
+   "detail": "Transfer stock from Plant Graz, owner Risk Analyst A"
+  },
+  {
+   "at": "2026-11-06T09:00:00Z",
    "actor": "Data Steward",
    "event": "import.committed",
    "ref": "IMP-002",
@@ -6728,36 +4106,8 @@
    "at": "2026-11-06T09:25:00Z",
    "actor": "Ingestion worker",
    "event": "alert.raised",
-   "ref": "AL-W-002",
-   "detail": "wheat-export-policy v1.2 from OB-000002"
-  },
-  {
-   "at": "2026-11-06T09:25:00Z",
-   "actor": "Ingestion worker",
-   "event": "alert.raised",
    "ref": "AL-T-004",
-   "detail": "tungsten-price v1.0 from OB-000011"
-  },
-  {
-   "at": "2026-11-07T09:00:00Z",
-   "actor": "Risk Analyst B",
-   "event": "action.status",
-   "ref": "AC-W-002",
-   "detail": "in_progress: Quantity confirmed with the plant"
-  },
-  {
-   "at": "2026-11-07T09:00:00Z",
-   "actor": "Procurement Manager",
-   "event": "decision.created",
-   "ref": "AC-W-003",
-   "detail": "Australian milling wheat via Port Adelaide (Southern Cross Grain Exports), owner Procurement Manager"
-  },
-  {
-   "at": "2026-11-07T09:00:00Z",
-   "actor": "Risk Analyst A",
-   "event": "action.status",
-   "ref": "AC-W-005",
-   "detail": "in_progress: Plant Milan agreed 300 t"
+   "detail": "tungsten-price v1.0 from OB-000004"
   },
   {
    "at": "2026-11-07T09:00:00Z",
@@ -6769,30 +4119,30 @@
   {
    "at": "2026-11-07T09:00:00Z",
    "actor": "Risk Analyst A",
+   "event": "action.status",
+   "ref": "AC-T-006",
+   "detail": "in_progress: Plant Graz agreed 1 t"
+  },
+  {
+   "at": "2026-11-07T09:00:00Z",
+   "actor": "Risk Analyst A",
    "event": "rule.draft",
-   "ref": "R-W-LOG",
+   "ref": "R-T-LOG",
    "detail": "version 1.1"
   },
   {
    "at": "2026-11-07T09:25:00Z",
    "actor": "Ingestion worker",
    "event": "alert.raised",
-   "ref": "AL-W-004",
-   "detail": "wheat-logistics v1.0 from OB-000004"
+   "ref": "AL-T-003",
+   "detail": "tungsten-export-policy v1.1 from OB-000003"
   },
   {
    "at": "2026-11-07T09:25:00Z",
    "actor": "Ingestion worker",
    "event": "alert.raised",
-   "ref": "AL-T-003",
-   "detail": "tungsten-export-policy v1.1 from OB-000010"
-  },
-  {
-   "at": "2026-11-07T21:00:00Z",
-   "actor": "Risk Analyst B",
-   "event": "action.status",
-   "ref": "AC-W-002",
-   "detail": "review: Transfer complete, ready for review"
+   "ref": "AL-T-008",
+   "detail": "tungsten-logistics v1.0 from OB-000008"
   },
   {
    "at": "2026-11-08T09:00:00Z",
@@ -6800,13 +4150,6 @@
    "event": "assumption.proposed",
    "ref": "AS-T-3",
    "detail": "40% affected share"
-  },
-  {
-   "at": "2026-11-08T09:00:00Z",
-   "actor": "Procurement Manager",
-   "event": "decision.created",
-   "ref": "AC-W-006",
-   "detail": "Canadian milling wheat via Thunder Bay (Great Lakes Commodities), owner Wheat Analyst"
   },
   {
    "at": "2026-11-08T09:00:00Z",
@@ -6833,15 +4176,8 @@
    "at": "2026-11-08T09:25:00Z",
    "actor": "Ingestion worker",
    "event": "alert.raised",
-   "ref": "AL-W-007",
-   "detail": "wheat-logistics v1.0 from OB-000007"
-  },
-  {
-   "at": "2026-11-08T09:25:00Z",
-   "actor": "Ingestion worker",
-   "event": "alert.raised",
    "ref": "AL-T-005",
-   "detail": "tungsten-price v1.0 from OB-000012"
+   "detail": "tungsten-price v1.0 from OB-000005"
   }
  ],
  "ingestion_run": [
@@ -6853,7 +4189,7 @@
    "accepted": 0,
    "duplicate": 0,
    "quarantined": 1,
-   "note": "ING-00021 (sim-policy v1)"
+   "note": "ING-00015 (sim-policy v1)"
   },
   {
    "id": "RUN-0002",
@@ -6863,7 +4199,7 @@
    "accepted": 0,
    "duplicate": 0,
    "quarantined": 1,
-   "note": "ING-00022 (sim-policy v1)"
+   "note": "ING-00016 (sim-policy v1)"
   },
   {
    "id": "RUN-0003",
@@ -6873,7 +4209,7 @@
    "accepted": 0,
    "duplicate": 0,
    "quarantined": 1,
-   "note": "ING-00023 (sim-price v1)"
+   "note": "ING-00017 (sim-price v1)"
   },
   {
    "id": "RUN-0004",
@@ -7178,7 +4514,7 @@
   {
    "id": "RUN-0034",
    "source_id": "src-policy",
-   "started_at": "2026-11-03T09:25:00Z",
+   "started_at": "2026-11-02T09:25:00Z",
    "status": "ok",
    "accepted": 1,
    "duplicate": 0,
@@ -7188,7 +4524,7 @@
   {
    "id": "RUN-0035",
    "source_id": "src-policy",
-   "started_at": "2026-11-06T09:25:00Z",
+   "started_at": "2026-11-04T09:25:00Z",
    "status": "ok",
    "accepted": 1,
    "duplicate": 0,
@@ -7197,38 +4533,38 @@
   },
   {
    "id": "RUN-0036",
-   "source_id": "src-logistics",
-   "started_at": "2026-11-05T09:25:00Z",
-   "status": "ok",
-   "accepted": 1,
-   "duplicate": 0,
-   "quarantined": 0,
-   "note": "ING-00003 (sim-logistics v1)"
-  },
-  {
-   "id": "RUN-0037",
-   "source_id": "src-logistics",
+   "source_id": "src-policy",
    "started_at": "2026-11-07T09:25:00Z",
    "status": "ok",
    "accepted": 1,
    "duplicate": 0,
    "quarantined": 0,
-   "note": "ING-00004 (sim-logistics v1)"
+   "note": "ING-00003 (sim-policy v1)"
   },
   {
-   "id": "RUN-0038",
-   "source_id": "src-logistics",
-   "started_at": "2026-11-01T09:25:00Z",
+   "id": "RUN-0037",
+   "source_id": "src-price",
+   "started_at": "2026-11-06T09:25:00Z",
    "status": "ok",
    "accepted": 1,
    "duplicate": 0,
    "quarantined": 0,
-   "note": "ING-00005 (sim-logistics v1)"
+   "note": "ING-00004 (sim-price v1)"
+  },
+  {
+   "id": "RUN-0038",
+   "source_id": "src-price",
+   "started_at": "2026-11-08T09:25:00Z",
+   "status": "ok",
+   "accepted": 1,
+   "duplicate": 0,
+   "quarantined": 0,
+   "note": "ING-00005 (sim-price v1)"
   },
   {
    "id": "RUN-0039",
    "source_id": "src-policy",
-   "started_at": "2026-10-20T09:25:00Z",
+   "started_at": "2026-10-10T09:25:00Z",
    "status": "ok",
    "accepted": 1,
    "duplicate": 0,
@@ -7238,7 +4574,7 @@
   {
    "id": "RUN-0040",
    "source_id": "src-logistics",
-   "started_at": "2026-11-08T09:25:00Z",
+   "started_at": "2026-11-05T09:25:00Z",
    "status": "ok",
    "accepted": 1,
    "duplicate": 0,
@@ -7247,28 +4583,28 @@
   },
   {
    "id": "RUN-0041",
-   "source_id": "src-policy",
-   "started_at": "2026-11-02T09:25:00Z",
+   "source_id": "src-logistics",
+   "started_at": "2026-11-07T09:25:00Z",
    "status": "ok",
    "accepted": 1,
    "duplicate": 0,
    "quarantined": 0,
-   "note": "ING-00008 (sim-policy v1)"
+   "note": "ING-00008 (sim-logistics v1)"
   },
   {
    "id": "RUN-0042",
-   "source_id": "src-policy",
-   "started_at": "2026-11-04T09:25:00Z",
+   "source_id": "src-logistics",
+   "started_at": "2026-11-01T09:25:00Z",
    "status": "ok",
    "accepted": 1,
    "duplicate": 0,
    "quarantined": 0,
-   "note": "ING-00009 (sim-policy v1)"
+   "note": "ING-00009 (sim-logistics v1)"
   },
   {
    "id": "RUN-0043",
    "source_id": "src-policy",
-   "started_at": "2026-11-07T09:25:00Z",
+   "started_at": "2026-11-05T12:25:00Z",
    "status": "ok",
    "accepted": 1,
    "duplicate": 0,
@@ -7277,28 +4613,28 @@
   },
   {
    "id": "RUN-0044",
-   "source_id": "src-price",
-   "started_at": "2026-11-06T09:25:00Z",
+   "source_id": "src-logistics",
+   "started_at": "2026-11-03T12:25:00Z",
    "status": "ok",
    "accepted": 1,
    "duplicate": 0,
    "quarantined": 0,
-   "note": "ING-00011 (sim-price v1)"
+   "note": "ING-00011 (sim-logistics v1)"
   },
   {
    "id": "RUN-0045",
-   "source_id": "src-price",
-   "started_at": "2026-11-08T09:25:00Z",
+   "source_id": "src-policy",
+   "started_at": "2026-11-01T12:25:00Z",
    "status": "ok",
    "accepted": 1,
    "duplicate": 0,
    "quarantined": 0,
-   "note": "ING-00012 (sim-price v1)"
+   "note": "ING-00012 (sim-policy v1)"
   },
   {
    "id": "RUN-0046",
    "source_id": "src-policy",
-   "started_at": "2026-10-10T09:25:00Z",
+   "started_at": "2026-11-03T12:25:00Z",
    "status": "ok",
    "accepted": 1,
    "duplicate": 0,
@@ -7307,18 +4643,18 @@
   },
   {
    "id": "RUN-0047",
-   "source_id": "src-policy",
-   "started_at": "2026-11-04T12:25:00Z",
+   "source_id": "src-price",
+   "started_at": "2026-10-28T12:25:00Z",
    "status": "ok",
    "accepted": 1,
    "duplicate": 0,
    "quarantined": 0,
-   "note": "ING-00014 (sim-policy v1)"
+   "note": "ING-00014 (sim-price v1)"
   },
   {
    "id": "RUN-0048",
    "source_id": "src-policy",
-   "started_at": "2026-11-05T12:25:00Z",
+   "started_at": "2026-11-07T14:25:00Z",
    "status": "ok",
    "accepted": 1,
    "duplicate": 0,
@@ -7328,7 +4664,7 @@
   {
    "id": "RUN-0049",
    "source_id": "src-policy",
-   "started_at": "2026-10-31T12:25:00Z",
+   "started_at": "2026-11-06T14:25:00Z",
    "status": "ok",
    "accepted": 1,
    "duplicate": 0,
@@ -7337,120 +4673,60 @@
   },
   {
    "id": "RUN-0050",
-   "source_id": "src-logistics",
-   "started_at": "2026-11-03T12:25:00Z",
-   "status": "ok",
-   "accepted": 1,
-   "duplicate": 0,
-   "quarantined": 0,
-   "note": "ING-00017 (sim-logistics v1)"
-  },
-  {
-   "id": "RUN-0051",
-   "source_id": "src-policy",
-   "started_at": "2026-11-01T12:25:00Z",
-   "status": "ok",
-   "accepted": 1,
-   "duplicate": 0,
-   "quarantined": 0,
-   "note": "ING-00018 (sim-policy v1)"
-  },
-  {
-   "id": "RUN-0052",
-   "source_id": "src-policy",
-   "started_at": "2026-11-03T12:25:00Z",
-   "status": "ok",
-   "accepted": 1,
-   "duplicate": 0,
-   "quarantined": 0,
-   "note": "ING-00019 (sim-policy v1)"
-  },
-  {
-   "id": "RUN-0053",
-   "source_id": "src-price",
-   "started_at": "2026-10-28T12:25:00Z",
-   "status": "ok",
-   "accepted": 1,
-   "duplicate": 0,
-   "quarantined": 0,
-   "note": "ING-00020 (sim-price v1)"
-  },
-  {
-   "id": "RUN-0054",
-   "source_id": "src-policy",
-   "started_at": "2026-11-07T14:25:00Z",
-   "status": "ok",
-   "accepted": 1,
-   "duplicate": 0,
-   "quarantined": 0,
-   "note": "ING-00021 (sim-policy v1)"
-  },
-  {
-   "id": "RUN-0055",
-   "source_id": "src-policy",
-   "started_at": "2026-11-06T14:25:00Z",
-   "status": "ok",
-   "accepted": 1,
-   "duplicate": 0,
-   "quarantined": 0,
-   "note": "ING-00022 (sim-policy v1)"
-  },
-  {
-   "id": "RUN-0056",
    "source_id": "src-price",
    "started_at": "2026-11-05T14:25:00Z",
    "status": "ok",
    "accepted": 1,
    "duplicate": 0,
    "quarantined": 0,
-   "note": "ING-00023 (sim-price v1)"
+   "note": "ING-00017 (sim-price v1)"
   }
  ],
  "quarantine_item": [
   {
    "id": "Q-0001",
    "source_id": "src-policy",
-   "run_id": "ING-00021",
+   "run_id": "ING-00015",
    "received_at": "2026-11-07T14:25:00Z",
    "reason": "Missing required field: country",
-   "source_row": "record 1 of ING-00021-e4c8abbb6a8d.json",
-   "object_key": "evidence/simulated/src-policy/20261107/ING-00021-e4c8abbb6a8d.json",
+   "source_row": "record 1 of ING-00015-fdd8abeac100.json",
+   "object_key": "evidence/simulated/src-policy/20261107/ING-00015-fdd8abeac100.json",
    "field": "country",
    "bad_value": "",
    "status": "quarantined",
    "correction": null,
-   "ingestion_id": "ING-00021",
-   "record_json": "{\"announcedAt\": \"2026-11-07T14:00:00Z\", \"commodity\": \"wheat\", \"confidencePct\": 62, \"headline\": \"Export restriction announced, country missing in the source record\", \"policyType\": \"export_restriction\", \"recordId\": \"src-policy-00021\"}"
+   "ingestion_id": "ING-00015",
+   "record_json": "{\"announcedAt\": \"2026-11-07T14:00:00Z\", \"commodity\": \"tungsten\", \"confidencePct\": 62, \"headline\": \"Export restriction announced, country missing in the source record\", \"policyType\": \"export_restriction\", \"recordId\": \"src-policy-00015\"}"
   },
   {
    "id": "Q-0002",
    "source_id": "src-policy",
-   "run_id": "ING-00022",
+   "run_id": "ING-00016",
    "received_at": "2026-11-06T14:25:00Z",
    "reason": "Unresolved location: 'Rossiya' is not a known country or alias",
-   "source_row": "record 1 of ING-00022-15338e751249.json",
-   "object_key": "evidence/simulated/src-policy/20261106/ING-00022-15338e751249.json",
+   "source_row": "record 1 of ING-00016-b732a064f4a8.json",
+   "object_key": "evidence/simulated/src-policy/20261106/ING-00016-b732a064f4a8.json",
    "field": "country",
    "bad_value": "Rossiya",
    "status": "quarantined",
    "correction": null,
-   "ingestion_id": "ING-00022",
-   "record_json": "{\"announcedAt\": \"2026-11-06T14:00:00Z\", \"commodity\": \"wheat\", \"confidencePct\": 66, \"country\": \"Rossiya\", \"headline\": \"Export restriction announced, country spelled in an unknown way\", \"policyType\": \"export_restriction\", \"recordId\": \"src-policy-00022\"}"
+   "ingestion_id": "ING-00016",
+   "record_json": "{\"announcedAt\": \"2026-11-06T14:00:00Z\", \"commodity\": \"tungsten\", \"confidencePct\": 66, \"country\": \"Rossiya\", \"headline\": \"Export restriction announced, country spelled in an unknown way\", \"policyType\": \"export_restriction\", \"recordId\": \"src-policy-00016\"}"
   },
   {
    "id": "Q-0003",
    "source_id": "src-price",
-   "run_id": "ING-00023",
+   "run_id": "ING-00017",
    "received_at": "2026-11-05T14:25:00Z",
    "reason": "confidencePct is not valid: Input should be less than or equal to 100",
-   "source_row": "record 1 of ING-00023-d26b4b0eee33.json",
-   "object_key": "evidence/simulated/src-price/20261105/ING-00023-d26b4b0eee33.json",
+   "source_row": "record 1 of ING-00017-d019d5b30944.json",
+   "object_key": "evidence/simulated/src-price/20261105/ING-00017-d019d5b30944.json",
    "field": "confidencePct",
    "bad_value": "150",
    "status": "quarantined",
    "correction": null,
-   "ingestion_id": "ING-00023",
-   "record_json": "{\"commodity\": \"tungsten\", \"confidencePct\": 150, \"headline\": \"Tungsten price report with an impossible confidence value\", \"indicator\": \"price_change_30d_pct\", \"observedAt\": \"2026-11-05T14:00:00Z\", \"recordId\": \"src-price-00023\", \"value\": 18.5}"
+   "ingestion_id": "ING-00017",
+   "record_json": "{\"commodity\": \"tungsten\", \"confidencePct\": 150, \"headline\": \"Tungsten price report with an impossible confidence value\", \"indicator\": \"price_change_30d_pct\", \"observedAt\": \"2026-11-05T14:00:00Z\", \"recordId\": \"src-price-00017\", \"value\": 18.5}"
   },
   {
    "id": "Q-0004",
@@ -7491,7 +4767,7 @@
    "source_row": "row 33 of IMP-001.csv",
    "object_key": "evidence/import/IMP-001.csv",
    "field": "to_id",
-   "bad_value": "w-nowhere",
+   "bad_value": "t-nowhere",
    "status": "quarantined",
    "correction": null,
    "ingestion_id": null,
@@ -7523,11 +4799,11 @@
    "version": 1,
    "rows": 71,
    "rejected": 2,
-   "checksum": "4b58c306251f4a5f83b0984e65bfc150986021f17991c607f53eb4e9912d2df4",
+   "checksum": "1baaad6edd4ddcf3830f6de58894d1e128a28c4c56044826b77c8c1bc95648e3",
    "committed_by": "Data Steward",
    "committed_at": "2026-10-28T09:00:00Z",
    "applied": true,
-   "content": "from_id,to_id,material,source,effective_from,confidence\nw-rott,w-p-duisburg,flour input,Curated file v1,2024-01-01,medium\n"
+   "content": "from_id,to_id,material,source,effective_from,confidence\nt-rhein,t-p-essen,tungsten carbide powder,Curated file v1,2024-01-01,medium\n"
   },
   {
    "id": "IMP-002",
@@ -7535,16 +4811,16 @@
    "version": 1,
    "rows": 9,
    "rejected": 0,
-   "checksum": "c43ae6d0916e4b17bea90cf76f63831a21d2985735e9865c4bc07199cc28aab2",
+   "checksum": "0390f9e8422a2324a4b9cee791075076f3b0abcff873ae4b16011d3b2c9a3920",
    "committed_by": "Data Steward",
    "committed_at": "2026-11-06T09:00:00Z",
    "applied": false,
-   "content": "plant_id,material,rate_per_day,unit,as_of\nw-p-duisburg,wheat flour input,40,t,2026-11-03\nt-p-essen,tungsten carbide powder,0.06,t,2026-11-03\n"
+   "content": "plant_id,material,rate_per_day,unit,as_of\nt-p-graz,tungsten carbide powder,0.04,t,2026-11-03\nt-p-essen,tungsten carbide powder,0.06,t,2026-11-03\n"
   }
  ],
  "option_shortlist": [
   {
-   "option_id": "O-W-01",
+   "option_id": "O-T-01",
    "shortlisted_by_id": "u-analyst-a",
    "shortlisted_by_name": "Risk Analyst A",
    "shortlisted_at": "2026-11-06T09:00:00Z"

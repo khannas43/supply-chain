@@ -1,4 +1,4 @@
-export type Commodity = 'wheat' | 'tungsten'
+export type Commodity = 'tungsten'
 export type Mode = 'live' | 'replay' | 'simulated'
 export type Severity = 'low' | 'medium' | 'high' | 'critical'
 export type Confidence = 'low' | 'medium' | 'high'

@@ -25,7 +25,7 @@ interface Auth {
 const Ctx = createContext<Auth | null>(null)
 
 const ALL_ROLES = Object.keys(ROLE_LABEL) as Role[]
-const COMMODITIES: Commodity[] = ['wheat', 'tungsten']
+const COMMODITIES: Commodity[] = ['tungsten']
 
 function authority(user: SessionUser) {
   return {
@@ -153,7 +153,7 @@ function KeycloakAuth({ config, children }: { config: { authority: string; clien
         <div className="signin-hero">
           <div className="signin-mark" aria-hidden="true" />
           <h1>Supply Chain Risk</h1>
-          <p>Know where wheat and tungsten supply is exposed, and decide what to do about it.</p>
+          <p>Know where tungsten supply is exposed, and decide what to do about it.</p>
           <ol className="signin-steps">
             <li><strong>Map</strong><span>Suppliers, routes and stock across tiers</span></li>
             <li><strong>Detect</strong><span>Policy, logistics and price signals as they arrive</span></li>

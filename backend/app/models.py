@@ -18,7 +18,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-COMMODITIES = ("wheat", "tungsten")
+COMMODITIES = ("tungsten",)
 MODES = ("live", "replay", "simulated")
 LEVELS = ("low", "medium", "high")
 SEVERITIES = ("low", "medium", "high", "critical")
@@ -524,6 +524,8 @@ class Observation(Base):
         _check("mode", MODES, "ck_observation_mode"),
         _check("outcome", ("alert_raised", "merged", "no_rule_match", "below_threshold", "late"), "ck_observation_outcome"),
         CheckConstraint("confidence_pct >= 0 AND confidence_pct <= 100", name="ck_observation_confidence"),
+        CheckConstraint("staleness_flag IS NULL OR staleness_flag IN ('fresh', 'stale', 'unknown')", name="ck_observation_staleness"),
+        CheckConstraint("completeness_flag IS NULL OR completeness_flag IN ('complete', 'partial', 'estimated', 'absent')", name="ck_observation_completeness"),
         Index("ix_observation_lookup", "source_id", "country", "kind", "published_at"),
     )
     id: Mapped[str] = mapped_column(String(40), primary_key=True)
@@ -545,6 +547,13 @@ class Observation(Base):
     ingested_at: Mapped[datetime] = mapped_column(TS)
     outcome: Mapped[str] = mapped_column(String(30))
     alert_id: Mapped[str | None] = mapped_column(ForeignKey("alert.id"))
+    # Provenance from external data providers (Credibl). Null for records that carry none.
+    origin_source: Mapped[str | None] = mapped_column(String(200))  # the upstream source Credibl names (USGS, PortWatch, ...)
+    licence_class: Mapped[str | None] = mapped_column(String(40))
+    attribution_text: Mapped[str | None] = mapped_column(Text)
+    source_refreshed_at: Mapped[datetime | None] = mapped_column(TS)
+    staleness_flag: Mapped[str | None] = mapped_column(String(20))
+    completeness_flag: Mapped[str | None] = mapped_column(String(20))
 
 
 # ---- People ----

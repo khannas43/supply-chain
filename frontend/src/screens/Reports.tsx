@@ -98,7 +98,7 @@ export function RiskExposureReport() {
                 } },
                 xAxis: { type: 'value', minInterval: 1, splitLine: { lineStyle: { color: t.grid } }, axisLabel: { color: t.muted } },
                 yAxis: { type: 'category', data: rows.map((l) => `${cap(l.commodity)} · ${l.location}`), ...axisStyle(t) },
-                series: [{ type: 'bar', barMaxWidth: 16, data: rows.map((l) => ({ value: l.alerts, itemStyle: { color: l.commodity === 'wheat' ? t.series[0] : t.series[3], borderRadius: [0, 4, 4, 0] } })),
+                series: [{ type: 'bar', barMaxWidth: 16, data: rows.map((l) => ({ value: l.alerts, itemStyle: { color: t.series[3], borderRadius: [0, 4, 4, 0] } })),
                   label: { show: true, position: 'right', color: t.muted } }],
               }
             }} />

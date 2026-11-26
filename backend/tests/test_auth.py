@@ -70,7 +70,7 @@ def bearer(*a, **k):
 def test_health_and_login_config_are_public_everything_else_needs_a_token(client, realm):
     assert client.get("/api/health").status_code == 200
     assert client.get("/api/auth/config").json() == {"mode": "keycloak", "authority": ISSUER, "clientId": "supplychain-web"}
-    for path in ("/api/alerts", "/api/overview?commodity=wheat", "/api/network/nodes", "/api/actions", "/api/rules", "/api/sources", "/api/reference"):
+    for path in ("/api/alerts", "/api/overview?commodity=tungsten", "/api/network/nodes", "/api/actions", "/api/rules", "/api/sources", "/api/reference"):
         r = client.get(path)
         assert r.status_code == 401 and r.headers["www-authenticate"] == "Bearer", path
     assert client.get("/api/alerts", headers=bearer()).status_code == 200
@@ -132,8 +132,8 @@ def test_keys_are_cached_and_rotation_is_picked_up(client, realm, monkeypatch):
 
 def test_the_token_name_and_roles_reach_the_audit_trail(client, realm, seeded):
     body = {"disposition": "monitor", "rationale": "watching"}
-    assert client.post("/api/alerts/AL-W-001/disposition", json=body, headers=bearer(roles=("viewer",))).status_code == 403
-    assert client.post("/api/alerts/AL-W-001/disposition", json=body, headers=bearer(roles=("viewer", "analyst"))).status_code == 200  # several roles
+    assert client.post("/api/alerts/AL-T-003/disposition", json=body, headers=bearer(roles=("viewer",))).status_code == 403
+    assert client.post("/api/alerts/AL-T-003/disposition", json=body, headers=bearer(roles=("viewer", "analyst"))).status_code == 200  # several roles
     from sqlalchemy import text
 
     with seeded.connect() as c:
@@ -142,7 +142,7 @@ def test_the_token_name_and_roles_reach_the_audit_trail(client, realm, seeded):
 
 def test_a_user_with_two_roles_gets_the_union(client, realm):
     h = bearer(roles=("manager", "steward"))
-    assert client.post("/api/options/O-W-1/shortlist", json={"shortlisted": True}, headers=h).status_code == 200
+    assert client.post("/api/options/O-T-5/shortlist", json={"shortlisted": True}, headers=h).status_code == 200
     assert client.post("/api/quarantine/Q-0032/replay", json={"correction": "USD"}, headers=h).status_code == 200
     assert client.post("/api/sources/src-policy/enabled", json={"enabled": False}, headers=h).status_code == 403  # admin only
 
@@ -174,26 +174,26 @@ def scoped(client, headers=None):
     }
 
 
-WHEAT_ONLY = {
-    "alerts": ["AL-W-001", "AL-W-002"], "alert_detail": 404, "assessment": 404, "options": 404, "overview": 404,
-    "nodes": ["wheat"], "traverse": 404, "actions": ["AC-W-001", "AC-W-002"], "action_detail": 404, "rules": ["wheat"],
-    "assumptions": ["AS-W-1"],
-}
+def test_a_token_scoped_to_tungsten_sees_everything_there_is(client, realm):
+    everything = scoped(client, bearer(roles=("analyst",)))
+    assert everything["alerts"] == ["AL-T-001", "AL-T-002", "AL-T-003", "AL-T-004"] and everything["alert_detail"] == 200
+    assert scoped(client, bearer(roles=("analyst",), scope=["tungsten"])) == everything
+    assert scoped(client, bearer(roles=("analyst",), scope="tungsten")) == everything  # a single value works too
 
 
-def test_a_scoped_token_sees_only_its_commodity(client, realm):
-    assert scoped(client, bearer(roles=("analyst",), scope=["wheat"])) == WHEAT_ONLY
-    assert scoped(client, bearer(roles=("analyst",), scope="wheat")) == WHEAT_ONLY  # a single value works too
+def test_a_scope_naming_a_retired_commodity_sees_nothing(client, realm):
+    s = scoped(client, bearer(roles=("analyst",), scope=["wheat"]))
+    assert s["alerts"] == [] and s["nodes"] == [] and s["actions"] == [] and s["alert_detail"] == 404
 
 
 def test_scope_in_dev_mode_works_the_same_way(client):
-    h = {"X-Actor-Id": "u", "X-Actor-Name": "U", "X-Actor-Role": "analyst", "X-Actor-Scope": "wheat"}
-    assert scoped(client, h) == WHEAT_ONLY
+    h = {"X-Actor-Id": "u", "X-Actor-Name": "U", "X-Actor-Role": "analyst", "X-Actor-Scope": "tungsten"}
+    assert scoped(client, h)["alerts"] == ["AL-T-001", "AL-T-002", "AL-T-003", "AL-T-004"]
 
 
 def test_an_unscoped_user_and_an_anonymous_dev_reader_see_everything(client, realm):
     everything = scoped(client, bearer(roles=("analyst",)))
-    assert everything["alerts"] == ["AL-T-001", "AL-T-002", "AL-W-001", "AL-W-002"] and everything["alert_detail"] == 200
+    assert everything["alerts"] == ["AL-T-001", "AL-T-002", "AL-T-003", "AL-T-004"] and everything["alert_detail"] == 200
 
 
 def test_an_empty_scope_sees_nothing(client, realm):
@@ -202,8 +202,8 @@ def test_an_empty_scope_sees_nothing(client, realm):
 
 
 def test_scope_also_limits_what_can_be_changed(client, realm, seeded):
-    wheat = bearer(roles=("analyst", "manager"), scope=["wheat"])
-    t = lambda path, body: client.post(path, json=body, headers=wheat)
+    retired = bearer(roles=("analyst", "manager"), scope=["wheat"])  # a commodity that no longer exists
+    t = lambda path, body: client.post(path, json=body, headers=retired)
     assert t("/api/alerts/AL-T-001/disposition", {"disposition": "monitor", "rationale": "x"}).status_code == 404
     assert t("/api/alerts/AL-T-001/assumptions", {"affectedSharePct": 10, "basis": "x"}).status_code == 404
     assert t("/api/options/O-T-1/shortlist", {"shortlisted": True}).status_code == 404
@@ -211,7 +211,6 @@ def test_scope_also_limits_what_can_be_changed(client, realm, seeded):
     assert t("/api/actions/AC-T-001/status", {"status": "review"}).status_code == 404
     assert t("/api/actions/AC-T-001/reassign", {"ownerId": "u", "ownerName": "U"}).status_code == 404
     assert t("/api/rules/R-T-EXP/draft", {"thresholds": [{"key": "conf", "value": 70}]}).status_code == 404
-    assert t("/api/alerts/AL-W-001/disposition", {"disposition": "monitor", "rationale": "x"}).status_code == 200  # its own is fine
 
 
 # ---- the directory of people ----
@@ -219,7 +218,7 @@ def test_scope_also_limits_what_can_be_changed(client, realm, seeded):
 
 def test_dev_mode_lists_the_demo_identities(client):
     people = client.get("/api/people").json()
-    assert len(people) == 9 and {"id": "u-analyst-a", "name": "Risk Analyst A", "roles": ["analyst"]} in people
+    assert len(people) == 8 and {"id": "u-analyst-a", "name": "Risk Analyst A", "roles": ["analyst"]} in people
 
 
 def test_people_appear_after_they_sign_in(client, realm, seeded):
@@ -253,7 +252,7 @@ def test_the_directory_needs_a_token_in_keycloak_mode(client, realm):
 SOURCE_HEALTH = ["/api/runs", "/api/quarantine", "/api/dead-letter", "/api/pipeline/queue"]
 RULES_AND_DATA = ["/api/rules", "/api/assumptions", "/api/reference", "/api/imports", "/api/imports/datasets"]
 SIMULATOR = ["/api/simulator/scenarios", "/api/simulator/run"]
-OPEN_TO_ALL = ["/api/alerts", "/api/overview?commodity=wheat", "/api/sources", "/api/network/nodes", "/api/actions", "/api/people"]
+OPEN_TO_ALL = ["/api/alerts", "/api/overview?commodity=tungsten", "/api/sources", "/api/network/nodes", "/api/actions", "/api/people"]
 
 
 def reads(client, role):

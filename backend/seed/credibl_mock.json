@@ -1,0 +1,17 @@
+{
+  "_note": "Stand-in for Credibl responses, shaped from their written answers of 24 Nov (as-of date, last refresh, source, licence class, staleness, completeness on every value). Field names are assumptions until Credibl sends its specification. Offsets are relative to today so the data looks current.",
+  "records": [
+    {"code": "supply_concentration_score", "country": "China", "value": 82, "headline": "China share of global tungsten mine supply keeps the concentration score high", "confidencePct": 85,
+     "asOfDaysAgo": 30, "refreshedHoursAgo": 20, "source": "USGS Mineral Commodity Summaries", "licenceClass": "public_domain", "attribution": "Source: U.S. Geological Survey", "staleness": "fresh", "completeness": "complete"},
+    {"code": "supply_concentration_score", "country": "Vietnam", "value": 24, "headline": "Vietnam is a secondary tungsten source with moderate concentration", "confidencePct": 70,
+     "asOfDaysAgo": 30, "refreshedHoursAgo": 20, "source": "USGS Mineral Commodity Summaries", "licenceClass": "public_domain", "attribution": "Source: U.S. Geological Survey", "staleness": "fresh", "completeness": "complete"},
+    {"code": "export_control_score", "country": "China", "value": 68, "headline": "Export licence requirements on tungsten products remain in force", "confidencePct": 75,
+     "asOfDaysAgo": 6, "refreshedHoursAgo": 8, "source": "MOFCOM and GACC notices (translated, reviewed)", "licenceClass": "public_notice", "attribution": "Source: PRC MOFCOM/GACC public notices; translation and extraction by Credibl", "staleness": "fresh", "completeness": "complete"},
+    {"code": "conflict_score", "country": "Rwanda", "value": 71, "headline": "Conflict intensity in tungsten-producing regions is elevated (baseline only)", "confidencePct": 45,
+     "asOfDaysAgo": 210, "refreshedHoursAgo": 400, "source": "UCDP georeferenced events (annual baseline)", "licenceClass": "attribution_required", "attribution": "Source: UCDP, Uppsala University", "staleness": "stale", "completeness": "partial"},
+    {"code": "route_risk_score", "country": "Global", "value": 37, "headline": "Malacca and Red Sea transit risk for tungsten shipments", "confidencePct": 60,
+     "asOfDaysAgo": 2, "refreshedHoursAgo": 30, "source": "IMF PortWatch", "licenceClass": "public_domain", "attribution": "Source: IMF PortWatch", "staleness": "fresh", "completeness": "complete"},
+    {"code": "producer_capacity_kt", "country": "China", "value": 61.5, "headline": "Listed-producer capacity for China (state-owned producers disclose little)", "confidencePct": 40,
+     "asOfDaysAgo": 120, "refreshedHoursAgo": 120, "source": "Company filings and technical reports (listed producers only)", "licenceClass": "public_filings", "attribution": "Source: company filings; compiled by Credibl", "staleness": "fresh", "completeness": "estimated"}
+  ]
+}

@@ -6,12 +6,12 @@ from app.routers.reports import INTEGRITY
 def test_risk_exposure(client, seeded):
     r = client.get("/api/reports/risk-exposure").json()
     assert r["totals"]["activeAlerts"] == r["totals"]["assessed"] + r["totals"]["unassessed"]
-    assert {c["commodity"] for c in r["bySeverity"]} == {"wheat", "tungsten"}
+    assert {c["commodity"] for c in r["bySeverity"]} == {"tungsten"}
     assert len(r["topAlerts"]) <= 10
 
 
 def test_concentration_shares_add_up(client, seeded):
-    r = client.get("/api/reports/supplier-concentration", params={"commodity": "wheat"}).json()
+    r = client.get("/api/reports/supplier-concentration", params={"commodity": "tungsten"}).json()
     assert r["totals"]["nodes"] == sum(k["count"] for k in r["byKind"])
     assert all(row["share"] <= 100 for row in r["byCountry"])
 
@@ -40,9 +40,9 @@ def test_lifecycle_check_catches_a_break(client, seeded, engine):
     assert any(c["violations"] for c in r["integrity"])
 
 
-def test_reports_respect_commodity_scope(client, seeded):
+def test_a_scope_naming_a_retired_commodity_sees_no_reports(client, seeded):
     h = {"X-Actor-Id": "u-x", "X-Actor-Name": "X", "X-Actor-Role": "analyst", "X-Actor-Scope": "wheat"}
     assert client.get("/api/reports/supplier-concentration", params={"commodity": "tungsten"}, headers=h).status_code == 404
     r = client.get("/api/reports/risk-exposure", headers=h).json()
-    assert [c["commodity"] for c in r["bySeverity"]] == ["wheat"]
+    assert r["bySeverity"] == []
     assert client.get("/api/reports/data-lifecycle", headers=h).json()["integrity"] is None
