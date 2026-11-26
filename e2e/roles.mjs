@@ -1,32 +1,54 @@
-import { chromium } from 'playwright-core'
-const APP = process.env.APP_URL ?? 'http://127.0.0.1:8095'
+// Every screen against every role: it loads cleanly for the roles allowed to see it and says so for the others.
 // Needs the API in dev mode (identity override):  AUTH_MODE=dev docker compose up -d api
-const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true })
-const cases = [
-  ['u-analyst-a', '/sources', 'Source and pipeline health'], ['u-analyst-a', '/rules', 'Rules and reference data'],
-  ['u-steward', '/sources', 'Source and pipeline health'], ['u-steward', '/rules', 'Rules and reference data'],
-  ['u-admin', '/sources', 'Source and pipeline health'], ['u-admin', '/rules', 'Rules and reference data'], ['u-admin', '/simulator', 'Simulator control'],
-  ['u-demo', '/sources', 'Source and pipeline health'], ['u-demo', '/simulator', 'Simulator control'],
-  ['u-manager', '/actions', 'Action register'], ['u-manager', '/response', 'Response comparison'], ['u-viewer', '/overview', 'overview'],
-  ['u-viewer', '/reports/risk-exposure', 'Risk exposure'], ['u-manager', '/reports/supplier-concentration', 'Supplier concentration'], ['u-viewer', '/reports/actions', 'Actions and decisions'],
-  ['u-steward', '/reports/data-lifecycle', 'Data life cycle'], ['u-admin', '/reports/data-lifecycle', 'Data life cycle'], ['u-analyst-a', '/reports/data-lifecycle', 'Data life cycle'],
-  ['u-viewer', '/reports/data-lifecycle', 'Access denied'], ['u-manager', '/reports/data-lifecycle', 'Access denied'],
-  ['u-manager', '/rules', 'Access denied'], ['u-viewer', '/sources', 'Access denied'], ['u-analyst-a', '/simulator', 'Access denied'],
+// Restore the normal mode afterwards:             docker compose up -d api
+import { APP, launch, reporter } from './lib.mjs'
+
+const { ok, finish } = reporter()
+const browser = await launch()
+
+const ALL = ['u-viewer', 'u-analyst-a', 'u-manager', 'u-steward', 'u-admin', 'u-demo']
+const TEAM = ['u-analyst-a', 'u-steward', 'u-admin', 'u-demo']
+const NOT_TEAM = ['u-viewer', 'u-manager']
+const screens = [
+  // the tungsten purchasing screens
+  ['/market', 'Market overview', ALL], ['/suppliers', 'Supplier dashboard', ALL], ['/suppliers/A', 'Ardenne Tungsten Refining', ALL],
+  ['/requirement', 'Requirement', ALL], ['/comparison', 'Comparison', ALL], ['/stress', 'Stress test', ALL],
+  ['/decision', 'Decision & pack', ['u-analyst-a', 'u-manager', 'u-steward', 'u-admin', 'u-demo']],
+  ['/data', 'Data & quotes', TEAM], ['/review', 'Data review', TEAM], ['/master', 'Supplier master', TEAM], ['/configuration', 'Configuration', TEAM],
+  // screens kept from the first build
+  ['/actions', 'Action register', ALL], ['/sources', 'Source and pipeline health', ['u-analyst-a', 'u-steward', 'u-admin', 'u-demo']],
+  ['/rules', 'Rules and reference data', ['u-analyst-a', 'u-steward', 'u-admin']], ['/simulator', 'Simulator control', ['u-admin', 'u-demo']],
 ]
-let bad = 0
-for (const [as, path, heading] of cases) {
+const denied = { '/decision': ['u-viewer'], '/data': NOT_TEAM, '/review': NOT_TEAM, '/master': NOT_TEAM, '/configuration': NOT_TEAM, '/sources': ['u-viewer', 'u-manager'], '/rules': ['u-viewer', 'u-manager', 'u-demo'], '/simulator': ['u-viewer', 'u-manager', 'u-analyst-a', 'u-steward'] }
+// screens moved to Phase 2: the address still works, but lands on the market overview
+const hidden = ['/risk', '/network', '/impact', '/response', '/overview', '/reports/risk-exposure', '/reports/supplier-concentration', '/reports/actions', '/reports/data-lifecycle']
+
+async function open(as, path, heading) {
   const page = await (await browser.newContext({ viewport: { width: 1300, height: 800 } })).newPage()
   const failures = []
-  page.on('response', (r) => r.status() >= 400 && failures.push(`${r.status()} ${new URL(r.url()).pathname}`))
+  page.on('response', (r) => r.status() >= 400 && !r.url().includes('favicon') && failures.push(`${r.status()} ${new URL(r.url()).pathname}`))
   await page.goto(`${APP}${path}?as=${as}`)
-  await page.getByRole('heading', { name: new RegExp(heading, 'i') }).first().waitFor({ timeout: 15000 })
-  await page.waitForTimeout(1500)
+  const found = await page.getByRole('heading', { name: new RegExp(heading, 'i') }).first().waitFor({ timeout: 15000 }).then(() => true, () => false)
+  await page.waitForTimeout(800)
   const alerts = await page.locator('[role=alert]').allInnerTexts()
-  const ok = failures.length === 0 && alerts.length === 0
-  if (!ok) bad++
-  console.log(`${ok ? 'ok  ' : 'FAIL'} ${as.padEnd(12)} ${path.padEnd(11)} ${heading}${ok ? '' : '  ' + [...failures, ...alerts].join(' | ')}`)
+  const url = new URL(page.url()).pathname
   await page.context().close()
+  return { found, failures, alerts, url }
 }
-await browser.close()
-console.log(bad ? `${bad} problems` : 'all screens load cleanly for every role')
-process.exit(bad ? 1 : 0)
+
+for (const [path, heading, allowed] of screens) {
+  for (const as of ALL) {
+    if (allowed.includes(as)) {
+      const r = await open(as, path, heading)
+      ok(`${as.padEnd(12)} ${path.padEnd(15)} loads cleanly`, r.found && r.failures.length === 0 && r.alerts.length === 0, [...r.failures, ...r.alerts, r.found ? '' : 'heading not found'].filter(Boolean).join(' | '))
+    } else if (denied[path]?.includes(as)) {
+      const r = await open(as, path, 'Access denied')
+      ok(`${as.padEnd(12)} ${path.padEnd(15)} is told access is denied`, r.found)
+    }
+  }
+}
+for (const path of hidden) {
+  const r = await open('u-admin', path, 'Market overview')
+  ok(`${path.padEnd(32)} is hidden and lands on the market overview`, r.found && r.url === '/market', r.url)
+}
+await finish(browser)

@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "journey": "node journey.mjs",
     "roles": "node roles.mjs",
     "login": "node login.mjs"
   },
